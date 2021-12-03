@@ -1,0 +1,19 @@
+@media all and (min-width: 480px) {
+    .Signup {
+      padding: 60px 0;
+    }
+  
+    .Signup form {
+      margin: 0 auto;
+      max-width: 320px;
+    }
+    .loginLink{
+        margin: 10px;
+    }
+    .loginLink> button:hover{
+        background-color:#e9c15c;
+    }
+    .loginLink > button{
+        background-color: #fec741;
+    }
+}
