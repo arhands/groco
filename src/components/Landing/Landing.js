@@ -13,11 +13,13 @@ function Landing() {
     return (
         <div className="Landing d-flex justify-content-center">
             <ListGroup>
-                <Button>Profile</Button>
-                <Button>Recipes</Button>
-                <Button>Groceries</Button>
-                <Button>Shopping List</Button>
-                <Button>Meal Plans</Button>
+                <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Profile</Button>
+                <Link to="/recipes">
+                    <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Recipes</Button>
+                </Link>
+                <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Groceries</Button>
+                <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Shopping List</Button>
+                <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Meal Plans</Button>
             </ListGroup>
         </div>
     )
