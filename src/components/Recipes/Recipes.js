@@ -4,13 +4,64 @@ import Button from "react-bootstrap/Button";
 import { Link } from 'react-router-dom';
 import './Recipes.css'
 import DataTable from 'react-data-table-component';
+import { Modal } from "react-bootstrap";
+import $ from 'jquery';
 
 function Recipes() {
-    function ShowRecipeDetails(id)
-    {
+    const [show, setShow] = useState(false);
 
+    const handleClose = () => setShow(false);
+    function GenerateRecipeModal()
+    {
+        function ToggleIngredients()
+        {
+            //let id = $(":Modal").attr("id")
+            let viewButton = $("#ModalViewIngredientsButton")
+            let setToIngredients = viewButton.html() === "View Ingredients"
+            if(setToIngredients)
+            {
+                viewButton.html("View Instructions")
+            }
+            else
+            {
+                viewButton.html("View Ingredients")
+            }
+            
+        }
+        return (
+            <Modal show={show} onHide={handleClose} id="Modal">
+                <Modal.Header>
+                    <Modal.Title id="ModalTitle">
+                        Recipe Details
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body id="ModalBody">
+                    
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="Secondary" id="ModalViewIngredientsButton" onClick={ToggleIngredients}>
+                        View Ingredients
+                    </Button>
+                    <Button variant="Secondary" disabled>
+                        Edit
+                    </Button>
+                    <Button variant="Secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="Primary" onClick={handleClose}>
+                        Add
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        );
     }
-    function AddRecipe(id)
+    function ShowRecipeDetails(data)
+    {
+        $("#Modal").attr("id",data.id);
+        $("#ModalTitle").html(data.name);
+        setShow(true);
+    }
+    function AddRecipe(data)
     {
 
     }
@@ -36,12 +87,12 @@ function Recipes() {
             creator: RawData[i].creator,
             name: RawData[i].name,
             details: (
-                <Button onClick={() => ShowRecipeDetails(RawData[i].id)}>
+                <Button onClick={() => ShowRecipeDetails(RawData[i])}>
                     Details
                 </Button>
             ),
             add: (
-                <Button onClick={() => AddRecipe(RawData[i].id)}>
+                <Button onClick={() => AddRecipe(RawData[i])}>
                     Add
                 </Button>
             )
@@ -50,6 +101,7 @@ function Recipes() {
     return (
         <div className="Recipes">
             <DataTable columns={columns} data={data}/>
+            {GenerateRecipeModal()}
         </div>
     )
 }
