@@ -6,7 +6,6 @@ import Button from "react-bootstrap/Button";
 import { Link } from 'react-router-dom';
 import './ViewRecipe.css'
 import DataTable from 'react-data-table-component';
-import $, { ajax } from 'jquery';
 
 function ViewRecipe() {
     const location = useLocation()
@@ -53,23 +52,38 @@ function ViewRecipe() {
             break
     }
     //
+    function CloseMenu()
+    {
+
+    }
+    let canEdit = false
+    //
     for(let i = 0; i < ingredients.length; i++)
         ingredients[i].cb = (<input type="checkbox" checked/>)
     return (
         <div className="ViewRecipe">
-            <h1 classname="mb-3">
+            <h1 className="mb-3">
                 {RecipeName}
             </h1>
-            <h4 classname="mb-3">
+            <h4 className="mb-3">
                 Instructions
             </h4>
             <div className="col-2 font-weight-normal">
                 {instructions}
             </div>
-            <h4 classname="mb-3">
+            <h4 className="mb-3">
                 Ingredients
             </h4>
             <DataTable columns={columns} data={ingredients}/>
+            <div className="bit-group" role="group">
+                <Link to="/recipes">
+                    <button type="button" className="btn btn-secondary">Exit</button>
+                </Link>
+                <button type="button" className="btn btn-secondary" disabled={canEdit}>Edit</button>
+                <Link to="/recipes">
+                    <button type="button" className="btn btn-primary">Add</button>
+                </Link>
+            </div>
         </div>
     )
 }
