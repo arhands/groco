@@ -1,0 +1,19 @@
+@media all and (min-width: 480px) {
+    .ViewRecipe {
+      padding: 60px 0;
+    }
+  
+    .ViewRecipe form {
+      margin: 0 auto;
+      max-width: 320px;
+    }
+    .viewRecipeLink{
+        margin: 10px;
+    }
+    .viewRecipeLink > button:hover{
+        background-color:#e9c15c;
+    }
+    .viewRecipeLink > button{
+        background-color: #fec741;
+    }
+}
