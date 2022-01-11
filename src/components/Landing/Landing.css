@@ -1,0 +1,19 @@
+@media all and (min-width: 480px) {
+    .Landing {
+      padding: 60px 0;
+    }
+  
+    .Landing form {
+      margin: 0 auto;
+      max-width: 320px;
+    }
+    .landingLink{
+        margin: 10px;
+    }
+    .landingLink> button:hover{
+        background-color:#e9c15c;
+    }
+    .landingLink > button{
+        background-color: #fec741;
+    }
+}

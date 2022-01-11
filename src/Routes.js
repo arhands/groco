@@ -4,6 +4,8 @@ import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 import NotFound from "./components/NotFound/NotFound";
 import Signup from "./components/Signup/Signup";
+import Landing from "./components/Landing/Landing";
+import Recipes from "./components/Recipes/Recipes";
 
 export default function Routes() {
     return (
@@ -13,6 +15,12 @@ export default function Routes() {
             </Route>
             <Route exact path="/login">
                 <Login />
+            </Route>
+            <Route exact path="/landing">
+                <Landing />
+            </Route>
+            <Route exact path="/recipes">
+                <Recipes />
             </Route>
             <Route exact path="/">
                 <Home />

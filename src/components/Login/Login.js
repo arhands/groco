@@ -36,9 +36,11 @@ export default function Login() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </Form.Group>
-                <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" type="submit" disabled={!validateForm()}>
-                    Login
-                </Button>
+                <Link className="landingLink" to='/landing'>
+                    <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" type="submit" disabled={!validateForm()}>
+                        Login
+                    </Button>
+                </Link>
                 <Link className="signupLink" to='/signup'>
                     <Button variant='custom' block size="lg" >
                         SignUp?
