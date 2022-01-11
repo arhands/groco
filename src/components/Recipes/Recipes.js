@@ -1,35 +1,67 @@
 import React, { useState } from "react";
+import ReactDOM from 'react-dom';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Link } from 'react-router-dom';
 import './Recipes.css'
 import DataTable from 'react-data-table-component';
 import { Modal } from "react-bootstrap";
-import $ from 'jquery';
+import $, { ajax } from 'jquery';
 
 function Recipes() {
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
+    function ModalShowInstructions(id)
+    {
+        // will be replaced with DB query.
+        let data = "ERROR"
+        switch(id)
+        {
+            case 337:
+                data = "Place the water into a pot and cook at medium for 20 minutes then serve.";
+                break
+            case 561:
+                data = "Get two slices of bread and a pickle, mix them together, and enjoy.";
+                break
+            case 849:
+                data = "Fetch one bread from the store and throw a pickle on it!";
+                break
+            case 123:
+                data = "Buy rice, eat it, then rethink your life because you just ate raw rice.";
+                break
+            default:
+                console.error("id = '" + toString(id) + "' is invalid")
+                break
+        }
+        //
+        ReactDOM.render(
+            <h1> 
+                {data}
+            </h1>
+        ,document.getElementById("ModalBody"))
+    }
     function GenerateRecipeModal()
     {
         function ToggleIngredients()
         {
-            //let id = $(":Modal").attr("id")
+            let id = $("div[className='Recipes']").attr('id')
             let viewButton = $("#ModalViewIngredientsButton")
             let setToIngredients = viewButton.html() === "View Ingredients"
             if(setToIngredients)
             {
                 viewButton.html("View Instructions")
+                
             }
             else
             {
                 viewButton.html("View Ingredients")
+                ModalShowInstructions(id)
             }
-            
         }
         return (
             <Modal show={show} onHide={handleClose} id="Modal">
+                {/* We store the id for the current recipe in the header.*/}
                 <Modal.Header>
                     <Modal.Title id="ModalTitle">
                         Recipe Details
@@ -57,9 +89,11 @@ function Recipes() {
     }
     function ShowRecipeDetails(data)
     {
-        $("#Modal").attr("id",data.id);
-        $("#ModalTitle").html(data.name);
-        setShow(true);
+        setShow(true,() => {
+            $("div[className='Recipes']").attr("id",data.id);
+            $("#ModalTitle").html(data.name);
+            ModalShowInstructions(data.id)
+        });
     }
     function AddRecipe(data)
     {
@@ -99,7 +133,7 @@ function Recipes() {
         });
     }
     return (
-        <div className="Recipes">
+        <div className="Recipes" id="-1">
             <DataTable columns={columns} data={data}/>
             {GenerateRecipeModal()}
         </div>
