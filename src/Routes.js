@@ -6,6 +6,7 @@ import NotFound from "./components/NotFound/NotFound";
 import Signup from "./components/Signup/Signup";
 import Landing from "./components/Landing/Landing";
 import Recipes from "./components/Recipes/Recipes";
+import Profile from "./components/Profile/Profile";
 
 export default function Routes() {
     return (
@@ -24,6 +25,9 @@ export default function Routes() {
             </Route>
             <Route exact path="/">
                 <Home />
+            </Route>
+            <Route exact path="/profile">
+                <Profile/>
             </Route>
             <Route>
                 <NotFound />

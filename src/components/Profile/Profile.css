@@ -1,0 +1,24 @@
+@media all and (min-width: 480px) {
+    .Profile {
+        padding: 60px 0;
+    }
+    .profileLink{
+        margin: 10px;
+    }
+    .profileLink > button{
+        background-color: #fec741;
+    }
+    .div-container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .profilePic {
+        border-radius: 50%;
+        overflow: 'hidden';
+        height: 220;
+        width: 220;
+        content: url('./default-profile-pic.png');
+    }
+
+}
