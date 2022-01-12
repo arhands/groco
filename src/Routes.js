@@ -6,10 +6,18 @@ import NotFound from "./components/NotFound/NotFound";
 import Signup from "./components/Signup/Signup";
 import Landing from "./components/Landing/Landing";
 import Recipes from "./components/Recipes/Recipes";
+import MealPlans from "./components/MealPlans/MealPlans";
+import SinglePlan from "./components/SinglePlan/SinglePlan";
 
 export default function Routes() {
     return (
         <Switch>
+            <Route exact path="/mealplans">
+                <MealPlans />
+            </Route>
+            <Route exact path="/singleplan">
+                <SinglePlan />
+            </Route>
             <Route exact path="/signup">
                 <Signup />
             </Route>

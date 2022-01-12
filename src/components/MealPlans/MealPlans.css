@@ -1,0 +1,11 @@
+@media all and (min-width: 480px) {
+    
+    .header{
+        text-align:center;
+        font-weight:bold;
+        font-size: large;
+        color: #fb6500
+    }
+   
+}
+  
