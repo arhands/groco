@@ -6,10 +6,12 @@ import Button from "react-bootstrap/Button";
 import { Link } from 'react-router-dom';
 import './ViewRecipe.css'
 import DataTable from 'react-data-table-component';
+import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 
 function ViewRecipe() {
     const location = useLocation()
     const { id, RecipeName } = location.data
+    console.log(JSON.stringify(location))
     let columns = [
         { name: "Item",         selector: row => row.name },
         { name: "Amount",       selector: row => row.quantity},
@@ -19,6 +21,7 @@ function ViewRecipe() {
     // will be replaced with DB query.
     let instructions = "ERROR"
     let ingredients = []
+    let isAuthor = true
     switch(id)
     {
         case 337:
@@ -51,6 +54,28 @@ function ViewRecipe() {
             console.error("id = '" + toString(id) + "' is invalid")
             break
     }
+    function GenerateMealPlanSelection()
+    {
+        return (<></>)
+        let mealPlans = [
+            {name: "3 days plan",   id: "1"},
+            {name: "1 week plan",   id: "2"},
+            {name: "Vegetarian",    id: "3"},
+            {name: "Thanksgiving",  id: "4"},
+            {name: "Weekend BBQ",   id: "5"}
+        ];
+        function AddToMealPlan(id)
+        {
+            //console.log("Adding recipe to meal plan " + toString(id) + ".")
+        }
+        return (
+            <DropdownButton as={ButtonGroup} title="+ Meal Plan">
+                {mealPlans.map(
+                    p => (<Dropdown.Item as="button" onClick={AddToMealPlan(p.id)} eventKey={p.id}>{p.name}</Dropdown.Item>))
+                }
+            </DropdownButton>
+        )
+    }
     //
     function CloseMenu()
     {
@@ -59,33 +84,49 @@ function ViewRecipe() {
     let canEdit = false
     //
     for(let i = 0; i < ingredients.length; i++)
-        ingredients[i].cb = (<input type="checkbox" checked/>)
+    {
+        ingredients[i].isIncluded = true
+        ingredients[i].cb = (<input type="checkbox" defaultChecked onChange={(e) => ingredients[i].isIncluded = e.target.value}/>)
+    }
     return (
-        <div className="ViewRecipe">
-            <h1 className="mb-3">
-                {RecipeName}
-            </h1>
-            <h4 className="mb-3">
-                Instructions
-            </h4>
-            <div className="col-2 font-weight-normal">
-                {instructions}
-            </div>
-            <h4 className="mb-3">
-                Ingredients
-            </h4>
-            <DataTable columns={columns} data={ingredients}/>
-            <div className="bit-group" role="group">
-                <Link to="/recipes">
-                    <button type="button" className="btn btn-secondary">Exit</button>
-                </Link>
-                <button type="button" className="btn btn-secondary" disabled={canEdit}>Edit</button>
-                <Link to="/recipes">
-                    <button type="button" className="btn btn-primary">Add</button>
-                </Link>
-            </div>
-        </div>
-    )
+        <form>
+            <label>
+                Name:
+                <input type="text" value={RecipeName} onChange={(e) => RecipeName=e.target.value} disabled/>
+            </label>
+            <br/>
+            <label>
+                Instructions:
+                <textarea type="text" value={RecipeName} onChange={(e) => instructions=e.target.value} disabled/>
+            </label>
+            <br/>
+            <label>
+                Ingredients:
+                <br/>
+                <DataTable columns={columns} data={ingredients}/>
+            </label>
+            <br/>
+            {
+                isAuthor? 
+                (
+                    <ButtonGroup>              
+                        <Button variant="Secondary">Delete</Button>
+                        <Button variant="Secondary">Edit</Button>
+                        <Button variant="Secondary">Close</Button>
+                        {GenerateMealPlanSelection()}
+                        <Button variant="Primary">+ List</Button>
+                    </ButtonGroup>
+                ) :
+                (
+                    <ButtonGroup>              
+                        <Button variant="Secondary">Close</Button>
+                        {GenerateMealPlanSelection()}
+                        <Button variant="Primary">+ List</Button>
+                    </ButtonGroup>
+                )
+            }
+        </form>
+    );
 }
 
 export default ViewRecipe
