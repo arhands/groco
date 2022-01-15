@@ -72,7 +72,12 @@ function ViewRecipe() {
         return (
             <DropdownButton as={ButtonGroup} title="+ Meal Plan">
                 {mealPlans.map(
-                    p => (<Dropdown.Item as={Button} onClick={() => AddToMealPlan(p)} eventKey={p.id}>{p.name}</Dropdown.Item>))
+                    p => (
+                        <Link to={{ pathname: "/recipes"}} >
+                            <Dropdown.Item as={Button} onClick={() => AddToMealPlan(p)} eventKey={p.id}>
+                                {p.name}
+                            </Dropdown.Item>
+                        </Link>))
                 }
             </DropdownButton>
         )
@@ -172,9 +177,13 @@ function ViewRecipe() {
                     <ButtonGroup>             
                         <Button variant="Secondary">Delete</Button>
                         <Button variant="Secondary" onClick={onClickEditBtn} id="editBtn">{editMode? "Save" : "Edit"}</Button>
-                        <Button variant="Secondary">Close</Button>
+                        <Link to={{ pathname: "/recipes"}} >
+                            <Button variant="Secondary">Close</Button>
+                        </Link>
                         {GenerateMealPlanSelection()}
-                        <Button variant="Primary">+ List</Button>
+                        <Link to={{ pathname: "/recipes"}} >
+                            <Button variant="Secondary">+List</Button>
+                        </Link>
                     </ButtonGroup>
                 ) :
                 (
