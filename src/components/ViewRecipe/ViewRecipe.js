@@ -80,7 +80,7 @@ function ViewRecipe() {
     //
     let isInEditMode = false
     let data = []
-    function AddIngredient()
+    function AddIngredient(data)
     {
         let i = ingredients.length
         ingredients.push({
@@ -161,7 +161,7 @@ function ViewRecipe() {
             
             <br/>
             <label id="ingredients">
-                Ingredients: {editMode? (<Button variant="Secondary" onClick={AddIngredient}>Add Ingredient</Button>) : null}
+                Ingredients: {editMode? (<Button variant="Secondary" onClick={() => AddIngredient(stateData)}>Add Ingredient</Button>) : null}
                 <br/>
                 <DataTable columns={columns} data={stateData}/>
             </label>
