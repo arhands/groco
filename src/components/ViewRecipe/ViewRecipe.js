@@ -108,7 +108,7 @@ function ViewRecipe() {
                 //$("#row-" + i).remove()
                 ingredients.splice(i,1)
                 data.splice(i,1)
-                setStateData(data)
+                //setStateData(data)
                 console.log("updated.")
             }
             else
@@ -128,7 +128,7 @@ function ViewRecipe() {
         ingredients[i].isIncluded = true
         //ingredients[i].cb = (<input type="checkbox" className="form-check-input" defaultChecked onClick={(e) => ingredients[i].isIncluded = e.target.value}/>)
     }
-    const [stateData, setStateData] = React.useState(data)
+    //const [stateData, setStateData] = React.useState(data)
     return (
         <form>
             <label>
@@ -145,7 +145,7 @@ function ViewRecipe() {
             <label id="ingredients">
                 Ingredients: {editMode? (<Button variant="Secondary">Add Ingredient</Button>) : null}
                 <br/>
-                <DataTable columns={columns} data={stateData}/>
+                <DataTable columns={columns} data={data}/>
             </label>
             <br/>
             {
