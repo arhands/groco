@@ -14,10 +14,10 @@ function ViewRecipe() {
     let { id, RecipeName } = location.data
     console.log(JSON.stringify(location))
     let columns = [
-        { name: (<Form.Label>Item</Form.Label>),         selector: row => row.name,              sortable: true },
-        { name: (<Form.Label>Amount</Form.Label>),       selector: row => row.quantity,          sortable: true },
-        { name: (<Form.Label>Measurement</Form.Label>),  selector: row => row.measurement_type,  sortable: true },
-        { name: (<Form.Label>Include</Form.Label>),      selector: row => row.cb,                sortable: true },
+        { name: (<Form.Label>Item</Form.Label>),         selector: row => row.name },
+        { name: (<Form.Label>Amount</Form.Label>),       selector: row => row.quantity },
+        { name: (<Form.Label>Measurement</Form.Label>),  selector: row => row.measurement_type },
+        { name: (<Form.Label>Include</Form.Label>),      selector: row => row.cb },
     ];
     // will be replaced with DB query.
     let instructions = "ERROR"
@@ -82,49 +82,64 @@ function ViewRecipe() {
     {
 
     }
-    let canEdit = false
-    let isInEditMode = false
-    function HandleEditToggle()
+    const [editMode, setEditMode] = React.useState(false)
+    //const onClickEditBtn = () => setEditMode(!editMode)
+    function onClickEditBtn()
     {
-        $("#input-name,#input-instructions").prop("disabled",isInEditMode)
-        $("#ingredients").find(":input").prop("disabled",isInEditMode)
-        isInEditMode = !isInEditMode
-        $("#editBtn").html(isInEditMode? "Save" : "Edit")
+        setEditMode(!editMode)
+        // still has old value for 'editMode'.
+        if(editMode)
+            for(let i = 0; i < ingredients.length; i++)
+                $("#toggleBtn-" + i).html(ingredients[i].isIncluded? "Included" : "Excluded")
+        else
+            $("#ingredients").find(":button").html("Delete")
+        
     }
+    let canEdit = false
     //
     let data = []
     for(let i = 0; i < ingredients.length; i++)
     {
+        function HandleClick()
+        {
+            if(editMode)
+            {
+                $("#row-" + i).remove()
+                ingredients.splice(i,1)
+            }
+            else
+            {
+                ingredients[i].isIncluded = !ingredients[i].isIncluded
+                $("#toggleBtn-" + i).html(ingredients[i].isIncluded? "Included" : "Excluded")
+                console.log($("#toggleBtn-" + i).length)
+            }
+        }
         data.push({
-            cb: (<Button variant="Secondary" onClick={ToggleInclude} id={"toggleBtn-" + i}>Remove</Button>),
-            name: (<input type="text" defaultValue={ingredients[i].name} onChange={e => ingredients[i].name=e.target.value} disabled/>),
-            quantity: (<input type="number" defaultValue={ingredients[i].quantity} onChange={e => ingredients[i].quantity=e.target.value} disabled/>),
-            measurement_type: (<input type="text" defaultValue={ingredients[i].measurement_type} onChange={e => ingredients[i].measurement_type=e.target.value} disabled/>)
+            cb: (<Button variant="Secondary" onClick={HandleClick} id={"toggleBtn-" + i}>Included</Button>),
+            name: (<input type="text" defaultValue={ingredients[i].name} onChange={e => ingredients[i].name=e.target.value} disabled={!editMode}/>),
+            quantity: (<input type="number" defaultValue={ingredients[i].quantity} onChange={e => ingredients[i].quantity=e.target.value} disabled={!editMode}/>),
+            measurement_type: (<input type="text" defaultValue={ingredients[i].measurement_type} onChange={e => ingredients[i].measurement_type=e.target.value} disabled={!editMode}/>),
+            id: i
         });
+        ingredients[i].id = i
         ingredients[i].isIncluded = true
         //ingredients[i].cb = (<input type="checkbox" className="form-check-input" defaultChecked onClick={(e) => ingredients[i].isIncluded = e.target.value}/>)
-        function ToggleInclude()
-        {
-            ingredients[i].isIncluded = !ingredients[i].isIncluded
-            $("#toggleBtn-" + i).html(ingredients[i].isIncluded? "Remove" : "Add")
-            console.log($("#toggleBtn-" + i).length)
-        }
     }
     return (
         <form>
             <label>
                 Name:
-                <input type="text" defaultValue={RecipeName} onChange={e => RecipeName=e.target.value} id="input-name" disabled/>
+                <input type="text" defaultValue={RecipeName} onChange={e => RecipeName=e.target.value} id="input-name" disabled={!editMode}/>
             </label>
             <br/>
             <Form.Label>
                 Instructions:<br/>
             </Form.Label>
-            <Form.Control as="textarea" rows="8" defaultValue={instructions} onChange={e => instructions=e.target.value} id="input-instructions" disabled/>
+            <Form.Control as="textarea" rows="8" defaultValue={instructions} onChange={e => instructions=e.target.value} id="input-instructions" disabled={!editMode}/>
             
             <br/>
             <label id="ingredients">
-                Ingredients:
+                Ingredients: {editMode? (<Button variant="Secondary">Add Ingredient</Button>) : null}
                 <br/>
                 <DataTable columns={columns} data={data}/>
             </label>
@@ -134,7 +149,7 @@ function ViewRecipe() {
                 (
                     <ButtonGroup>              
                         <Button variant="Secondary">Delete</Button>
-                        <Button variant="Secondary" onClick={HandleEditToggle} id="editBtn">Edit</Button>
+                        <Button variant="Secondary" onClick={onClickEditBtn} id="editBtn">{editMode? "Save" : "Edit"}</Button>
                         <Button variant="Secondary">Close</Button>
                         {GenerateMealPlanSelection()}
                         <Button variant="Primary">+ List</Button>
