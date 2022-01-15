@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import "./MealPlans.css";
 import { useEffect, useState } from 'react';
 import axios from 'axios'
+import Button from '../Button/Button';
+
 
 
 const MealPlans = () => {
@@ -17,12 +19,19 @@ const MealPlans = () => {
 
     if(mealPlans){
         return (
-            <div>
-            <p className='header'> MEAL PLANS </p>
-            <h3> {mealPlans.map(function(plan){
-                    return <ul><li><Link to="/singleplan">{plan.name}</Link></li></ul>})}
-            </h3>
-
+        <div>
+            <div className='header'>
+                <p> MEAL PLANS </p>
+            </div>
+            <div className='body' >
+                 <p> {mealPlans.map(function(plan){
+                    return <ul><Link to="/singleplan">{plan.name}</Link></ul>})}
+                 </p>
+            </div>
+            <div className='addMealPlan'>
+                <Button  text='Add'/>
+            </div>
+           
         </div>
         )
     }
