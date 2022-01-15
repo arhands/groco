@@ -28,27 +28,27 @@ function ViewRecipe() {
         case 337:
             instructions = "Place the water into a pot and cook at medium for 20 minutes then serve.";
             ingredients = [
-                { name: "Water", quantity: "1", measurement_type: "Cups" },
+                { name: "Water", quantity: 1, measurement_type: "Cups" },
             ];
             break
         case 561:
             instructions = "Get two slices of bread and a pickle, mix them together, and enjoy.";
             ingredients = [
-                { name: "Bread", quantity: "2", measurement_type: "Slices" },
-                { name: "Pickle", quantity: "1", measurement_type: "N/A" },
+                { name: "Bread", quantity: 2, measurement_type: "Slices" },
+                { name: "Pickle", quantity: 1, measurement_type: "N/A" },
             ];
             break
         case 849:
             instructions = "Fetch one bread from the store and throw an egg on it!";
             ingredients = [
-                { name: "Bread", quantity: "1", measurement_type: "Loaf" },
-                { name: "Egg", quantity: "1", measurement_type: "N/A" },
+                { name: "Bread", quantity: 1, measurement_type: "Loaf" },
+                { name: "Egg", quantity: 1, measurement_type: "N/A" },
             ];
             break
         case 123:
             instructions = "Buy rice, eat it, then rethink your life because you just ate raw rice.";
             ingredients = [
-                { name: "Rice", quantity: "2.3", measurement_type: "Cups" },
+                { name: "Rice", quantity: 2.3, measurement_type: "Cups" },
             ];
             break
         default:
@@ -78,55 +78,73 @@ function ViewRecipe() {
         )
     }
     //
-    function CloseMenu()
+    let isInEditMode = false
+    let data = []
+    function AddIngredient()
     {
-
+        let i = ingredients.length
+        ingredients.push({
+            name: "", quantity: 0, measurement_type: "N/A", id: i, isIncluded: true
+        })
+        console.log(JSON.stringify(ingredients))
+        data.push({
+            cb: (<Button variant="Secondary" onClick={() => HandleClick(i)} id={"toggleBtn-" + i}>Delete</Button>),
+            name: (<input type="text" defaultValue={ingredients[i].name} onChange={e => ingredients[i].name=e.target.value}/>),
+            quantity: (<input type="number" defaultValue={ingredients[i].quantity} onChange={e => ingredients[i].quantity=e.target.value}/>),
+            measurement_type: (<input type="text" defaultValue={ingredients[i].measurement_type} onChange={e => ingredients[i].measurement_type=e.target.value}/>),
+            id: i
+        });
+        updateState({editMode: true, stateData: data})
     }
-    const [editMode, setEditMode] = React.useState(false)
+
+    for(let i = 0; i < ingredients.length; i++)
+    {
+        data.push({
+            cb: (<Button variant="Secondary" onClick={() => HandleClick(i)} id={"toggleBtn-" + i}>Included</Button>),
+            name: (<input type="text" defaultValue={ingredients[i].name} onChange={e => ingredients[i].name=e.target.value} disabled/>),
+            quantity: (<input type="number" defaultValue={ingredients[i].quantity} onChange={e => ingredients[i].quantity=e.target.value} disabled/>),
+            measurement_type: (<input type="text" defaultValue={ingredients[i].measurement_type} onChange={e => ingredients[i].measurement_type=e.target.value} disabled/>),
+            id: i
+        });
+        ingredients[i].id = i
+        ingredients[i].isIncluded = true
+    }
+
+    const [{editMode, stateData}, updateState] = React.useState({editMode: false, stateData: data})
     //const onClickEditBtn = () => setEditMode(!editMode)
     function onClickEditBtn()
     {
-        setEditMode(!editMode)
+        isInEditMode = !isInEditMode
+        updateState({editMode: isInEditMode, stateData: stateData})
         // still has old value for 'editMode'.
         if(editMode)
             for(let i = 0; i < ingredients.length; i++)
                 $("#toggleBtn-" + i).html(ingredients[i].isIncluded? "Included" : "Excluded")
         else
-            $("#ingredients").find(":button").html("Delete")
+        {
+            let ing = $("#ingredients")
+            ing.find(":button").html("Delete")
+            ing.find(":input").prop("disabled",editMode)
+        }
         
     }
-    let canEdit = false
     //
-    let data = []
-    for(let i = 0; i < ingredients.length; i++)
+    function HandleClick(i)
     {
-        function HandleClick()
+        console.log("isInEditMode: " + isInEditMode)
+        if(isInEditMode)
         {
-            console.log("editMode:" + editMode)
-            if(editMode)
-            {
-                //$("#row-" + i).remove()
-                ingredients.splice(i,1)
-                data.splice(i,1)
-                //setStateData(data)
-                console.log("updated.")
-            }
-            else
-            {
-                ingredients[i].isIncluded = !ingredients[i].isIncluded
-                $("#toggleBtn-" + i).html(ingredients[i].isIncluded? "Included" : "Excluded")
-            }
+            //$("#row-" + i).remove()
+            ingredients.splice(i,1)
+            data.splice(i,1)
+            updateState({editMode: isInEditMode, stateData: data})
+            console.log("updated.")
         }
-        data.push({
-            cb: (<Button variant="Secondary" onClick={HandleClick} id={"toggleBtn-" + i}>Included</Button>),
-            name: (<input type="text" defaultValue={ingredients[i].name} onChange={e => ingredients[i].name=e.target.value} disabled={!editMode}/>),
-            quantity: (<input type="number" defaultValue={ingredients[i].quantity} onChange={e => ingredients[i].quantity=e.target.value} disabled={!editMode}/>),
-            measurement_type: (<input type="text" defaultValue={ingredients[i].measurement_type} onChange={e => ingredients[i].measurement_type=e.target.value} disabled={!editMode}/>),
-            id: i
-        });
-        ingredients[i].id = i
-        ingredients[i].isIncluded = true
-        //ingredients[i].cb = (<input type="checkbox" className="form-check-input" defaultChecked onClick={(e) => ingredients[i].isIncluded = e.target.value}/>)
+        else
+        {
+            ingredients[i].isIncluded = !ingredients[i].isIncluded
+            $("#toggleBtn-" + i).html(ingredients[i].isIncluded? "Included" : "Excluded")
+        }
     }
     //const [stateData, setStateData] = React.useState(data)
     return (
@@ -143,9 +161,9 @@ function ViewRecipe() {
             
             <br/>
             <label id="ingredients">
-                Ingredients: {editMode? (<Button variant="Secondary">Add Ingredient</Button>) : null}
+                Ingredients: {editMode? (<Button variant="Secondary" onClick={AddIngredient}>Add Ingredient</Button>) : null}
                 <br/>
-                <DataTable columns={columns} data={data}/>
+                <DataTable columns={columns} data={stateData}/>
             </label>
             <br/>
             {
