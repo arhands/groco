@@ -15,8 +15,8 @@ function Recipes() {
 
     }
     const columns = [
-        {name: 'Name', selector: row => row.name},
-        {name: 'Author', selector: row => row.creator},
+        {name: 'Name', selector: row => row.name, sortable: true},
+        {name: 'Author', selector: row => row.creator, sortable: true},
         {name: 'Details', selector: row => row.details},
         {name: 'Add', selector: row => row.add},
     ];
@@ -49,15 +49,36 @@ function Recipes() {
                 
             ),
             add: (
-                <Button onClick={() => AddRecipe(RawData[i])}>
+                <Button onClick={() => {AddRecipe(RawData[i])}}>
                     Add
                 </Button>
             )
         });
     }
+    // setting up filter
+    const [filterText, setFilterText] = React.useState('')
+    const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false)
+    const filteredItems = data.filter(item => item.creator.toLowerCase().includes(filterText.toLowerCase()) || item.name.toLowerCase().includes(filterText.toLowerCase()))
+    const subHeaderComponentMemo = React.useMemo(() => {
+		const handleClear = () => {
+			if (filterText) {
+				setResetPaginationToggle(!resetPaginationToggle);
+				setFilterText('');
+			}
+		};
+
+		//return (
+		//	<FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
+        //    
+        //);
+        return (
+			<input type="text" onChange={e => setFilterText(e.target.value)} onClear={handleClear} />
+            
+		);
+	}, [filterText, resetPaginationToggle]);
     return (
         <div className="Recipes" id="-1">
-            <DataTable columns={columns} data={data}/>
+            <DataTable columns={columns} data={filteredItems} pagination paginationResetDefaultPage={resetPaginationToggle} subHeader subHeaderComponent={subHeaderComponentMemo} selectableRows persistTableHead/>
         </div>
     )
 }
