@@ -102,16 +102,19 @@ function ViewRecipe() {
     {
         function HandleClick()
         {
+            console.log("editMode:" + editMode)
             if(editMode)
             {
-                $("#row-" + i).remove()
+                //$("#row-" + i).remove()
                 ingredients.splice(i,1)
+                data.splice(i,1)
+                setStateData(data)
+                console.log("updated.")
             }
             else
             {
                 ingredients[i].isIncluded = !ingredients[i].isIncluded
                 $("#toggleBtn-" + i).html(ingredients[i].isIncluded? "Included" : "Excluded")
-                console.log($("#toggleBtn-" + i).length)
             }
         }
         data.push({
@@ -125,6 +128,7 @@ function ViewRecipe() {
         ingredients[i].isIncluded = true
         //ingredients[i].cb = (<input type="checkbox" className="form-check-input" defaultChecked onClick={(e) => ingredients[i].isIncluded = e.target.value}/>)
     }
+    const [stateData, setStateData] = React.useState(data)
     return (
         <form>
             <label>
@@ -141,13 +145,13 @@ function ViewRecipe() {
             <label id="ingredients">
                 Ingredients: {editMode? (<Button variant="Secondary">Add Ingredient</Button>) : null}
                 <br/>
-                <DataTable columns={columns} data={data}/>
+                <DataTable columns={columns} data={stateData}/>
             </label>
             <br/>
             {
                 isAuthor? 
                 (
-                    <ButtonGroup>              
+                    <ButtonGroup>             
                         <Button variant="Secondary">Delete</Button>
                         <Button variant="Secondary" onClick={onClickEditBtn} id="editBtn">{editMode? "Save" : "Edit"}</Button>
                         <Button variant="Secondary">Close</Button>
