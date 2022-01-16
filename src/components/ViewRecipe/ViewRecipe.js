@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Link } from 'react-router-dom';
 import './ViewRecipe.css'
+import IngredientTable from './IngredientTable.js'
 import DataTable from 'react-data-table-component';
 import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import $ from 'jquery';
@@ -84,43 +85,12 @@ function ViewRecipe() {
     }
     //
     let isInEditMode = false
-    let data = []
-    function AddIngredient(data)
-    {
-        let i = ingredients.length
-        ingredients.push({
-            name: "", quantity: 0, measurement_type: "N/A", id: i, isIncluded: true
-        })
-        console.log(JSON.stringify(ingredients))
-        data.push({
-            cb: (<Button variant="Secondary" onClick={() => HandleClick(i)} id={"toggleBtn-" + i}>Delete</Button>),
-            name: (<input type="text" defaultValue={ingredients[i].name} onChange={e => ingredients[i].name=e.target.value}/>),
-            quantity: (<input type="number" defaultValue={ingredients[i].quantity} onChange={e => ingredients[i].quantity=e.target.value}/>),
-            measurement_type: (<input type="text" defaultValue={ingredients[i].measurement_type} onChange={e => ingredients[i].measurement_type=e.target.value}/>),
-            id: i
-        });
-        updateState({editMode: true, stateData: data})
-    }
-
-    for(let i = 0; i < ingredients.length; i++)
-    {
-        data.push({
-            cb: (<Button variant="Secondary" onClick={() => HandleClick(i)} id={"toggleBtn-" + i}>Included</Button>),
-            name: (<input type="text" defaultValue={ingredients[i].name} onChange={e => ingredients[i].name=e.target.value} disabled/>),
-            quantity: (<input type="number" defaultValue={ingredients[i].quantity} onChange={e => ingredients[i].quantity=e.target.value} disabled/>),
-            measurement_type: (<input type="text" defaultValue={ingredients[i].measurement_type} onChange={e => ingredients[i].measurement_type=e.target.value} disabled/>),
-            id: i
-        });
-        ingredients[i].id = i
-        ingredients[i].isIncluded = true
-    }
-
-    const [{editMode, stateData}, updateState] = React.useState({editMode: false, stateData: data})
+    const [editMode, updateState] = React.useState(false)
     //const onClickEditBtn = () => setEditMode(!editMode)
     function onClickEditBtn()
     {
         isInEditMode = !isInEditMode
-        updateState({editMode: isInEditMode, stateData: stateData})
+        updateState(isInEditMode)
         // still has old value for 'editMode'.
         if(editMode)
             for(let i = 0; i < ingredients.length; i++)
@@ -133,25 +103,6 @@ function ViewRecipe() {
         }
         
     }
-    //
-    function HandleClick(i)
-    {
-        console.log("isInEditMode: " + isInEditMode)
-        if(isInEditMode)
-        {
-            //$("#row-" + i).remove()
-            ingredients.splice(i,1)
-            data.splice(i,1)
-            updateState({editMode: isInEditMode, stateData: data})
-            console.log("updated.")
-        }
-        else
-        {
-            ingredients[i].isIncluded = !ingredients[i].isIncluded
-            $("#toggleBtn-" + i).html(ingredients[i].isIncluded? "Included" : "Excluded")
-        }
-    }
-    //const [stateData, setStateData] = React.useState(data)
     return (
         <form>
             <label>
@@ -163,13 +114,8 @@ function ViewRecipe() {
                 Instructions:<br/>
             </Form.Label>
             <Form.Control as="textarea" rows="8" defaultValue={instructions} onChange={e => instructions=e.target.value} id="input-instructions" disabled={!editMode}/>
-            
             <br/>
-            <label id="ingredients">
-                Ingredients: {editMode? (<Button variant="Secondary" onClick={() => AddIngredient(stateData)}>Add Ingredient</Button>) : null}
-                <br/>
-                <DataTable columns={columns} data={stateData}/>
-            </label>
+            <IngredientTable EditMode={editMode} Ingredients={ingredients}/>
             <br/>
             {
                 isAuthor? 
