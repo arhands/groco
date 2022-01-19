@@ -1,0 +1,27 @@
+@media all and (min-width: 480px) {
+    ul{ 
+        list-style-type: none;
+    }
+   .addMealPlan{
+       text-align: center;
+   }
+   
+    .header{
+        text-align:center;
+        font-weight:bold;
+        font-size: larger;
+        color: #fb6500;
+       
+    }
+    .body{
+        padding: auto;
+        background-color:#faf6f3;  
+        font-family: "Open Sans", sans-serif;
+        font-size: large;
+        font-weight: 400;
+        
+    }
+    
+   
+}
+  
