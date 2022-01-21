@@ -1,6 +1,7 @@
 @media all and (min-width: 480px) {
     .Profile {
         padding: 60px 0;
+        
     }
     .profileLink{
         margin: 10px;
@@ -13,11 +14,16 @@
         align-items: center;
         justify-content: center;
     }
+    .div-child{
+        display: inline-block;
+        vertical-align: text-top;
+        margin: 3px;
+    }
     .profilePic {
         border-radius: 50%;
         overflow: 'hidden';
-        height: 220;
-        width: 220;
+        height: 250px;
+        width: 250px;
         content: url('./default-profile-pic.png');
     }
 
