@@ -10,7 +10,7 @@ function App() {
     <div className="App container py-3">
       <Navbar collapseOnSelect bg="light" expand="md" className="mb-3">
         <Navbar.Brand className="font-weight-bold text-muted">
-          <img src={logo} width="50" height="50" class="d-inline-block align-top" alt="" />
+          <img src={logo} width="50" height="50" className="d-inline-block align-top" alt="" />
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">

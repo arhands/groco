@@ -1,44 +1,29 @@
-import React from 'react'
-import {useState} from 'react'
+import React from 'react';
+import {useState} from 'react';
+import "./AddMealPlan.css"
 
-const AddTask = ({onAdd}) => {
-    const [text, setText] = useState('')
-    const [day, setDay] = useState('')
-    const [reminder, setReminder] = useState(false)
+const AddMealPlan = ({onAdd}) => {
+    const [name, setName] = useState('')
 
     const onSubmit = (e) => {
         e.preventDefault()
-        if(!text){
-            alert('Please set task')
+        if(!name){
+            alert('Please add the plan name')
             return
         }
-        onAdd({text, day, reminder})
-        setText('')
-        setDay('')
-        setReminder(false)
-
-
+        onAdd({name})
+        setName('')
     }
 
-
-
     return (
-        <form className='add-form' onSubmit={onSubmit}>
-            <div className='form-control'>
-                <label>Task</label>
-                <input type='text' placeholder='Add task' value={text} onChange={(e)=>{setText(e.target.value)}}/>
+        <form className='addMealPlan-form' onSubmit={onSubmit}>
+            <div>
+                <label>Name</label>
+                <input size="80" type='text' placeholder='Add plan name' value={name} onChange={(e)=>{setName(e.target.value)}}/>
             </div>
-            <div className='form-control'>
-                <label>Day & time</label>
-                <input type='text' placeholder='Add day and time' value={day} onChange={(e)=>{setDay(e.target.value)}}/>
-            </div>
-            <div className='form-control form-control-check'>
-                <label>Set reminder</label>
-                <input type='checkbox' checked={reminder} value={reminder} onChange={(e)=>{setReminder(e.currentTarget.checked)}}/>
-            </div>
-            <input type='submit' value='Save task' className='btn btn-block'/>
+            <input type='submit' value='Save' className='btn'/>
         </form>
     )
 }
 
-export default AddTask
+export default AddMealPlan
