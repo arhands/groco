@@ -1,62 +1,74 @@
 import { Link } from 'react-router-dom';
 import "./MealPlans.css";
-import { useEffect, useState } from 'react';
-import axios from 'axios'
-import Button from '../Button/Button';
-import MealPlanHeader from '../MealPlanHeader/MealPlanHeader';
+import { Fragment, useEffect, useState } from 'react';
 import AddMealPlan from '../AddMealPlan/AddMealPlan';
-
+import EditMealPlan from '../EditMealPlan/EditMealPlan';
 
 
 const MealPlans = () => {
-    const url= `https://61df114a0f3bdb00179348ba.mockapi.io/MealPlans`
-    const [mealPlans, setMealPlans] = useState(null);
-    const [showAddNewPlan, setShowAddNewPlan] = useState(true);
-    
-  // useEffect take 2 arguments: (arrow) function to run & changable variable to update
-    useEffect(() => {
-        axios.get(url)
-            .then(response =>{
-                setMealPlans(response.data)
-            })
-    },[url])
+    const [mealPlans, setMealPlans] = useState([]);
+    // Delete mealplan function
+    const deleteMealPlan = async (id)=>{
+        try{
+            const deleteTodo = await fetch(`http://localhost:5000/mealplans/${id}`,{
+                method:"DELETE"
+            });
+            setMealPlans(mealPlans.filter(mealPlan => mealPlan.mealplan_id!=id));
 
-  // Add mealplan
-  const addMealPlan = (planName) => {
-      const id = Math.floor(Math.random()*10000)+1
-      const newPlan = {id, ...planName}
-      setMealPlans([...mealPlans, newPlan])
-      //console.log(newPlan)
+        }catch(err){
+            console.err(err.message);
+        }
 
-  }
+    };
 
+    // Fetch data from API
+    const getMealPlans = async ()=>{
+        try{
+            const response = await fetch("http://localhost:5000/mealplans")
+            const jsonData = await response.json();
+            console.log(jsonData);
+            setMealPlans(jsonData);
+        }catch(err){
+            console.error(err.message);
+        }
+    };
 
+    useEffect(()=>{
+        getMealPlans();
+    },[]);
+ 
+  return (
+    <Fragment>
+        <AddMealPlan/>
+        <table className="table mt-5 text-center">
+            <thead>
+                <tr>
+                    <th>Mealplan</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+                <tbody>
+                    {/* 
+                    <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>john@example.com</td>
+                    </tr>*/}
+                    {mealPlans.map(mealPlan =>(
+                        <tr key={mealPlan.mealplan_id}>
+                            <td>{mealPlan.name}</td>
+                            <td><EditMealPlan mealPlan={mealPlan}/></td>
+                            <td>
+                                <button className='btn btn-danger' 
+                                onClick={()=> deleteMealPlan(mealPlan.mealplan_id)}>Delete</button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+        </table>
+    </Fragment>
+  )};
 
-    if(mealPlans){
-        return (
-        <div>
-            <div className='header'>
-                <p> MEAL PLANS </p>
-            </div>
-            <div className='body' >
-                 <div> {mealPlans.map(function(plan){
-                    return <ul key={plan.id}><Link to="/singleplan"><MealPlanHeader title={plan.name}/></Link></ul>})}
-                 </div>
-            </div>
-            <div className='addMealPlan'>
-                <Button onClick={()=> setShowAddNewPlan(!showAddNewPlan)}
-                color='#fb6500' text='Add New Plan'/>
-            </div>
-            {showAddNewPlan && <AddMealPlan onAdd={addMealPlan}/>}
-        </div>
-        )
-    }
-    return (
-        <div>Data not found</div>
-    )
-
-
-    
-}
 
 export default MealPlans
