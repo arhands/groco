@@ -1,7 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 const AuthContext = React.createContext(undefined);
 
 const AuthProvider = ({ children }) => {
+    useEffect(() => {
+        setIsAuthenticated(localStorage.getItem('googleId') ? true : false);
+    }, []);
+
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userProfile, setUserProfile] = useState();
     const [googleId, setGoogleId] = useState();
@@ -9,11 +13,13 @@ const AuthProvider = ({ children }) => {
         setUserProfile(props?.profileObj);
         setGoogleId(props?.googleId);
         setIsAuthenticated(true);
+        localStorage.setItem('googleId', googleId);
     };
     const logout = (props) => {
         setUserProfile();
         setGoogleId();
         setIsAuthenticated();
+        localStorage.removeItem('googleId');
     }
     return <AuthContext.Provider value={{ login, logout, isAuthenticated, userProfile, googleId }}>{children}  </AuthContext.Provider>;
 };
