@@ -11,8 +11,7 @@ app.use(express.json());
 // need to create database and table using psql first
 app.post("/mealplans",async(req,res) =>{
     try{
-        const{user_id} = req.body;
-        const {name} = req.body;
+        const{user_id, name} = req.body;
         const newMealPlan = await pool.query(
             "INSERT INTO mealplan (user_id, name) VALUES($1, $2) RETURNING *",
             [user_id, name]
