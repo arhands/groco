@@ -1,33 +1,38 @@
 import React from 'react';
+import axios from 'axios';
 import {Fragment, useState} from 'react';
 import "./AddMealPlan.css"
 
+//api = "https://61f6f4c72e1d7e0017fd6fa4.mockapi.io/mealplan";
+
 const AddMealPlan = () => {
-    const [mealPlanName, setMealPlanName] = useState("");
-    //const [userId, setUserId] = useState(1);
+    const api = "https://61f6f4c72e1d7e0017fd6fa4.mockapi.io/mealplan";
+    const [name, setName] = useState("");
+    const [user_id, setUserId] = useState(1);
     const onSubmitForm = async(e) =>{
         e.preventDefault();
         try{
-            const body = {mealPlanName};
-            const response = await fetch("http://localhost:5000/mealplans",{
-                method:"POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(body)
+            setUserId(1);
+            const body = {user_id, name};
+            console.log(body);
+            axios.post(api, body
+            ).then(response => {
+                console.log(response);
             });
-            window.location = "/";
+           
         }catch(err){
             console.error(err.message);
         }
-       
-        setMealPlanName("");
+       //window.location = "/mealplans";
+       // setMealPlanName("");
 
     }
   return (
     <Fragment>
         <h1 className='text-center mt-5'>Meal Plans</h1>
         <form className="d-flex mt-5" onSubmit={onSubmitForm}>
-            <input type='text' className="form-control" value={mealPlanName}
-            onChange={e => setMealPlanName(e.target.value)}/>
+            <input type='text' placeholder='New plan name' className="form-control" value={name}
+            onChange={e => setName(e.target.value)}/>
             <button className='btn btn-success'>Add</button>
         </form>
     

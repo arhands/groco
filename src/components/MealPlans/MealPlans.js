@@ -6,32 +6,34 @@ import EditMealPlan from '../EditMealPlan/EditMealPlan';
 
 
 const MealPlans = () => {
+    const api = "https://61f6f4c72e1d7e0017fd6fa4.mockapi.io/mealplan";
     const [mealPlans, setMealPlans] = useState([]);
     // Delete mealplan function
     const deleteMealPlan = async (id)=>{
         try{
-            const deleteTodo = await fetch(`http://localhost:5000/mealplans/${id}`,{
+            const deleteTodo = await fetch(`https://61f6f4c72e1d7e0017fd6fa4.mockapi.io/mealplan/${id}`,{
                 method:"DELETE"
             });
-            setMealPlans(mealPlans.filter(mealPlan => mealPlan.mealplan_id!=id));
-
+            setMealPlans(mealPlans.filter(mealPlan => mealPlan.mealplan_id!==id));
         }catch(err){
             console.err(err.message);
         }
-
     };
 
     // Fetch data from API
     const getMealPlans = async ()=>{
         try{
-            const response = await fetch("http://localhost:5000/mealplans")
+            const response = await fetch(api)
             const jsonData = await response.json();
             console.log(jsonData);
             setMealPlans(jsonData);
+            
         }catch(err){
             console.error(err.message);
         }
+        
     };
+    
 
     useEffect(()=>{
         getMealPlans();
