@@ -57,10 +57,14 @@ const MealPlans = () => {
                         <td>Doe</td>
                         <td>john@example.com</td>
                     </tr>*/}
+                   {/* <a href="/editmealplan" class="btn btn-warning" 
+                                role="button">Edit</a></td>*/}
                     {mealPlans.map(mealPlan =>(
                         <tr key={mealPlan.mealplan_id}>
                             <td>{mealPlan.name}</td>
-                            <td><EditMealPlan mealPlan={mealPlan}/></td>
+                            <td>  
+                                <EditMealPlan/>
+                            </td>
                             <td>
                                 <button className='btn btn-danger' 
                                 onClick={()=> deleteMealPlan(mealPlan.mealplan_id)}>Delete</button>
