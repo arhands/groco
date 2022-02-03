@@ -63,7 +63,7 @@ const MealPlans = () => {
                         <tr key={mealPlan.mealplan_id}>
                             <td>{mealPlan.name}</td>
                             <td>  
-                                <EditMealPlan/>
+                                <EditMealPlan mealplan={mealPlan}/>
                             </td>
                             <td>
                                 <button className='btn btn-danger' 

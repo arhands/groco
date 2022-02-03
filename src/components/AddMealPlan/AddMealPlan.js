@@ -11,20 +11,25 @@ const AddMealPlan = () => {
     const [user_id, setUserId] = useState(1);
     const onSubmitForm = async(e) =>{
         e.preventDefault();
-        try{
-            setUserId(1);
-            const body = {user_id, name};
-            console.log(body);
-            axios.post(api, body
-            ).then(response => {
-                console.log(response);
-            });
-           
-        }catch(err){
-            console.error(err.message);
+        if (!name)
+        {
+            alert('Please add meal plan name')
+            return
         }
-       //window.location = "/mealplans";
-       // setMealPlanName("");
+        else{
+            try{
+                setUserId(1);
+                const body = {user_id, name};
+                console.log(body);
+                axios.post(api, body
+                ).then(response => {
+                    console.log(response);
+                    window.location = "/mealplans";
+                }); 
+            }catch(err){
+                console.error(err.message);
+            }
+        }
 
     }
   return (
