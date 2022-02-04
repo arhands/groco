@@ -1,52 +1,37 @@
 import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import { Link } from 'react-router-dom';
+import GoogleLogin from 'react-google-login'
+import { useSnackbar } from "notistack";
+import { useAuth } from "../../auth";
 import "./Login.css";
+import { useHistory } from "react-router-dom";
 
 export default function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
-    function validateForm() {
-        return email.length > 0 && password.length > 0;
+    const { enqueueSnackbar } = useSnackbar();
+    const { login } = useAuth();
+    let history = useHistory();
+    const LoginSuccess = (response) => {
+        console.log(response)
+        login(response);
+        history.push("/landing")
     }
-
-    function handleSubmit(event) {
-        event.preventDefault();
+    const LoginFailure = (response) => {
+        if (response?.error === 'popup_closed_by_user')
+            enqueueSnackbar('Popup closed before completing login', { variant: 'error', autoHideDuration: 2000 })
+        else
+            enqueueSnackbar(response?.error, { variant: 'error', autoHideDuration: 2000 })
     }
-
     return (
         <div className="Login">
-            <Form onSubmit={handleSubmit}>
-                <Form.Group size="lg" controlId="email">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                        autoFocus
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </Form.Group>
-                <Form.Group size="lg" controlId="password">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </Form.Group>
-                <Link className="landingLink" to='/landing'>
-                    <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" type="submit" disabled={!validateForm()}>
-                        Login
-                    </Button>
-                </Link>
-                <Link className="signupLink" to='/signup'>
-                    <Button variant='custom' block size="lg" >
-                        SignUp?
-                    </Button>
-                </Link>
-            </Form>
+            <label>Login Using Google </label>
+            <GoogleLogin
+                clientId="638367321598-klgh4fml3thf7dhdng9nmvrf2ffub88s.apps.googleusercontent.com"
+                buttonText="Login"
+                onSuccess={LoginSuccess}
+                onFailure={LoginFailure}
+                cookiePolicy={'single_host_origin'}
+                scope='profile'
+                style={{ width: '200px' }}
+            />
         </div>
     );
 }

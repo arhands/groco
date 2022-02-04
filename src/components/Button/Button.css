@@ -1,0 +1,10 @@
+@media all and (min-width: 480px) {
+    .btn{
+        width: auto;
+        height: auto;
+        color: white;
+        background-color: gray;
+       
+    }
+    
+}
