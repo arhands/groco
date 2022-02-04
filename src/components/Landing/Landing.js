@@ -13,7 +13,9 @@ function Landing() {
     return (
         <div className="Landing d-flex justify-content-center">
             <ListGroup>
-                <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Profile</Button>
+                <Link to="/profile">
+                    <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Profile</Button>
+                </Link>
                 <Link to="/recipes">
                     <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Recipes</Button>
                 </Link>

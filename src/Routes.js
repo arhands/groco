@@ -6,6 +6,7 @@ import NotFound from "./components/NotFound/NotFound";
 import Signup from "./components/Signup/Signup";
 import Landing from "./components/Landing/Landing";
 import Recipes from "./components/Recipes/Recipes";
+import Profile from "./components/Profile/Profile";
 import ViewRecipe from "./components/ViewRecipe/ViewRecipe";
 import MealPlans from "./components/MealPlans/MealPlans";
 import SinglePlan from "./components/SinglePlan/SinglePlan";
@@ -41,6 +42,9 @@ export default function Routes() {
             </Route>
             <Route exact path="/">
                 <Home />
+            </Route>
+            <Route exact path="/profile">
+                <Profile/>
             </Route>
             <Route>
                 <NotFound />
