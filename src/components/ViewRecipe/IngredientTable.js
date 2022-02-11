@@ -17,7 +17,7 @@ class IngredientTable extends React.Component
   {
     super(props)
     this.Ingredients = props.Ingredients
-    this.state = { data : this.GetData() }
+    this.state = { Placeholder : true }
     this.HandleAddIngredient = this.HandleAddIngredient.bind(this)
     this.HandleDeleteSelection = this.HandleDeleteSelection.bind(this)
     this.GetData = this.GetData.bind(this)
@@ -29,8 +29,6 @@ class IngredientTable extends React.Component
       { name: (<Form.Label>Amount</Form.Label>),       selector: row => row.quantity },
       { name: (<Form.Label>Measurement</Form.Label>),  selector: row => row.measurement_type },
     ];
-    console.log("Rendering Ingredient Table.")
-    console.log("this.state.data: ",JSON.stringify(Array.from(this.state.data,row => row.name)))
     return (
       <div>
       <label id="ingredients">
@@ -46,7 +44,7 @@ class IngredientTable extends React.Component
         ) : null}
 
       </label>
-      <DataTable columns={columns} data={this.state.data} selectableRows onSelectedRowsChange={sel => this.SelectedRows = sel.selectedRows}/>
+      <DataTable columns={columns} data={this.GetData()} selectableRows onSelectedRowsChange={sel => this.SelectedRows = sel.selectedRows}/>
       </div>
     );
   }
@@ -55,18 +53,16 @@ class IngredientTable extends React.Component
     this.Ingredients.push({
         name: "", quantity: 0, measurement_type: "N/A"
     })
-    this.setState({ data : this.GetData() })
+    this.setState({ Placeholder : true })
   }
   HandleDeleteSelection()
   {
     let selectedIDs = new Set()
     this.SelectedRows.forEach((val, index) => selectedIDs.add(val.id))
-    console.log("selectedIDs: ",JSON.stringify(selectedIDs))
     for(let i = 0; i < this.Ingredients.length; i++)
       if(selectedIDs.has(this.Ingredients[i].id))
         this.Ingredients.splice(i--,1)
-    console.log("this.Ingredients:",this.Ingredients)
-    this.setState({ data : this.GetData() })
+    this.setState({ Placeholder : true })
   }
   GetData()
   {

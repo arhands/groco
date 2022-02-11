@@ -84,25 +84,8 @@ function ViewRecipe() {
         )
     }
     //
-    let isInEditMode = false
     const [editMode, updateState] = React.useState(false)
-    //const onClickEditBtn = () => setEditMode(!editMode)
-    function onClickEditBtn()
-    {
-        isInEditMode = !isInEditMode
-        updateState(isInEditMode)
-        // still has old value for 'editMode'.
-        if(editMode)
-            for(let i = 0; i < ingredients.length; i++)
-                $("#toggleBtn-" + i).html(ingredients[i].isIncluded? "Included" : "Excluded")
-        else
-        {
-            let ing = $("#ingredients")
-            ing.find(":button").html("Delete")
-            ing.find(":input").prop("disabled",editMode)
-        }
-        
-    }
+    let editModeToggle = () => updateState(!editMode)
     return (
         <form>
             <label>
@@ -122,7 +105,7 @@ function ViewRecipe() {
                 (
                     <ButtonGroup>             
                         <Button variant="Secondary">Delete</Button>
-                        <Button variant="Secondary" onClick={onClickEditBtn} id="editBtn">{editMode? "Save" : "Edit"}</Button>
+                        <Button variant="Secondary" onClick={editModeToggle} id="editBtn">{editMode? "Save" : "Edit"}</Button>
                         <Link to={{ pathname: "/recipes"}} >
                             <Button variant="Secondary">Close</Button>
                         </Link>
