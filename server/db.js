@@ -10,4 +10,21 @@ const pool = new Pool({
     database: "grocotest"
 })
 
-module.exports = pool;
+function getUserEmails()
+{
+    return new Promise(function(resolve, reject)
+    {
+        pool.query("SELECT user_email FROM UserTable", (error, results) =>
+        {
+            if(error)
+            {
+                reject(error)
+            }
+            resolve(results.rows)
+        })
+        
+    });
+}
+module.exports = {
+    getUserEmails
+}
