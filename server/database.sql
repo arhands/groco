@@ -1,25 +1,25 @@
 CREATE DATABASE GrocoDatabase;
 
-CREATE TABLE IngredientTable (
+CREATE TABLE Ingredient (
   id SERIAL PRIMARY KEY,
   name varchar UNIQUE
 );
 
-CREATE TABLE MeasurementTable (
+CREATE TABLE Measurement (
   id SERIAL PRIMARY KEY,
   name varchar UNIQUE
 );
 
-CREATE TABLE BrandTable (
+CREATE TABLE Brand (
   id SERIAL PRIMARY KEY,
   name varchar UNIQUE
 );
-CREATE TABLE BrandIngredientTable (
+CREATE TABLE BrandIngredient (
   id SERIAL PRIMARY KEY,
-  brand_id int REFERENCES BrandTable(id),
-  ingredient_id int REFERENCES IngredientTable(id)
+  brand_id int REFERENCES Brand(id),
+  ingredient_id int REFERENCES Ingredient(id)
 );
-CREATE TABLE UserTable (
+CREATE TABLE User (
   id SERIAL PRIMARY KEY,
   user_name varchar,
   user_email varchar UNIQUE,
@@ -27,27 +27,27 @@ CREATE TABLE UserTable (
   shopping_list_id int UNIQUE,
   favorites_list_id int UNIQUE
 );
-CREATE TABLE MealPlanTable (
+CREATE TABLE MealPlan (
   id SERIAL PRIMARY KEY,
   name varchar,
-  user_id SERIAL REFERENCES UserTable(id)
+  user_id SERIAL REFERENCES User(id)
 );
-CREATE TABLE RecipeTable (
+CREATE TABLE Recipe (
   id SERIAL PRIMARY KEY,
-  creator_id int REFERENCES UserTable(id),
+  creator_id int REFERENCES User(id),
   name varchar,
   instructions varchar,
   ingredient_collection_id int UNIQUE
 );
-CREATE TABLE MealPlanRecipeTable (
+CREATE TABLE MealPlanRecipe (
   id SERIAL PRIMARY KEY,
-  meal_plan_id int REFERENCES MealPlanTable(id),
-  recipe_id int REFERENCES RecipeTable(id)
+  meal_plan_id int REFERENCES MealPlan(id),
+  recipe_id int REFERENCES Recipe(id)
 );
-CREATE TABLE IngredientInstanceTable (
+CREATE TABLE IngredientInstance (
   id SERIAL PRIMARY KEY,
   collection_id int,
-  ingredient_id int REFERENCES IngredientTable(id),
+  ingredient_id int REFERENCES Ingredient(id),
   quantity float,
-  measurement_type int REFERENCES MeasurementTable(id)
+  measurement_type int REFERENCES Measurement(id)
 );
