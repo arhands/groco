@@ -4,10 +4,10 @@ const Pool = require("pg").Pool;
 
 const pool = new Pool({
     user: "postgres",
-    password:"test",
-    host: "localhost",
+    password:"HA9Gqj3h7OpvuibB",
+    host: "35.224.114.175",
     port: 5432,
-    database: "GrocoDatabase"
+    database: "postgres"
 })
 
 function getUserEmails()

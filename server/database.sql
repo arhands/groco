@@ -1,4 +1,4 @@
-CREATE DATABASE GrocoDatabase;
+CREATE DATABASE groco_database; /*Uyen did, have to use lower case*/
 
 CREATE TABLE Ingredient (
   id SERIAL PRIMARY KEY,
@@ -19,30 +19,34 @@ CREATE TABLE BrandIngredient (
   brand_id int REFERENCES Brand(id),
   ingredient_id int REFERENCES Ingredient(id)
 );
-CREATE TABLE User (
+/* Uyen did, need to add public in front of every table*/
+CREATE TABLE public.User (
   id SERIAL PRIMARY KEY,
   user_name varchar,
   user_email varchar UNIQUE,
   password_hash varchar,
   shopping_list_id int UNIQUE,
   favorites_list_id int UNIQUE
-);
-CREATE TABLE MealPlan (
+); 
+/* Uyen did*/
+CREATE TABLE public.MealPlan (
   id SERIAL PRIMARY KEY,
   name varchar,
-  user_id SERIAL REFERENCES User(id)
+  user_id SERIAL REFERENCES public.User(id)
 );
-CREATE TABLE Recipe (
+/* Uyen did*/
+CREATE TABLE public.Recipe (
   id SERIAL PRIMARY KEY,
-  creator_id int REFERENCES User(id),
+  creator_id int REFERENCES public.User(id),
   name varchar,
   instructions varchar,
   ingredient_collection_id int UNIQUE
 );
-CREATE TABLE MealPlanRecipe (
+/* Uyen did*/
+CREATE TABLE public.MealPlanRecipe (
   id SERIAL PRIMARY KEY,
-  meal_plan_id int REFERENCES MealPlan(id),
-  recipe_id int REFERENCES Recipe(id)
+  meal_plan_id int REFERENCES public.MealPlan(id),
+  recipe_id int REFERENCES public.Recipe(id)
 );
 CREATE TABLE IngredientInstance (
   id SERIAL PRIMARY KEY,
