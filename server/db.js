@@ -1,30 +1,12 @@
 // connect server to database
+const {Client} = require('pg');
+const  client = new Client({
+    connectionString: 'postgres://xugpkdftkkfdvp:26514fe7141547f2062fd013cbfa20e63bc61763eac8640fc1e1490c47babe95@ec2-18-215-8-186.compute-1.amazonaws.com:5432/d8l6dun0c266uv',
+    ssl:{
+        rejectUnauthorized: false
+    }
+});
+client.connect();
 
-const Pool = require("pg").Pool;
 
-const pool = new Pool({
-    user: "postgres",
-    password:"HA9Gqj3h7OpvuibB",
-    host: "35.224.114.175",
-    port: 5432,
-    database: "postgres"
-})
-
-function getUserEmails()
-{
-    return new Promise(function(resolve, reject)
-    {
-        pool.query("SELECT user_email FROM UserTable", (error, results) =>
-        {
-            if(error)
-            {
-                reject(error)
-            }
-            resolve(results.rows)
-        })
-        
-    });
-}
-module.exports = {
-    getUserEmails
-}
+module.exports = client;

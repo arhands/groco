@@ -1,4 +1,4 @@
-const express = require('express')
+/*const express = require('express')
 const app = express()
 const port = 3001
 
@@ -24,7 +24,9 @@ function test(req, res)
 app.get('/test', test)
 app.post('/test', test)
 app.listen(port, () => console.log("App running on port ${port}"))
-/*
+*/
+
+
 const express = require("express");
 const app = express();
 const cors = require ("cors");
@@ -52,7 +54,7 @@ app.post("/mealplans",async(req,res) =>{
 // get all mealplan
 app.get("/mealplans",async(req,res) =>{
     try{
-        const allMealPlans = await pool.query("SELECT * FROM mealplan");
+        const allMealPlans = await pool.query("SELECT * FROM public.\"testMealplan\"");
         res.json(allMealPlans.rows);
     }catch(err){
         console.log(err.message);
@@ -93,7 +95,6 @@ app.delete("/mealplans/:id",async(req,res) =>{
     }
 });
 
-app.listen(5000, () =>{
-  console.log("Server started at port 5000")
+app.listen(port, () =>{
+  console.log(`Server started at port ${port}`)
 });
-*/
