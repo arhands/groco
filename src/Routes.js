@@ -11,6 +11,7 @@ import ViewRecipe from "./components/ViewRecipe/ViewRecipe";
 import MealPlans from "./components/MealPlans/MealPlans";
 import SinglePlan from "./components/SinglePlan/SinglePlan";
 import EditMealPlan from "./components/EditMealPlan/EditMealPlan";
+import Shopping from "./components/Shopping/Shopping";
 
 export default function Routes() {
     
@@ -45,6 +46,9 @@ export default function Routes() {
             </Route>
             <Route exact path="/profile">
                 <Profile/>
+            </Route>
+            <Route exact path ="/shopping">
+                <Shopping />
             </Route>
             <Route>
                 <NotFound />
