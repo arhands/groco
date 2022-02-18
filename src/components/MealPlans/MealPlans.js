@@ -6,7 +6,7 @@ import EditMealPlan from '../EditMealPlan/EditMealPlan';
 
 
 const MealPlans = () => {
-    const api = "https://61f6f4c72e1d7e0017fd6fa4.mockapi.io/mealplan";
+    const api = "http://localhost:3001/mealplans";
     const [mealPlans, setMealPlans] = useState([]);
     // Delete mealplan function
     const deleteMealPlan = async (id)=>{
