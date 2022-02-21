@@ -7,7 +7,7 @@ const EditMealPlan = ({mealplan}) => {
     e.preventDefault();
     try{
       const body = {name};
-      const response = await fetch(`https://61f6f4c72e1d7e0017fd6fa4.mockapi.io/mealplan/${mealplan.mealplan_id}`,{ 
+      const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}`,{ 
           method:"PUT",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify(body)
@@ -21,10 +21,10 @@ const EditMealPlan = ({mealplan}) => {
   return (
     <Fragment>
       <button type="button" class="btn btn-warning" 
-      data-toggle="modal" data-target={`#id${mealplan.mealplan_id}`}>
+      data-toggle="modal" data-target={`#id${mealplan.id}`}>
        Edit
       </button>
-      <div class="modal" id={`id${mealplan.mealplan_id}`}>
+      <div class="modal" id={`id${mealplan.id}`}>
         <div class="modal-dialog">
           <div class="modal-content">
 
