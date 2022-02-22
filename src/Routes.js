@@ -3,7 +3,6 @@ import { Route, Switch } from "react-router-dom";
 import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 import NotFound from "./components/NotFound/NotFound";
-import Signup from "./components/Signup/Signup";
 import Landing from "./components/Landing/Landing";
 import Recipes from "./components/Recipes/Recipes";
 import Profile from "./components/Profile/Profile";
@@ -25,9 +24,6 @@ export default function Routes() {
             </Route>
             <Route exact path="/editmealplan">
                 <EditMealPlan />
-            </Route>
-            <Route exact path="/signup">
-                <Signup />
             </Route>
             <Route exact path="/login">
                 <Login />

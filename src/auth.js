@@ -10,10 +10,11 @@ const AuthProvider = ({ children }) => {
     const [userProfile, setUserProfile] = useState();
     const [googleId, setGoogleId] = useState();
     const login = (props) => {
-        setUserProfile(props?.profileObj);
-        setGoogleId(props?.googleId);
+        setUserProfile(props.profileObj);
+        setGoogleId(props.googleId);
+        console.log(props.googleId)
         setIsAuthenticated(true);
-        localStorage.setItem('googleId', googleId);
+        localStorage.setItem('googleId', props.googleId);
     };
     const logout = (props) => {
         setUserProfile();
