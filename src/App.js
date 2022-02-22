@@ -34,7 +34,7 @@ function App() {
               render={renderProps => (
                 <Nav.Link onClick={renderProps.onClick} disabled={renderProps.disabled}>Logout</Nav.Link>
               )}
-              clientId="638367321598-klgh4fml3thf7dhdng9nmvrf2ffub88s.apps.googleusercontent.com"
+              clientId="209549426012-fmse3oog6vbndjajsbe1a3g8375tkl76.apps.googleusercontent.com"
               buttonText="Logout"
               onLogoutSuccess={logoutHandler}
             >
