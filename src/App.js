@@ -29,7 +29,7 @@ function App() {
         <Navbar.Collapse className="justify-content-end">
           <Nav activeKey={window.location.pathname}>
             <Nav.Link href="/">Home</Nav.Link>
-            {isAuthenticated ? <Nav.Link href="/mealplans">Meal Plans</Nav.Link> : ''}
+            {isAuthenticated ? <Nav.Link href="/landing">Menu</Nav.Link> : ''}
             {isAuthenticated ? <GoogleLogout
               render={renderProps => (
                 <Nav.Link onClick={renderProps.onClick} disabled={renderProps.disabled}>Logout</Nav.Link>
@@ -39,7 +39,6 @@ function App() {
               onLogoutSuccess={logoutHandler}
             >
             </GoogleLogout> : ''}
-            {!isAuthenticated ? <Nav.Link href="/signup">Signup</Nav.Link> : ''}
             {!isAuthenticated ? <Nav.Link href="/login">Login</Nav.Link> : ''}
           </Nav>
         </Navbar.Collapse>
