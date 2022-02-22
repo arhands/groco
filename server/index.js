@@ -95,6 +95,19 @@ app.delete("/mealplans/:id",async(req,res) =>{
     }
 });
 
+// get all recipes of a mealplan
+app.get("/mealplans/:id/recipesID",async(req,res) =>{
+    try{
+        const {id} = req.params;
+        const allRecipesID = await pool.query("SELECT recipe_id FROM public.\"meal_plan_recipe_table\" WHERE meal_plan_id = $1",[id]);
+        //const allRecipesName = await pool.query("SELECT name FROM public.\"recipe_table\" WHERE id = $1",[each]);
+        res.json(allRecipesID.rows);
+        
+    }catch(err){
+        console.log(err.message);
+    }
+});
+
 app.listen(port, () =>{
   console.log(`Server started at port ${port}`)
 });

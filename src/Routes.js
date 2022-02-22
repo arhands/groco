@@ -11,6 +11,7 @@ import ViewRecipe from "./components/ViewRecipe/ViewRecipe";
 import MealPlans from "./components/MealPlans/MealPlans";
 import SinglePlan from "./components/SinglePlan/SinglePlan";
 import EditMealPlan from "./components/EditMealPlan/EditMealPlan";
+import ViewMealPlan from "./components/ViewMealPlan/ViewMealPlan";
 
 export default function Routes() {
     
@@ -19,8 +20,8 @@ export default function Routes() {
             <Route exact path="/mealplans">
                 <MealPlans />
             </Route>
-            <Route exact path="/singleplan">
-                <SinglePlan />
+            <Route exact path="/viewmealplan">
+                <ViewMealPlan />
             </Route>
             <Route exact path="/editmealplan">
                 <EditMealPlan />
