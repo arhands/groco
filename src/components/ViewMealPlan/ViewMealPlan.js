@@ -2,7 +2,7 @@ import React from 'react'
 import { Fragment, useState, useEffect } from "react"
 
 const ViewMealPlan = ({mealplan}) => {
-    const [recipesID, setRecipesID] = useState([]);
+    const [recipesID, setRecipesID] = useState(['test']);
     const [mealPlanRecipes, setMealPlanRecipes] = useState([]);
     const getRecepiesID = async ()=>{
         try{
@@ -50,7 +50,6 @@ const ViewMealPlan = ({mealplan}) => {
                 {each}
             </li>
         ))}
-          
           </div>
           <div>This is recipe</div>
       </Fragment>
