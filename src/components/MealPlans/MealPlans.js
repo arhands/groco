@@ -4,7 +4,7 @@ import { Fragment, useEffect, useState } from 'react';
 import AddMealPlan from '../AddMealPlan/AddMealPlan';
 import EditMealPlan from '../EditMealPlan/EditMealPlan';
 import ViewMealPlan from '../ViewMealPlan/ViewMealPlan';
-import Datacollector from '../Datacollector';
+
 
 
 const MealPlans = () => {
@@ -44,7 +44,6 @@ const MealPlans = () => {
   return (
     <Fragment>
         <AddMealPlan/>
-        <Datacollector/>
         <table className="table mt-5 text-center">
             {/*<thead>
                 <tr>

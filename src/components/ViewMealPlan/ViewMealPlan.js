@@ -1,16 +1,17 @@
 import React from 'react'
 import { Fragment, useState, useEffect } from "react"
 
-const ViewMealPlan = ({mealplan}) => {
-    const [recipesID, setRecipesID] = useState(['test']);
+const ViewMealPlan = ({id}) => {
+    //const [recipesID, setRecipesID] = useState([""]);
+    var recipesID =[];
     const [mealPlanRecipes, setMealPlanRecipes] = useState([]);
     const getRecepiesID = async ()=>{
         try{
-            const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}/recipesID`)
+            const response = await fetch(`http://localhost:3001/mealplans/${id}/recipesID`)
             const jsonData = await response.json();
             console.log(jsonData);
-            jsonData.map(each =>{setRecipesID(each)});
-            console.log(recipesID);
+            recipesID = jsonData;
+            console.log(recipesID[0]);
             
         }catch(err){
             console.error(err.message);
@@ -18,9 +19,7 @@ const ViewMealPlan = ({mealplan}) => {
         
     };
 
-    /*
-
-    const getMealPlanRecipes = async ()=>{
+    /*const getMealPlanRecipes = async ()=>{
         try{
             const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}`)
             const jsonData = await response.json();
@@ -40,18 +39,15 @@ const ViewMealPlan = ({mealplan}) => {
     /*useEffect(()=>{
         getMealPlanRecipes();
     },[]);*/
-    
+
     
   return (
       <Fragment>
-          
-          <div>{recipesID.map(each => (
-            <li>
-                {each}
-            </li>
-        ))}
-          </div>
-          <div>This is recipe</div>
+                <div>{recipesID.map((each)=>{
+                    <li>{each.recipe_id}</li>
+                })}</div>
+                <div>this is recipe</div>
+              
       </Fragment>
     
   )
