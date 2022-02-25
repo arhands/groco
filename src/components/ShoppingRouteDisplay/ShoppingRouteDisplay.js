@@ -26,6 +26,7 @@ class ShoppingRouteDisplay extends React.Component
         [
           {
             name: String,
+            cost: Float,
             quantity: Float,
             measurement_type: String
           },...
