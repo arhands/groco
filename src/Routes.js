@@ -10,11 +10,8 @@ import ViewRecipe from "./components/ViewRecipe/ViewRecipe";
 import MealPlans from "./components/MealPlans/MealPlans";
 import SinglePlan from "./components/SinglePlan/SinglePlan";
 import EditMealPlan from "./components/EditMealPlan/EditMealPlan";
-<<<<<<< HEAD
 import Shopping from "./components/Shopping/Shopping";
-=======
 import ViewMealPlan from "./components/ViewMealPlan/ViewMealPlan";
->>>>>>> Uyen-from-commit
 
 export default function Routes() {
     
