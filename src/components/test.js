@@ -1,6 +1,3 @@
-/*import React from 'react'
-
-const Datacollector = () => {
   
 var settings = {
   "async": true,
@@ -21,10 +18,5 @@ $.ajax(settings).done(function (response) {
   console.log(response);
 });
 
-  return (
-    <div><Datacollector/></div>
-  )
-}
 
-export default Datacollector
-*/
+
