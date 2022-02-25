@@ -26,8 +26,8 @@ class StoreDisplayCard extends React.Component
   render()
   {
     let columns = [
-      { name: (<Form.Label>Item</Form.Label>),         selector: row => row.name },
-      { name: (<Form.Label>Amount</Form.Label>),       selector: row => row.quantity + " " + row.measurement_type},
+      { name: (<Form.Label>Item</Form.Label>), selector: row => row.name },
+      { name: (<Form.Label>Amount</Form.Label>), selector: row => row.quantity + " " + row.measurement_type},
     ];
     return (
       <Card>

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './Shopping.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faCheckCircle, faPlus, faChevronLeft ,faChevronRight} from '@fortawesome/free-solid-svg-icons';
+import ShoppingRouteOptionsModal from '../ShoppingRouteDisplay/ShoppingRouteOptionsModal.js';
+import Button from "react-bootstrap/Button";
 
 const Shopping = () => {
 	
@@ -59,11 +61,12 @@ const Shopping = () => {
 
 		setTotalItemCount(totalItemCount);
 	};
-
+	const [options, showOptions] = useState(false);
 	return (
+		
 		<div className='app-background'>
-			
 			<div className='main-container'>
+			<Button variant="primary" onClick={() => {console.log("button clicked!"); showOptions(true)}}>Open Options</Button>
 			<div><h2>Shopping list</h2></div>
 				<div className='add-item-box'>
 					<input value={inputValue} onChange={(event) => setInputValue(event.target.value)} className='add-item-input' placeholder='Add an item...' />
@@ -99,6 +102,7 @@ const Shopping = () => {
 				</div>
 				<div className='total'>Total: {totalItemCount}</div>
 			</div>
+			<ShoppingRouteOptionsModal Show={options} HideMenu={() => showOptions(false)}/>
 		</div>
 	);
 };

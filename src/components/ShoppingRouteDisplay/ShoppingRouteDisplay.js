@@ -44,13 +44,13 @@ class ShoppingRouteDisplay extends React.Component
     ];
     return (
       <div>
-      <label id="ingredients">
-        Shopping List
-      </label>
-      <DataTable columns={columns} data={this.ShoppingPlan} 
-        selectableRows onSelectedRowsChange={sel => this.SelectedRows = sel.selectedRows}
-        expandableRows expandableRowsComponent={this.HandleRowExpansion}
-      />
+        <label>
+          Shopping List
+        </label>
+        <DataTable columns={columns} data={this.ShoppingPlan} 
+          selectableRows onSelectedRowsChange={sel => this.SelectedRows = sel.selectedRows}
+          expandableRows expandableRowsComponent={this.HandleRowExpansion}
+        />
       </div>
     );
   }
