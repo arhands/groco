@@ -9,6 +9,7 @@ import './StoreDisplayCard.js'
 import DataTable from 'react-data-table-component';
 import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import StoreDisplayCard from "./StoreDisplayCard.js";
+import Badge from 'react-bootstrap/Badge';
 class ShoppingRouteDisplay extends React.Component
 {
   SelectedRows = []
@@ -57,7 +58,7 @@ class ShoppingRouteDisplay extends React.Component
   }
   HandleRowExpansion(data)
   {
-    debug.log(data)
+    console.log(data)
     return <StoreDisplayCard StoreName={data.StoreName} StoreItems={data.StoreItems}></StoreDisplayCard>
   }
 }

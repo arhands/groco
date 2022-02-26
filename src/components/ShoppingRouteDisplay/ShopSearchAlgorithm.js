@@ -8,21 +8,23 @@ Idea: this can be implemented as a Hidden State Shape Model with stores as the s
 // Returns: [{ Store_id, Distance: int}]
 function GetStores(max_distance)
 {
-  
+  let arr = Array(5)
+  for(let i = 0; i < arr.length; i++)
+    arr[i] = [{ Store_id: i, Distance: 1 }]
 }
 // Returns: [{ ItemName: String, Cost: Float }]
 function GetItemFromStore(store_id, item)
 {
-
+  return [{ ItemName: "Placeholder", Cost: 1 }]
 }
 function GetDistance(store1_id, store2_id)
 {
-
+  return 1;
 }
 // [Name, Address]
 function GetStoreDetails(store_id)
 {
-
+  return [ "Store " + toString(store_id) + " Placeholder", "Placeholder"]
 }
 // shopping_items: [{
 //          name: String,

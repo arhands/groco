@@ -62,11 +62,13 @@ const Shopping = () => {
 		setTotalItemCount(totalItemCount);
 	};
 	const [options, showOptions] = useState(false);
+	console.log("Rerendering shopping")
+	console.log("options: ",options)
 	return (
 		
 		<div className='app-background'>
 			<div className='main-container'>
-			<Button variant="primary" onClick={() => {console.log("button clicked!"); showOptions(true)}}>Open Options</Button>
+			<Button variant="primary" onClick={() => {showOptions(true); console.log("button clicked!");}}>Open Options</Button>
 			<div><h2>Shopping list</h2></div>
 				<div className='add-item-box'>
 					<input value={inputValue} onChange={(event) => setInputValue(event.target.value)} className='add-item-input' placeholder='Add an item...' />

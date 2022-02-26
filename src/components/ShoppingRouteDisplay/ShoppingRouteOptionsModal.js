@@ -17,70 +17,63 @@ class ShoppingRouteOptionsModal extends React.Component
   constructor(props)
   {
     super(props)
-    this.MenuShown = props.Show
     this.handleClose = props.HideMenu
   }
   render()
   {
+    let maxDistance = 20;
+    let maxStores = 5;
+    let itemCostWeight = 50;
+    let distanceWeight = 50;
     return (
-      <Modal show={this.MenuShown} onHide={this.handleClose}>
+      <Modal animation={false} show={this.props.Show} onHide={this.handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Shop Wizard</Modal.Title>
         </Modal.Header>
         <Modal.Body>
         <Form>
-            <Form.Group>
+            <Form.Group className="mb-3">
               <Form.Label>Maximum Distance (miles)</Form.Label>
-              <NumericInput min={0} max={1000} value={20}/>
+              <br></br>
+              <NumericInput min={0} max={1000} value={maxDistance} format={num => num + ' miles'} onChange={val => maxDistance = val}/>
             </Form.Group>
-            <Form.Group>
+            <Form.Group className="mb-3">
               <Form.Label>Maximum Stores</Form.Label>
-              <NumericInput min={0} max={100} value={5}/>
+              <br></br>
+              <NumericInput min={0} max={100} value={maxStores} onChange={val => maxStores = val}/>
             </Form.Group>
-
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-        </Modal.Footer>
-      </Modal>
-    );
-    return (
-      <Modal show={this.MenuShown} onHide={this.handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Shop Wizard</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group>
-              <Form.Label>Maximum Distance (miles)</Form.Label>
-              <NumericInput min={0} max={1000} value={20}/>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Maximum Stores</Form.Label>
-              <NumericInput min={0} max={100} value={5}/>
-            </Form.Group>
-            <Form.Group>
+            <Form.Group className="mb-3">
               <Form.Label>Item Cost Weight</Form.Label>
-              <Form.Range />
+              <br></br>
+              <NumericInput min={0} max={100} value={itemCostWeight} onChange={val => itemCostWeight = val}/>
             </Form.Group>
-            <Form.Group>
+            <Form.Group className="mb-3">
               <Form.Label>Travel Distance Weight</Form.Label>
-              <Form.Range />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Store Visit Weight</Form.Label>
-              <Form.Range />
+              <br></br>
+              <NumericInput min={0} max={100} value={distanceWeight} onChange={val => distanceWeight = val}/>
             </Form.Group>
           </Form>
-          
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={this.HandleRoute}>
-            Route
-          </Button>
+          
+          <Link
+            to={{
+              pathname: "/shoppingroute",
+              data: {
+                maxStores: maxStores,
+                maxDistance: maxDistance,
+                itemCostWeight: itemCostWeight,
+                distanceWeight: distanceWeight
+              }
+            }}
+          >
+            <Button variant="primary" onClick={() => console.log("maxDistance:",maxDistance)}>
+              Route
+            </Button>
+          </Link>
         </Modal.Footer>
       </Modal>
     );
