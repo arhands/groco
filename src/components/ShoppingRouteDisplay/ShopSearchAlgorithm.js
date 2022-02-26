@@ -29,7 +29,8 @@ function GetStoreDetails(store_id)
 // shopping_items: [{
 //          name: String,
 //          quantity: Float,
-//          measurement_type: String
+//          measurement_type: String,
+//          brand: String
 //        },...]
 function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_weight, distance_weight, starting_address)
 {
