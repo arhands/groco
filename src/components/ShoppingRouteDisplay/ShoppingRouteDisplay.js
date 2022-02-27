@@ -36,12 +36,12 @@ class ShoppingRouteDisplay extends React.Component
     ]
     */
     // TODO: replace the following hardcoded ID with the actual user_id
-    let user_id = 1;
-    const api = "http://localhost:3001/shoppinglist/";
     this.state = { ShoppingPlan: null };
   }
   render()
   {
+    let user_id = 1;
+    const api = "http://localhost:3001/shoppinglist/";
     if(this.state.ShoppingPlan == null)
     {
       (async () => {
