@@ -2,7 +2,7 @@ const pool = require("../db");
 async function getShoppingList(req, res) {
   try {
       const { userid } = req.params;
-      const newMealPlan = await pool.query(
+      const results = await pool.query(
           "SELECT I.name AS name, quantity, B.name AS brand, M.name as measurement_type " +
             "FROM user_table U, ingredient_instance_table II, measurement_table M, ingredient_table I, brand_table B " +
             "WHERE U.id = $1 " +
@@ -12,7 +12,7 @@ async function getShoppingList(req, res) {
               "AND II.brand_id = B.id ",
           [userid]
       );
-      res.json(newMealPlan.rows[0]);
+      res.json(results);
   } catch (err) {
       console.log(err.message);
   }
