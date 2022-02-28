@@ -57,10 +57,7 @@ const MealPlans = () => {
                         <tr key={mealPlan.mealplan_id}>
                             <td>{mealPlan.name}</td>
                             <td>  
-                                <Link to='/viewmealplan'>
-                                <button className='btn btn-primary'
-                                >View</button>
-                                </Link>
+                                <ViewMealPlan mealplan={mealPlan}/>
                             </td>
                             <td>  
                                 <EditMealPlan mealplan={mealPlan}/>

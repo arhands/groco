@@ -21,9 +21,6 @@ export default function Routes() {
             <Route exact path="/mealplans">
                 <MealPlans />
             </Route>
-            <Route exact path="/viewmealplan">
-                <ViewMealPlan id='2' />
-            </Route>
             <Route exact path="/editmealplan">
                 <EditMealPlan />
             </Route>
