@@ -1,7 +1,9 @@
-import { Fragment, useState } from "react"
+import { Fragment, useState, useEffect } from "react"
 
 
 const EditMealPlan = ({mealplan}) => {
+
+  // Edit mealplan name
   const [name, setName] = useState(mealplan.name);
   const updateName = async(e)=>{
     e.preventDefault();
@@ -17,6 +19,46 @@ const EditMealPlan = ({mealplan}) => {
       console.log(err.message);
     }
   }
+
+  // View all mealplan recipes 
+  const [recipeIDs, setRecipesID] = useState([]);
+  //const [mealPlanRecipes, setMealPlanRecipes] = useState([]);
+  const getRecepiesID = async ()=>{
+      try{
+          const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}/recipesID`)
+          const jsonData = await response.json();
+          console.log(jsonData);
+          setRecipesID(jsonData)
+      }catch(err){
+          console.error(err.message);
+      }
+      
+  };
+
+  /*function setRecipes(jsonData){
+      setRecipesID(jsonData)
+  }*/
+  /*const getMealPlanRecipes = async ()=>{
+      try{
+          const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}`)
+          const jsonData = await response.json();
+          console.log(jsonData);
+          setMealPlanRecipes(jsonData);
+          
+      }catch(err){
+          console.error(err.message);
+      }
+      
+  };*/
+  useEffect(()=>{
+  },[recipeIDs])
+  useEffect(()=>{
+      getRecepiesID();
+  },[]);
+
+  /*useEffect(()=>{
+      getMealPlanRecipes();
+  },[]);*/
   
   return (
     <Fragment>
@@ -40,6 +82,13 @@ const EditMealPlan = ({mealplan}) => {
               onChange={e => setName(e.target.value)}/>
             </div>
 
+            <div>
+              {recipeIDs?.map( each => 
+              <ul>
+                <li>{each.recipe_id}</li>
+              </ul>)}            
+            </div>
+
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" 
               data-dismiss="modal" onClick={e => updateName(e)} >Save
@@ -52,6 +101,16 @@ const EditMealPlan = ({mealplan}) => {
           </div>
         </div>
       </div>
+
+
+
+
+
+
+
+
+
+
     </Fragment>
   
   )};
