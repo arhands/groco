@@ -2,7 +2,6 @@ import { Fragment, useState, useEffect } from "react"
 
 
 const EditMealPlan = ({mealplan}) => {
-
   // Edit mealplan name
   const [name, setName] = useState(mealplan.name);
   const updateName = async(e)=>{
@@ -20,9 +19,9 @@ const EditMealPlan = ({mealplan}) => {
     }
   }
 
-  // View all mealplan recipes 
+  // Get all selected mealplan's recipeIDs
   const [recipeIDs, setRecipesID] = useState([]);
-  //const [mealPlanRecipes, setMealPlanRecipes] = useState([]);
+  const [mealPlanRecipes, setMealPlanRecipes] = useState([]);
   const getRecepiesID = async ()=>{
       try{
           const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}/recipesID`)
@@ -34,11 +33,8 @@ const EditMealPlan = ({mealplan}) => {
       }
       
   };
-
-  /*function setRecipes(jsonData){
-      setRecipesID(jsonData)
-  }*/
-  /*const getMealPlanRecipes = async ()=>{
+  // Get all recipeIds names from database
+  const getMealPlanRecipes = async ()=>{
       try{
           const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}`)
           const jsonData = await response.json();
@@ -49,16 +45,18 @@ const EditMealPlan = ({mealplan}) => {
           console.error(err.message);
       }
       
-  };*/
+  };
   useEffect(()=>{
   },[recipeIDs])
+  useEffect(()=>{
+  },[mealPlanRecipes])
   useEffect(()=>{
       getRecepiesID();
   },[]);
 
-  /*useEffect(()=>{
+  useEffect(()=>{
       getMealPlanRecipes();
-  },[]);*/
+  },[]);
   
   return (
     <Fragment>
@@ -82,12 +80,24 @@ const EditMealPlan = ({mealplan}) => {
               onChange={e => setName(e.target.value)}/>
             </div>
 
-            <div>
-              {recipeIDs?.map( each => 
-              <ul>
-                <li>{each.recipe_id}</li>
-              </ul>)}            
-            </div>
+            
+              <table className="table mt-5 text-center">
+                <tbody>
+                    {recipeIDs.map(each =>(
+                        <tr key={each.recipe_id}>
+                            <td>{each.recipe_id}</td>
+                            <td>  
+                                Edit
+                            </td>
+                            <td>
+                                Delete
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+              </table>
+            
+
 
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" 
@@ -101,13 +111,6 @@ const EditMealPlan = ({mealplan}) => {
           </div>
         </div>
       </div>
-
-
-
-
-
-
-
 
 
 
