@@ -37,28 +37,40 @@ const EditMealPlan = ({mealplan}) => {
   // Get all recipeIds names from database ${recipeIDs[i].recipe_id}
   const getMealPlanRecipes = async ()=>{
       try{
-          const response = await fetch(`http://localhost:3001/recipeName/4`)
-          const jsonData = await response.json();
-          setMealPlanRecipes(jsonData);
-          console.log('get receipe names json')
-          console.log(mealPlanRecipes);
-        
+        console.log(recipeIDs);
+        console.log(recipeIDs.length);
+        for(var i=0;i<3;i++){
+          await fetch(`http://localhost:3001/recipeName/3`)
+          .then (response => {
+            return response.json();
+        })
+        .then(name =>{
+          setMealPlanRecipes(name);
+          console.log({mealPlanRecipes});
+        })}
       }catch(err){
         console.error(err.message);
 }};
- 
-      
-  useEffect(()=>{
-  },[recipeIDs])
-  useEffect(()=>{
-  },[mealPlanRecipes])
+          
+/*
+            const response = await fetch(`http://localhost:3001/recipeName/${id}`)
+            const jsonData = await response.json();
+            setMealPlanRecipes(jsonData);
+            console.log('get receipe names json')
+            console.log(mealPlanRecipes);
+  */
+          
   useEffect(()=>{
       getRecepiesID();
   },[]);
+  useEffect(()=>{
+  },[recipeIDs])
 
   useEffect(()=>{
       getMealPlanRecipes();
   },[]);
+  useEffect(()=>{
+  },[mealPlanRecipes])
   
   return (
     <Fragment>
