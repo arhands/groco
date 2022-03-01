@@ -9,9 +9,8 @@ import Recipes from "./components/Recipes/Recipes";
 import Profile from "./components/Profile/Profile";
 import ViewRecipe from "./components/ViewRecipe/ViewRecipe";
 import MealPlans from "./components/MealPlans/MealPlans";
-import SinglePlan from "./components/SinglePlan/SinglePlan";
 import EditMealPlan from "./components/EditMealPlan/EditMealPlan";
-import ViewMealPlan from "./components/ViewMealPlan/ViewMealPlan";
+
 
 export default function Routes() {
     

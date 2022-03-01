@@ -107,7 +107,20 @@ app.get("/mealplans/:id/recipesID",async(req,res) =>{
         console.log(err.message);
     }
 });
-
+// get all recipes name of a mealplan
+app.get("/recipeName/:recipeID",async(req,res) =>{
+    try{
+        const {recipeID} = req.params;
+        const recipeName = await pool.query("SELECT name FROM public.recipe_table WHERE id= $1",[recipeID]);
+        res.json(recipeName.rows);
+        console.log('This si app.get name')
+        console.log(recipeID);
+        console.log(recipeName);
+        
+    }catch(err){
+        console.log(err.message);
+    }
+});
 app.listen(port, () =>{
   console.log(`Server started at port ${port}`)
 });

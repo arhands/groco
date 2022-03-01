@@ -26,6 +26,7 @@ const EditMealPlan = ({mealplan}) => {
       try{
           const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}/recipesID`)
           const jsonData = await response.json();
+          console.log('getRecipeIDs json')
           console.log(jsonData);
           setRecipesID(jsonData)
       }catch(err){
@@ -33,19 +34,20 @@ const EditMealPlan = ({mealplan}) => {
       }
       
   };
-  // Get all recipeIds names from database
+  // Get all recipeIds names from database ${recipeIDs[i].recipe_id}
   const getMealPlanRecipes = async ()=>{
       try{
-          const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}`)
+          const response = await fetch(`http://localhost:3001/recipeName/4`)
           const jsonData = await response.json();
-          console.log(jsonData);
           setMealPlanRecipes(jsonData);
-          
+          console.log('get receipe names json')
+          console.log(mealPlanRecipes);
+        
       }catch(err){
-          console.error(err.message);
-      }
+        console.error(err.message);
+}};
+ 
       
-  };
   useEffect(()=>{
   },[recipeIDs])
   useEffect(()=>{
@@ -83,9 +85,9 @@ const EditMealPlan = ({mealplan}) => {
             
               <table className="table mt-5 text-center">
                 <tbody>
-                    {recipeIDs.map(each =>(
-                        <tr key={each.recipe_id}>
-                            <td>{each.recipe_id}</td>
+                    {mealPlanRecipes.map(each =>(
+                        <tr key={each.id}>
+                            <td>{each.name}</td>
                             <td>  
                                 Edit
                             </td>
