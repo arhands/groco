@@ -19,6 +19,11 @@ const EditMealPlan = ({mealplan}) => {
     }
   }
 
+  // Save recipes deletion 
+ 
+
+
+
   // Get all selected mealplan's recipeIDs
   const [recipeIDs, setRecipesID] = useState([]);
   const [mealPlanRecipes, setMealPlanRecipes] = useState([]);
@@ -40,7 +45,7 @@ const EditMealPlan = ({mealplan}) => {
         console.log(recipeIDs);
         console.log(recipeIDs.length);
         for(var i=0;i<3;i++){
-          await fetch(`http://localhost:3001/recipeName/3`)
+          await fetch(`http://localhost:3001/recipeName/5`)
           .then (response => {
             return response.json();
         })
@@ -51,6 +56,12 @@ const EditMealPlan = ({mealplan}) => {
       }catch(err){
         console.error(err.message);
 }};
+
+const deleteMealPlanRecipe = async (id)=>{
+  //const response = await fetch(`http://localhost:3001/recipeName/5`);
+  setMealPlanRecipes(mealPlanRecipes.filter(mealPlanRecipe => mealPlanRecipe.id!==id));
+  
+};
           
 /*
             const response = await fetch(`http://localhost:3001/recipeName/${id}`)
@@ -83,7 +94,7 @@ const EditMealPlan = ({mealplan}) => {
           <div class="modal-content">
 
             <div class="modal-header">
-              <h4 class="modal-title">Editing meal plan</h4>
+              <h4 class="modal-title">Editing {mealplan.name}</h4>
               <button type="button" class="close" 
               data-dismiss="modal" onClick={()=> setName(mealplan.name)}>
                 &times;</button>
@@ -100,11 +111,14 @@ const EditMealPlan = ({mealplan}) => {
                     {mealPlanRecipes.map(each =>(
                         <tr key={each.id}>
                             <td>{each.name}</td>
-                            <td>  
-                                Edit
+                            <td>
+                              <button>
+                              View
+                              </button> 
                             </td>
                             <td>
-                                Delete
+                            <button onClick={()=>deleteMealPlanRecipe(each.id)}>
+                            Delete</button>
                             </td>
                         </tr>
                     ))}
