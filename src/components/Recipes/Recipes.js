@@ -1,13 +1,9 @@
 import React, { useState, createContext, memo } from "react";
-import ReactDOM from 'react-dom';
-import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Link } from 'react-router-dom';
-import './Recipes.css'
+import './Recipes.css';
 import DataTable from 'react-data-table-component';
-import { Modal } from "react-bootstrap";
-import $, { ajax } from 'jquery';
-import context from "react-bootstrap/esm/AccordionContext";
+import { FaPlusCircle } from 'react-icons/fa';
 class Recipes extends React.Component
 {
   constructor(props)
@@ -24,7 +20,14 @@ class Recipes extends React.Component
       {name: 'Name', selector: row => row.name, sortable: true},
       {name: 'Author', selector: row => row.creator, sortable: true},
       {name: 'Details', selector: row => row.details},
-      {name: 'Add', selector: row => row.add},
+      {name: <div>
+        <Link to={{ pathname: "/recipedetails", data: {id: -1, RecipeName: ''}}} >
+          <Button size="sm">
+          <FaPlusCircle/>
+          </Button>
+                      
+                  </Link>
+        </div>, selector: row => row.add},
     ];
     // raw data collected from server
     const RawData = [
@@ -72,7 +75,7 @@ class Recipes extends React.Component
           pagination 
           paginationResetDefaultPage={this.state.pagination} 
           subHeader 
-          subHeaderComponent={<input type="text" className="mb-3" onChange={e => setFilterText(e.target.value)} />} 
+          subHeaderComponent={<input type="text" className="mb-3" onChange={e => setFilterText(e.target.value)}/>} 
           selectableRows 
           persistTableHead/>
       </div>

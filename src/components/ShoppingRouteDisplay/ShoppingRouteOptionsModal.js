@@ -1,14 +1,9 @@
-import React, { useState } from "react";
-import ReactDOM from 'react-dom';
-import { useLocation } from 'react-router-dom'
+import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Link } from 'react-router-dom';
 //import './ViewRecipe.css'
 import './StoreDisplayCard.js'
-import DataTable from 'react-data-table-component';
-import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
-import StoreDisplayCard from "./StoreDisplayCard.js";
 import Modal from 'react-bootstrap/Modal';
 import NumericInput from 'react-numeric-input';
 
@@ -70,17 +65,13 @@ class ShoppingRouteOptionsModal extends React.Component
               }
             }}
           >
-            <Button variant="primary" onClick={() => console.log("maxDistance:",maxDistance)}>
+            <Button variant="primary">
               Route
             </Button>
           </Link>
         </Modal.Footer>
       </Modal>
     );
-  }
-  HandleRoute()
-  {
-
   }
 }
 export default ShoppingRouteOptionsModal

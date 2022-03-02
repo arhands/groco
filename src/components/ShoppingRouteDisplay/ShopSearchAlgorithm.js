@@ -9,13 +9,14 @@ Idea: this can be implemented as a Hidden State Shape Model with stores as the s
 function GetStores(max_distance)
 {
   let arr = Array(5)
-  for(let i = 0; i < arr.length; i++)
-    arr[i] = [{ Store_id: i, Distance: 1 }]
+  for(let i = 0; i < 5; i++)
+    arr[i] = { Store_id: i, Distance: 1 }
+  return arr
 }
-// Returns: [{ ItemName: String, Cost: Float }]
+// Returns: { ItemName: String, Cost: Float }
 function GetItemFromStore(store_id, item)
 {
-  return [{ ItemName: "Placeholder", Cost: 1 }]
+  return { ItemName: item.name, Cost: 1 }
 }
 function GetDistance(store1_id, store2_id)
 {
@@ -24,7 +25,7 @@ function GetDistance(store1_id, store2_id)
 // [Name, Address]
 function GetStoreDetails(store_id)
 {
-  return [ "Store " + toString(store_id) + " Placeholder", "Placeholder"]
+  return [ "Store " + store_id + " Placeholder", "Placeholder"]
 }
 // shopping_items: [{
 //          name: String,
@@ -32,7 +33,7 @@ function GetStoreDetails(store_id)
 //          measurement_type: String,
 //          brand: String
 //        },...]
-function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_weight, distance_weight, starting_address)
+export function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_weight, distance_weight, starting_address)
 {
   let S = GetStores(max_distance);
   let F = shopping_items
@@ -72,19 +73,22 @@ function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_we
   {
     for(let k = 0; k < F.length; k++)
     {
-      let item = GetItemFromStore(S[i].store_id,F[i])
+      let item = B[i][k]
       if(item == null)
         PreviousRegistrations[i][k] = null
       else
+      {
         PreviousRegistrations[i][k] = { 
           States: new Set([i]), 
           Features: new Set([k]), 
           Cost: S[i].Distance * distance_weight + item.Cost * item_cost_weight,
           TotalDistance: S[i].Distance,
-          Coordinates = [i,k]
+          Coordinates: [i,k]
         }
+      }
     }
   }
+  
   // Computing intermediate and final registrations
   for(let j = 1; j < F.length; j++)
   {
@@ -134,7 +138,7 @@ function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_we
             TotalDistance: optimalDistance,
             States: states,
             Features: features,
-            Coordinates = [i,k]
+            Coordinates: [i,k]
           };
         }
       }
@@ -146,8 +150,8 @@ function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_we
   // Now, we search the final registrations to find the best registration
   let optimalRegistration = null
   let optimalCost = Infinity
-  for(let i = 0; i < States.length; i++)
-    for(let k = 0; k < Features.length; k++)
+  for(let i = 0; i < S.length; i++)
+    for(let k = 0; k < F.length; k++)
       if(PreviousRegistrations[i][k] != null && PreviousRegistrations[i][k].Cost < optimalCost)
       {
         optimalRegistration = PreviousRegistrations[i][k]
@@ -175,29 +179,30 @@ function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_we
     },...
   ]
   */
-  shoppingPlan = []
-  previousStore = null
+  let shoppingPlan = []
+  let previousStore = null
   while(optimalRegistration != null)
   {
     
     if(previousStore != optimalRegistration.Coordinates[0])
     {
       previousStore = optimalRegistration.Coordinates[0]
-      let [storeName, address] = GetStoreDetails(States[previousStore].store_id)
+      let [storeName, address] = GetStoreDetails(S[previousStore].Store_id)
       shoppingPlan.push({
         StoreName: storeName,
         StoreAddress: address,
         StoreItems: [],
       })
     }
-    let Bik = B[optimalRegistration.Coordinates[0],optimalRegistration.Coordinates[1]];
+    let Bik = B[optimalRegistration.Coordinates[0]][optimalRegistration.Coordinates[1]];
     let storeItem = {
       name: Bik.Name,
       cost: Bik.MonetaryCost,
       quantity: F[optimalRegistration.Coordinates[1]].quantity,
       measurement_type: F[optimalRegistration.Coordinates[1]].measurement_type
-    }
+    };
     shoppingPlan[shoppingPlan.length - 1].StoreItems.push(storeItem)
+    optimalRegistration = optimalRegistration.Previous
   }
   return shoppingPlan.reverse()
 }

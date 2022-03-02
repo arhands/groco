@@ -12,7 +12,7 @@ async function getShoppingList(req, res) {
               "AND II.brand_id = B.id ",
           [userid]
       );
-      res.json(results);
+      res.json(results.rows);
   } catch (err) {
       console.log(err.message);
   }

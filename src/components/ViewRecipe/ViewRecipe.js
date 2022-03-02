@@ -1,29 +1,28 @@
-import React, { useState } from "react";
-import ReactDOM from 'react-dom';
+import React from "react";
 import { useLocation } from 'react-router-dom'
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Link } from 'react-router-dom';
 import './ViewRecipe.css'
 import IngredientTable from './IngredientTable.js'
-import DataTable from 'react-data-table-component';
 import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
-import $ from 'jquery';
 
 function ViewRecipe() {
     const location = useLocation()
     let { id, RecipeName } = location.data
-    console.log(JSON.stringify(location))
-    let columns = [
-        { name: (<Form.Label>Item</Form.Label>),         selector: row => row.name },
-        { name: (<Form.Label>Amount</Form.Label>),       selector: row => row.quantity },
-        { name: (<Form.Label>Measurement</Form.Label>),  selector: row => row.measurement_type },
-        { name: (<Form.Label>Include</Form.Label>),      selector: row => row.cb },
-    ];
-    // will be replaced with DB query.
     let instructions = "ERROR"
     let ingredients = []
     let isAuthor = true
+    if(id === -1)// new recipe
+    {
+        instructions = ""
+    }
+    else
+    {
+        
+    }
+    // will be replaced with DB query.
+
     switch(id)
     {
         case 337:
