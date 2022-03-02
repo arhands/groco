@@ -11,6 +11,7 @@ import MealPlans from "./components/MealPlans/MealPlans";
 import SinglePlan from "./components/SinglePlan/SinglePlan";
 import EditMealPlan from "./components/EditMealPlan/EditMealPlan";
 import Shopping from "./components/Shopping/Shopping";
+import ShoppingRouteDisplay from "./components/ShoppingRouteDisplay/ShoppingRouteDisplay";
 import ViewMealPlan from "./components/ViewMealPlan/ViewMealPlan";
 import Grocery from "./components/Grocery/Grocery";
 
@@ -20,9 +21,6 @@ export default function Routes() {
         <Switch>
             <Route exact path="/mealplans">
                 <MealPlans />
-            </Route>
-            <Route exact path="/viewmealplan">
-                <ViewMealPlan id='2' />
             </Route>
             <Route exact path="/editmealplan">
                 <EditMealPlan />
@@ -50,6 +48,8 @@ export default function Routes() {
             </Route>
             <Route exact path="/grocery">
                 <Grocery/>
+            <Route exact path = "/shoppingroute">
+                <ShoppingRouteDisplay />
             </Route>
             <Route>
                 <NotFound />

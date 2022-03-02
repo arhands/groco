@@ -1,24 +1,28 @@
 import React from 'react'
 import { Fragment, useState, useEffect } from "react"
+import { Link } from 'react-router-dom';
 
-const ViewMealPlan = ({id}) => {
-    //const [recipesID, setRecipesID] = useState([""]);
-    var recipesID =[];
-    const [mealPlanRecipes, setMealPlanRecipes] = useState([]);
+
+const ViewMealPlan = ({mealplan}) => {
+    const [recipesID, setRecipesID] = useState([]);
+    //const [mealPlanRecipes, setMealPlanRecipes] = useState([]);
     const getRecepiesID = async ()=>{
         try{
-            const response = await fetch(`http://localhost:3001/mealplans/${id}/recipesID`)
+            const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}/recipesID`)
             const jsonData = await response.json();
             console.log(jsonData);
-            recipesID = jsonData;
-            console.log(recipesID[0]);
-            
+            setRecipesID(jsonData)
         }catch(err){
             console.error(err.message);
         }
         
     };
 
+ 
+
+    /*function setRecipes(jsonData){
+        setRecipesID(jsonData)
+    }*/
     /*const getMealPlanRecipes = async ()=>{
         try{
             const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}`)
@@ -31,7 +35,8 @@ const ViewMealPlan = ({id}) => {
         }
         
     };*/
-    
+    useEffect(()=>{
+    },[recipesID])
     useEffect(()=>{
         getRecepiesID();
     },[]);
@@ -41,16 +46,9 @@ const ViewMealPlan = ({id}) => {
     },[]);*/
 
     
-  return (
-      <Fragment>
-                <div>{recipesID.map((each)=>{
-                    <li>{each.recipe_id}</li>
-                })}</div>
-                <div>this is recipe</div>
-              
-      </Fragment>
-    
-  )
+  return <div>
+        
+        </div>
 }
 
 export default ViewMealPlan
