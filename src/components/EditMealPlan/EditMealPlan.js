@@ -1,4 +1,5 @@
 import { Fragment, useState, useEffect } from "react"
+import { Link } from "react-router-dom";
 
 
 const EditMealPlan = ({mealplan}) => {
@@ -112,9 +113,12 @@ const deleteMealPlanRecipe = async (id)=>{
                         <tr key={each.id}>
                             <td>{each.name}</td>
                             <td>
-                              <button>
-                              View
-                              </button> 
+                              <Link to='/recipedetails'>
+                                <button>
+                                View
+                                </button> 
+                              </Link>
+                              
                             </td>
                             <td>
                             <button onClick={()=>deleteMealPlanRecipe(each.id)}>
