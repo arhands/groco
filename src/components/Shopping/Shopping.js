@@ -15,10 +15,6 @@ const Shopping = (props) => {
 	const [inputValue, setInputValue] = useState('');
 	const [totalItemCount, setTotalItemCount] = useState('');
 
-	
-
-	
-
 	const handleAddButtonClick = () => {
 		const newItem = {
 			itemName: inputValue,
