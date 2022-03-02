@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faCheckCircle, faPlus, faChevronLeft ,faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import ShoppingRouteOptionsModal from '../ShoppingRouteDisplay/ShoppingRouteOptionsModal.js';
 import Button from "react-bootstrap/Button";
+import Units from './Units';
 
 const Shopping = (props) => {
 	
@@ -16,9 +17,7 @@ const Shopping = (props) => {
 
 	
 
-	const handleShopButton = () =>{
-		alert("Searching the items using our algorithm");
-	}
+	
 
 	const handleAddButtonClick = () => {
 		const newItem = {
@@ -81,13 +80,16 @@ const Shopping = (props) => {
 		setTotalItemCount(totalItemCount);
 	};
 	const [options, showOptions] = useState(false);
+	const [units, showUnits] = useState(false);
+	
+
 	console.log("Rerendering shopping")
 	console.log("options: ",options)
 	return (
 		
 		<div className='app-background'>
 			<div className='main-container'>
-			<Button variant="primary" onClick={() => {showOptions(true); console.log("button clicked!");}}>Open Options</Button>
+			
 			<div><h2>Shopping list</h2></div>
 				<div className='add-item-box'>
 					
@@ -104,6 +106,7 @@ const Shopping = (props) => {
 									<>
 										<FontAwesomeIcon icon={faCheckCircle} />
 										<span className='completed'>{item.itemName}</span>
+										
 									</>
 								) : (
 									<>
@@ -121,15 +124,21 @@ const Shopping = (props) => {
 									<FontAwesomeIcon icon={faChevronRight} onClick={() => handleQuantityIncrease(index)} />
 								</button>
 							</div>
+							<div className = 'units'>
+								<Button variant="primary" onClick={() => {showUnits(true);}}>
+									Units<Units Display={units} HideDisplay={() => showUnits(false)}/>
+								</Button>								
+							</div>
 						</div>
 					))}
 				</div>
 				<div className='total'>Total: {totalItemCount}</div>
 				<div className='shop'>
-					<button onClick={handleShopButton}><h2>Shop</h2></button>
+					<Button variant="primary" onClick={() => {showOptions(true); console.log("button clicked!");}}>Open Options</Button>
+					<ShoppingRouteOptionsModal Show={options} HideMenu={() => showOptions(false)}/>
 				</div>
 			</div>
-			<ShoppingRouteOptionsModal Show={options} HideMenu={() => showOptions(false)}/>
+			
 		</div>
 		
 	);
