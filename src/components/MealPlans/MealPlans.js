@@ -3,6 +3,8 @@ import "./MealPlans.css";
 import { Fragment, useEffect, useState } from 'react';
 import AddMealPlan from '../AddMealPlan/AddMealPlan';
 import EditMealPlan from '../EditMealPlan/EditMealPlan';
+import ViewMealPlan from '../ViewMealPlan/ViewMealPlan';
+
 
 
 const MealPlans = () => {
@@ -43,25 +45,20 @@ const MealPlans = () => {
     <Fragment>
         <AddMealPlan/>
         <table className="table mt-5 text-center">
-            <thead>
+            {/*<thead>
                 <tr>
                     <th>Mealplan</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th></th>
+                    <th></th>
                 </tr>
-            </thead>
+            </thead>*/}
                 <tbody>
-                    {/* 
-                    <tr>
-                        <td>John</td>
-                        <td>Doe</td>
-                        <td>john@example.com</td>
-                    </tr>*/}
-                   {/* <a href="/editmealplan" class="btn btn-warning" 
-                                role="button">Edit</a></td>*/}
                     {mealPlans.map(mealPlan =>(
                         <tr key={mealPlan.mealplan_id}>
                             <td>{mealPlan.name}</td>
+                            <td>  
+                                <ViewMealPlan mealplan={mealPlan}/>
+                            </td>
                             <td>  
                                 <EditMealPlan mealplan={mealPlan}/>
                             </td>
