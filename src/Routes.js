@@ -48,6 +48,7 @@ export default function Routes() {
             </Route>
             <Route exact path="/grocery">
                 <Grocery/>
+            </Route>
             <Route exact path = "/shoppingroute">
                 <ShoppingRouteDisplay />
             </Route>
