@@ -8,6 +8,7 @@ import DataTable from 'react-data-table-component';
 import { Modal } from "react-bootstrap";
 import $, { ajax } from 'jquery';
 import context from "react-bootstrap/esm/AccordionContext";
+import Shopping from "../Shopping/Shopping";
 
 function Recipes() {
     function AddRecipe(data)
@@ -49,7 +50,7 @@ function Recipes() {
                 
             ),
             add: (
-                <Button onClick={() => {AddRecipe(RawData[i])}}>
+                <Button onClick={<Shopping data = {RawData[i]} />}>
                     Add
                 </Button>
             )
