@@ -83,7 +83,7 @@ function ViewRecipe() {
         )
     }
     //
-    const [editMode, updateState] = React.useState(false)
+    const [editMode, updateState] = React.useState(id === -1)
     let editModeToggle = () => updateState(!editMode)
     return (
         <form>
@@ -108,7 +108,7 @@ function ViewRecipe() {
                         <Link to={{ pathname: "/recipes"}} >
                             <Button variant="Secondary">Close</Button>
                         </Link>
-                        {GenerateMealPlanSelection()}
+                        {id===-1? null : GenerateMealPlanSelection()}
                         <Link to={{ pathname: "/recipes"}} >
                             <Button variant="Secondary">+List</Button>
                         </Link>

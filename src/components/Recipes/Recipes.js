@@ -12,21 +12,17 @@ class Recipes extends React.Component
       this.state = { filteredText: '', pagination: false }
   }
   render() {
-    function AddRecipe(data)
-    {
-
-    }
     const columns = [
       {name: 'Name', selector: row => row.name, sortable: true},
       {name: 'Author', selector: row => row.creator, sortable: true},
       {name: 'Details', selector: row => row.details},
-      {name: <div>
-        <Link to={{ pathname: "/recipedetails", data: {id: -1, RecipeName: ''}}} >
-          <Button size="sm">
-          <FaPlusCircle/>
-          </Button>
-                      
-                  </Link>
+      {name: 
+        <div>
+          <Link to={{ pathname: "/recipedetails", data: {id: -1, RecipeName: ''}}} >
+            <Button size="sm">
+              <FaPlusCircle/>
+            </Button>          
+          </Link>
         </div>, selector: row => row.add},
     ];
     // raw data collected from server
