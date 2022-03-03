@@ -83,6 +83,7 @@ function ViewRecipe() {
         )
     }
     //
+    console.log("id === -1:",id === -1)
     const [editMode, updateState] = React.useState(id === -1)
     let editModeToggle = () => updateState(!editMode)
     return (

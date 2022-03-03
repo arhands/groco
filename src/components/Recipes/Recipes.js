@@ -32,6 +32,10 @@ class Recipes extends React.Component
       { creator: "Will",      name: "Egg on Bread",    id: 849},
       { creator: "Christine", name: "Rice",            id: 123}
     ];
+    function AddRecipe(data)
+    {
+
+    }
     // converting data into something usable.
     const data = []
     for(let i = 0; i < RawData.length; i++)
@@ -53,7 +57,7 @@ class Recipes extends React.Component
           </Link>            
           ),
           add: (
-            <Button onClick={() => {AddRecipe(RawData[i])}}>
+            <Button onClick={() => AddRecipe(RawData[i])}>
               Add
             </Button>
           )
