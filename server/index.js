@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mealplans = require("./mealplans/mealplans");
+const shoppinglist = require("./shoppinglist/shoppinglist");
 const port = 3001
 
 // middleware
@@ -21,6 +22,9 @@ app.put("/mealplans/:id", mealplans.update);
 app.delete("/mealplans/:id", mealplans.delete);
 // get all recipes of a mealplan
 app.get("/mealplans/:id/recipesID",);
+
+// get a shopping list
+app.get("/shoppinglist/get/:userid", shoppinglist.get);
 
 app.listen(port, () => {
     console.log(`Server started at port ${port}`)

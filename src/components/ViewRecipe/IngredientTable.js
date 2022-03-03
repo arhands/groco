@@ -1,12 +1,9 @@
-import React, { useState } from "react";
-import ReactDOM from 'react-dom';
-import { useLocation } from 'react-router-dom'
+import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { Link } from 'react-router-dom';
 import './ViewRecipe.css'
 import DataTable from 'react-data-table-component';
-import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import { ButtonGroup } from "react-bootstrap";
 class IngredientTable extends React.Component
 {
   // Placeholder function(s)
