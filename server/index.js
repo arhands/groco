@@ -31,8 +31,6 @@ app.get("/shoppinglist/get/:userid", shoppinglist.get);
 // create a user
 
 app.post("/user", async (req, res) => {
-    console.log(req)
-    console.log(req.body)
     try {
         console.log(req)
         const { googleid, user_email, first_name, last_name, image_url } = req.body;
@@ -42,6 +40,20 @@ app.post("/user", async (req, res) => {
         );
         res.json(newUser.rows[0]);
     } catch (err) {
+        console.log(err.message);
+    }
+});
+
+app.get("/recipeName/:recipeID",async(req,res) =>{
+    try{
+        const {recipeID} = req.params;
+        const recipeName = await pool.query("SELECT name FROM public.recipe_table WHERE id= $1",[recipeID]);
+        res.json(recipeName.rows);
+        console.log('This si app.get name')
+        console.log(recipeID);
+        console.log(recipeName);
+        
+    }catch(err){
         console.log(err.message);
     }
 });

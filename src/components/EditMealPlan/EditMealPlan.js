@@ -1,4 +1,5 @@
 import { Fragment, useState, useEffect } from "react"
+import { Link } from "react-router-dom";
 
 
 const EditMealPlan = ({mealplan}) => {
@@ -19,6 +20,11 @@ const EditMealPlan = ({mealplan}) => {
     }
   }
 
+  // Save recipes deletion 
+ 
+
+
+
   // Get all selected mealplan's recipeIDs
   const [recipeIDs, setRecipesID] = useState([]);
   const [mealPlanRecipes, setMealPlanRecipes] = useState([]);
@@ -26,6 +32,7 @@ const EditMealPlan = ({mealplan}) => {
       try{
           const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}/recipesID`)
           const jsonData = await response.json();
+          console.log('getRecipeIDs json')
           console.log(jsonData);
           setRecipesID(jsonData)
       }catch(err){
@@ -33,30 +40,49 @@ const EditMealPlan = ({mealplan}) => {
       }
       
   };
-  // Get all recipeIds names from database
+  // Get all recipeIds names from database ${recipeIDs[i].recipe_id}
   const getMealPlanRecipes = async ()=>{
       try{
-          const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}`)
-          const jsonData = await response.json();
-          console.log(jsonData);
-          setMealPlanRecipes(jsonData);
-          
+        console.log(recipeIDs);
+        console.log(recipeIDs.length);
+        for(var i=0;i<3;i++){
+          await fetch(`http://localhost:3001/recipeName/5`)
+          .then (response => {
+            return response.json();
+        })
+        .then(name =>{
+          setMealPlanRecipes(name);
+          console.log({mealPlanRecipes});
+        })}
       }catch(err){
-          console.error(err.message);
-      }
-      
-  };
-  useEffect(()=>{
-  },[recipeIDs])
-  useEffect(()=>{
-  },[mealPlanRecipes])
+        console.error(err.message);
+}};
+
+const deleteMealPlanRecipe = async (id)=>{
+  //const response = await fetch(`http://localhost:3001/recipeName/5`);
+  setMealPlanRecipes(mealPlanRecipes.filter(mealPlanRecipe => mealPlanRecipe.id!==id));
+  
+};
+          
+/*
+            const response = await fetch(`http://localhost:3001/recipeName/${id}`)
+            const jsonData = await response.json();
+            setMealPlanRecipes(jsonData);
+            console.log('get receipe names json')
+            console.log(mealPlanRecipes);
+  */
+          
   useEffect(()=>{
       getRecepiesID();
   },[]);
+  useEffect(()=>{
+  },[recipeIDs])
 
   useEffect(()=>{
       getMealPlanRecipes();
   },[]);
+  useEffect(()=>{
+  },[mealPlanRecipes])
   
   return (
     <Fragment>
@@ -69,7 +95,7 @@ const EditMealPlan = ({mealplan}) => {
           <div class="modal-content">
 
             <div class="modal-header">
-              <h4 class="modal-title">Editing meal plan</h4>
+              <h4 class="modal-title">Editing {mealplan.name}</h4>
               <button type="button" class="close" 
               data-dismiss="modal" onClick={()=> setName(mealplan.name)}>
                 &times;</button>
@@ -83,14 +109,20 @@ const EditMealPlan = ({mealplan}) => {
             
               <table className="table mt-5 text-center">
                 <tbody>
-                    {recipeIDs.map(each =>(
-                        <tr key={each.recipe_id}>
-                            <td>{each.recipe_id}</td>
-                            <td>  
-                                Edit
+                    {mealPlanRecipes.map(each =>(
+                        <tr key={each.id}>
+                            <td>{each.name}</td>
+                            <td>
+                              <Link to='/recipedetails'>
+                                <button>
+                                View
+                                </button> 
+                              </Link>
+                              
                             </td>
                             <td>
-                                Delete
+                            <button onClick={()=>deleteMealPlanRecipe(each.id)}>
+                            Delete</button>
                             </td>
                         </tr>
                     ))}
