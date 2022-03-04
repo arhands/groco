@@ -11,11 +11,11 @@ import MealPlans from "./components/MealPlans/MealPlans";
 import EditMealPlan from "./components/EditMealPlan/EditMealPlan";
 import Shopping from "./components/Shopping/Shopping";
 import ShoppingRouteDisplay from "./components/ShoppingRouteDisplay/ShoppingRouteDisplay";
-import ViewMealPlan from "./components/ViewMealPlan/ViewMealPlan";
+// import ViewMealPlan from "./components/ViewMealPlan/ViewMealPlan";
 import Grocery from "./components/Grocery/Grocery";
 
 export default function Routes() {
-    
+
     return (
         <Switch>
             <Route exact path="/mealplans">
@@ -40,15 +40,15 @@ export default function Routes() {
                 <Home />
             </Route>
             <Route exact path="/profile">
-                <Profile/>
+                <Profile />
             </Route>
-            <Route exact path ="/shopping">
+            <Route exact path="/shopping">
                 <Shopping />
             </Route>
             <Route exact path="/grocery">
-                <Grocery/>
+                <Grocery />
             </Route>
-            <Route exact path = "/shoppingroute">
+            <Route exact path="/shoppingroute">
                 <ShoppingRouteDisplay />
             </Route>
             <Route>
