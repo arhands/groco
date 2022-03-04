@@ -9,7 +9,7 @@ export default function Login() {
     const { enqueueSnackbar } = useSnackbar();
     const { login } = useAuth();
     let history = useHistory();
-    const LoginSuccess = (response) => {
+    const  LoginSuccess = (response) => {
         console.log(response)
         login(response);
         history.push("/landing")
