@@ -10,7 +10,7 @@ const Shopping = (props) => {
 	
 	const [items, setItems] = useState([]);
 
-	const groceyitem ={
+	const groceryItem ={
 		itemName: props.groceryBrand,
 		quantity: props.groceryQuantity,
 		units: props.ButtongroceryMeasurment,
@@ -99,13 +99,13 @@ const Shopping = (props) => {
 				<div className='item-list'>
 					<div className = 'item-container'>
 						<div className='item-name'>
-							{groceyitem.itemName}
+							{groceryItem.itemName}
 						</div>
 						<div className='Quantity'>
-							{groceyitem.quantity}
+							{groceryItem.quantity}
 						</div>
 						<div className='Units'>
-							{groceyitem.units}
+							{groceryItem.units}
 						</div>
 					</div>					
 					{items.map((item, index) => (						
