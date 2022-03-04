@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import './Landing.css'
 import { ListGroup } from "react-bootstrap";
 
+
 function Landing() {
 
     function handleSubmit(event) {
@@ -19,9 +20,15 @@ function Landing() {
                 <Link to="/recipes">
                     <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Recipes</Button>
                 </Link>
-                <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Groceries</Button>
-                <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Shopping List</Button>
-                <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Meal Plans</Button>
+                <Link to="/grocery">
+                    <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Grocery</Button>
+                </Link>
+                <Link to="/shopping">
+                    <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Shopping List</Button>
+                </Link>
+                <Link to="/mealplans">
+                    <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Meal Plans</Button>
+                </Link>
             </ListGroup>
         </div>
     )

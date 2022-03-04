@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import GoogleLogin from 'react-google-login'
 import { useSnackbar } from "notistack";
 import { useAuth } from "../../auth";
@@ -9,7 +9,7 @@ export default function Login() {
     const { enqueueSnackbar } = useSnackbar();
     const { login } = useAuth();
     let history = useHistory();
-    const LoginSuccess = (response) => {
+    const  LoginSuccess = (response) => {
         console.log(response)
         login(response);
         history.push("/landing")
@@ -24,7 +24,7 @@ export default function Login() {
         <div className="Login">
             <label>Login Using Google </label>
             <GoogleLogin
-                clientId="638367321598-klgh4fml3thf7dhdng9nmvrf2ffub88s.apps.googleusercontent.com"
+                clientId="209549426012-fmse3oog6vbndjajsbe1a3g8375tkl76.apps.googleusercontent.com"
                 buttonText="Login"
                 onSuccess={LoginSuccess}
                 onFailure={LoginFailure}

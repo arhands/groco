@@ -1,113 +1,49 @@
-/*const express = require('express')
-const app = express()
-const port = 3001
-
-const db = require('./db')
-
-app.use(express.json())
-app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers');
-  next();
-});
-function test(req, res)
-{
-    db.getUserEmails()
-    .then(response => {
-      res.status(200).send(response);
-    })
-    .catch(error => {
-      res.status(500).send(error);
-    })
-}
-app.get('/test', test)
-app.post('/test', test)
-app.listen(port, () => console.log("App running on port ${port}"))
-*/
-
-
 const express = require("express");
 const app = express();
-const cors = require ("cors");
+const cors = require("cors");
+const mealplans = require("./mealplans/mealplans");
+const shoppinglist = require("./shoppinglist/shoppinglist");
+const user = require("./user/user")
+const port = process.env.PORT || 3001
 const pool = require("./db");
-const port = 3001
-
+// var bodyParser = require('body-parser');
 // middleware
 app.use(cors());
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 // ROUTES
 // need to create database and table using psql first
-app.post("/mealplans",async(req,res) =>{
-    try{
-        const{user_id, name} = req.body;
-        const newMealPlan = await pool.query(
-            "INSERT INTO public.\"meal_plan_table\" (user_id, name) VALUES($1, $2) RETURNING *",
-            [user_id, name]
-        );
-        res.json(newMealPlan.rows[0]);
-    }catch(err){
-        console.log(err.message);
-    }
-})
+app.post("/mealplans", mealplans.create)
 // get all mealplan
-app.get("/mealplans",async(req,res) =>{
-    try{
-        const allMealPlans = await pool.query("SELECT * FROM public.\"meal_plan_table\"");
-        res.json(allMealPlans.rows);
-    }catch(err){
-        console.log(err.message);
-    }
-});
-
+app.get("/mealplans", mealplans.getAll);
 // get a mealplan
-app.get("/mealplans/:id",async(req,res) =>{
-    try{
-       const {id} = req.params;
-       const todo =await pool.query("SELECT * FROM public.\"meal_plan_table\" WHERE id =$1",[id]);
-       res.json(todo.rows[0]);
-    }catch(err){
-        console.log(err.message);
-    }
-});
-
+app.get("/mealplans/:id", mealplans.get);
 // edit a mealplan
-app.put("/mealplans/:id",async(req,res) =>{
-    try{
-       const {id} = req.params;
-       const {name} = req.body;
-       const updateTodo =await pool.query("UPDATE public.\"meal_plan_table\" SET name = $1 WHERE id = $2",[name,id]);
-       res.json("Mealplan is updated");
-    }catch(err){
-        console.log(err.message);
-    }
-});
-
+app.put("/mealplans/:id", mealplans.update);
 // delete a mealplan
-app.delete("/mealplans/:id",async(req,res) =>{
-    try{
-       const {id} = req.params;
-       const deleteTodo =await pool.query("DELETE FROM public.\"meal_plan_table\" WHERE id = $1",[id]);
-       res.json("Mealplan is deleted");
-    }catch(err){
+app.delete("/mealplans/:id", mealplans.delete);
+// get all recipes of a mealplan
+app.get("/mealplans/:id/recipesID",);
+
+// get a shopping list
+app.get("/shoppinglist/get/:userid", shoppinglist.get);
+
+// create a user
+
+app.post("/user", async (req, res) => {
+    try {
+        console.log(req)
+        const { googleid, user_email, first_name, last_name, image_url } = req.body;
+        const newUser = await pool.query(
+            "INSERT INTO public.user_table (googleid, user_email, first_name, last_name, image_url) VALUES($1, $2, $3, $4, $5) RETURNING *",
+            [googleid, user_email, first_name, last_name, image_url]
+        );
+        res.json(newUser.rows[0]);
+    } catch (err) {
         console.log(err.message);
     }
 });
 
-// get all recipes of a mealplan
-app.get("/mealplans/:id/recipesID",async(req,res) =>{
-    try{
-        const {id} = req.params;
-        const allRecipesID = await pool.query("SELECT recipe_id FROM public.\"meal_plan_recipe_table\" WHERE meal_plan_id = $1",[id]);
-        //const allRecipesName = await pool.query("SELECT name FROM public.\"recipe_table\" WHERE id = $1",[each]);
-        res.json(allRecipesID.rows);
-        
-    }catch(err){
-        console.log(err.message);
-    }
-});
-// get all recipes name of a mealplan
 app.get("/recipeName/:recipeID",async(req,res) =>{
     try{
         const {recipeID} = req.params;
@@ -121,6 +57,9 @@ app.get("/recipeName/:recipeID",async(req,res) =>{
         console.log(err.message);
     }
 });
-app.listen(port, () =>{
-  console.log(`Server started at port ${port}`)
+
+//get a user
+app.get("/user/:id", user.get);
+app.listen(port, () => {
+    console.log(`Server started at port ${port}`)
 });

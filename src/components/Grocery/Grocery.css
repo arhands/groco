@@ -1,0 +1,20 @@
+@media all and (min-width: 480px) {
+    .GroceriesTable {
+        padding: 60px 0;
+      }
+
+    .groco-div {
+        padding: 60px 0;
+    } 
+    .center {
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+    }
+    .inputSize {
+        width: 100%;
+        height: 100%;
+        margin: auto;
+    }
+   
+}

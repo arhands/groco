@@ -13,10 +13,10 @@ const MealPlans = () => {
     // Delete mealplan function
     const deleteMealPlan = async (id)=>{
         try{
-            const deleteTodo = await fetch(`http://localhost:3001/mealplans/${id}`,{
+            const deleteTodo = await fetch(`https://61f6f4c72e1d7e0017fd6fa4.mockapi.io/mealplan/${id}`,{
                 method:"DELETE"
             });
-            setMealPlans(mealPlans.filter(mealPlan => mealPlan.id!==id));
+            setMealPlans(mealPlans.filter(mealPlan => mealPlan.mealplan_id!==id));
         }catch(err){
             console.err(err.message);
         }
@@ -54,7 +54,7 @@ const MealPlans = () => {
             </thead>*/}
                 <tbody>
                     {mealPlans.map(mealPlan =>(
-                        <tr key={mealPlan.id}>
+                        <tr key={mealPlan.mealplan_id}>
                             <td>{mealPlan.name}</td>
                             <td>  
                                 
@@ -64,7 +64,7 @@ const MealPlans = () => {
                             </td>
                             <td>
                                 <button className='btn btn-danger' 
-                                onClick={()=> deleteMealPlan(mealPlan.id)}>Delete</button>
+                                onClick={()=> deleteMealPlan(mealPlan.mealplan_id)}>Delete</button>
                             </td>
                         </tr>
                     ))}

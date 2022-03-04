@@ -1,7 +1,6 @@
 @media all and (min-width: 480px) {
     .Profile {
-        padding: 60px 0;
-        
+        padding: 60px 0; 
     }
     .profileLink{
         margin: 10px;
@@ -22,9 +21,8 @@
     .profilePic {
         border-radius: 50%;
         overflow: 'hidden';
-        height: 250px;
-        width: 250px;
-        content: url('./default-profile-pic.png');
+        height: 150px;
+        width: 150px;
     }
 
 }

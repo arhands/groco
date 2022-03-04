@@ -5,6 +5,9 @@
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.11",
     "@mui/material": "^5.3.1",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
@@ -19,6 +22,7 @@
     "react-dom": "^17.0.2",
     "react-google-login": "^5.2.2",
     "react-icons": "^4.2.0",
+    "react-numeric-input": "^2.2.3",
     "react-router-bootstrap": "^0.26.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
