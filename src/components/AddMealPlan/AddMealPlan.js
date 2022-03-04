@@ -6,7 +6,7 @@ import "./AddMealPlan.css"
 //api = "https://61f6f4c72e1d7e0017fd6fa4.mockapi.io/mealplan";
 
 const AddMealPlan = () => {
-    const api = "https://61f6f4c72e1d7e0017fd6fa4.mockapi.io/mealplan";
+    const api = 'http://localhost:3001/mealplans';
     const [name, setName] = useState("");
     const [user_id, setUserId] = useState(1);
     const onSubmitForm = async(e) =>{
