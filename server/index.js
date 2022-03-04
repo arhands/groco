@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const mealplans = require("./mealplans/mealplans");
 const shoppinglist = require("./shoppinglist/shoppinglist");
-const port = 3001
+const port = process.env.PORT || 3001
 
 // middleware
 app.use(cors());
