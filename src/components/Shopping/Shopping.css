@@ -130,3 +130,10 @@
   .completed {
     text-decoration: line-through;
   }
+
+  .shop{
+    
+    float: left;
+    left: 0px;
+    padding: 0px;
+  }
