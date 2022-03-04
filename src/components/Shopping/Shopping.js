@@ -8,9 +8,13 @@ import Units from './Units';
 
 const Shopping = (props) => {
 	
-	const [items, setItems] = useState([
-		
-	]);
+	const [items, setItems] = useState([]);
+
+	const groceyitem ={
+		itemName: props.groceryBrand,
+		quantity: props.groceryQuantity,
+		units: props.ButtongroceryMeasurment,
+	}
 
 	const [inputValue, setInputValue] = useState('');
 	const [totalItemCount, setTotalItemCount] = useState('');
@@ -78,7 +82,6 @@ const Shopping = (props) => {
 	const [options, showOptions] = useState(false);
 	const [units, showUnits] = useState(false);
 	
-
 	console.log("Rerendering shopping")
 	console.log("options: ",options)
 	return (
@@ -89,13 +92,23 @@ const Shopping = (props) => {
 			<div><h2>Shopping list</h2></div>
 				<div className='add-item-box'>
 					
-					<input value={inputValue} onChange={(event) => setInputValue(event.target.value)} className='add-item-input' placeholder='Add an item...' required/>	
+					<input value={inputValue} onChange={(event) => setInputValue(event.target.value)} className='add-item-input' placeholder='Add an item...'/>	
 					
 					<FontAwesomeIcon icon={faPlus} onClick={() => handleAddButtonClick()} alignmentBaseline = 'right' />
 				</div>
-				<div className='item-list'>					
-					{items.map((item, index) => (
-						
+				<div className='item-list'>
+					<div className = 'item-container'>
+						<div className='item-name'>
+							{groceyitem.itemName}
+						</div>
+						<div className='Quantity'>
+							{groceyitem.quantity}
+						</div>
+						<div className='Units'>
+							{groceyitem.units}
+						</div>
+					</div>					
+					{items.map((item, index) => (						
 						<div className='item-container'>
 							<div className='item-name' onClick={() => toggleComplete(index)}>
 								{item.isSelected ? (
@@ -122,11 +135,12 @@ const Shopping = (props) => {
 							</div>
 							<div className = 'units'>
 								<Button variant="primary" onClick={() => {showUnits(true);}}>
-									Units<Units Display={units} HideDisplay={() => showUnits(false)}/>
+									Change<Units Display={units} HideDisplay={() => showUnits(false)}/>
 								</Button>								
 							</div>
 						</div>
 					))}
+					
 				</div>
 				<div className='total'>Total: {totalItemCount}</div>
 				<div className='shop'>
