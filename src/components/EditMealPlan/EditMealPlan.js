@@ -105,10 +105,10 @@ const deleteMealPlanRecipe = async (id)=>{
   return (
     <Fragment>
       <button type="button" class="btn btn-warning" 
-      data-toggle="modal" data-target={`#id${mealplan.mealplan_id}`}>
+      data-toggle="modal" data-target={`#id${mealplan.id}`}>
        Edit
       </button>
-      <div class="modal" id={`id${mealplan.mealplan_id}`}>
+      <div class="modal" id={`id${mealplan.id}`}>
         <div class="modal-dialog">
           <div class="modal-content">
 
