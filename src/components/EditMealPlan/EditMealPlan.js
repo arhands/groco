@@ -9,7 +9,7 @@ const EditMealPlan = ({mealplan}) => {
     e.preventDefault();
     try{
       const body = {name};
-      const response = await fetch(`http:/mealplans/${mealplan.id}`,{ 
+      const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}`,{ 
           method:"PUT",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify(body)
