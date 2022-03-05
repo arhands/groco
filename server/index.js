@@ -23,7 +23,7 @@ app.put("/mealplans/:id", mealplans.update);
 // delete a mealplan
 app.delete("/mealplans/:id", mealplans.delete);
 // get all recipes of a mealplan
-app.get("/mealplans/:id/recipesID",mealplans.getRecipe);
+app.get("/mealplans/:id/recipeIDs",mealplans.getRecipe);
 
 // get a shopping list
 app.get("/shoppinglist/get/:userid", shoppinglist.get);
