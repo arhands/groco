@@ -9,7 +9,7 @@ const EditMealPlan = ({mealplan}) => {
     e.preventDefault();
     try{
       const body = {name};
-      const response = await fetch(`https://61f6f4c72e1d7e0017fd6fa4.mockapi.io/mealplan/${mealplan.mealplan_id}`,{ 
+      const response = await fetch(`http:/mealplans/${mealplan.id}`,{ 
           method:"PUT",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify(body)

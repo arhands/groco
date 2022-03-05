@@ -23,7 +23,7 @@ async function getAllMealPlans(req, res) {
 async function getMealPlan(req, res) {
     try {
         const { id } = req.params;
-        const todo = await pool.query("SELECT * FROM public.meal_plan_table WHERE mealplan_id =$1", [id]);
+        const todo = await pool.query("SELECT * FROM public.meal_plan_table WHERE id =$1", [id]);
         res.json(todo.rows[0]);
     } catch (err) {
         console.log(err.message);
@@ -33,7 +33,7 @@ async function updateMealPlan(req, res){
     try {
         const { id } = req.params;
         const { name } = req.body;
-        const updateTodo = await pool.query("UPDATE public.meal_plan_table SET name = $1 WHERE mealplan_id = $2", [name, id]);
+        const updateTodo = await pool.query("UPDATE public.meal_plan_table SET name = $1 WHERE id = $2", [name, id]);
         res.json("Mealplan is updated");
     } catch (err) {
         console.log(err.message);
@@ -53,7 +53,7 @@ async function delMealPlan (req, res) {
 async function getMealPlanRecipe (req, res){
     try {
         const { id } = req.params;
-        const allRecipesID = await pool.query("SELECT recipe_id FROM public.meal_plan_recipe_table WHERE meal_plan_id = $1", [id]);
+        const allRecipesID = await pool.query("SELECT recipe_id FROM public.meal_plan_recipe_table WHERE id = $1", [id]);
         //const allRecipesName = await pool.query("SELECT name FROM public.\"recipe_table\" WHERE id = $1",[each]);
         res.json(allRecipesID.rows);
 
