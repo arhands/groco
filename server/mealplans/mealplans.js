@@ -53,7 +53,7 @@ async function delMealPlan (req, res) {
 async function getMealPlanRecipe (req, res){
     try {
         const { id } = req.params;
-        const allRecipesID = await pool.query("SELECT recipe_id FROM public.meal_plan_recipe_table WHERE id = $1", [id]);
+        const allRecipesID = await pool.query("SELECT recipe_id FROM public.meal_plan_recipe_table WHERE meal_plan_id = $1", [id]);
         //const allRecipesName = await pool.query("SELECT name FROM public.\"recipe_table\" WHERE id = $1",[each]);
         res.json(allRecipesID.rows);
 

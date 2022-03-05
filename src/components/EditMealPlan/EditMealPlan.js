@@ -66,7 +66,7 @@ const deleteMealPlanRecipe = async (id)=>{
           
   useEffect(async ()=>{
     try{
-      const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}/recipesID`)
+      const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}/recipeIDs`)
       const jsonData = await response.json();
       console.log('getRecipeIDs json')
       console.log(jsonData);
