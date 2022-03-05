@@ -43,7 +43,7 @@ async function updateMealPlan(req, res){
 async function delMealPlan (req, res) {
     try {
         const { id } = req.params;
-        const deleteTodo = await pool.query("DELETE FROM public.meal_plan_table WHERE mealplan_id = $1", [id]);
+        const deleteTodo = await pool.query("DELETE FROM public.meal_plan_table WHERE id = $1", [id]);
         res.json("Mealplan is deleted");
     } catch (err) {
         console.log(err.message);
