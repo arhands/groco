@@ -1,6 +1,6 @@
 const pool = require("../db");
 
-async function createMealPlan(res, req) {
+async function createMealPlan(req, res) {
     try {
         const { user_id, name } = req.body;
         const newMealPlan = await pool.query(
