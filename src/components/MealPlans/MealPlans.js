@@ -13,7 +13,7 @@ const MealPlans = () => {
     // Delete mealplan function
     const deleteMealPlan = async (id)=>{
         try{
-            const deletePlan= await fetch(`http://localhost:3001/mealplans/${id}`,{
+            const deleteTodo = await fetch(`http://localhost:3001/mealplans/${id}`,{
                 method:"DELETE"
             });
             setMealPlans(mealPlans.filter(mealPlan => mealPlan.id!==id));
