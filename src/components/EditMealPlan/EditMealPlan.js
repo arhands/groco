@@ -1,4 +1,5 @@
 import { Fragment, useState, useEffect } from "react"
+import { Link } from "react-router-dom";
 
 
 const EditMealPlan = ({mealplan}) => {
@@ -8,7 +9,7 @@ const EditMealPlan = ({mealplan}) => {
     e.preventDefault();
     try{
       const body = {name};
-      const response = await fetch(`https://61f6f4c72e1d7e0017fd6fa4.mockapi.io/mealplan/${mealplan.mealplan_id}`,{ 
+      const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}`,{ 
           method:"PUT",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify(body)
@@ -19,57 +20,100 @@ const EditMealPlan = ({mealplan}) => {
     }
   }
 
+  // Save recipes deletion 
+ 
+
+
+
   // Get all selected mealplan's recipeIDs
   const [recipeIDs, setRecipesID] = useState([]);
   const [mealPlanRecipes, setMealPlanRecipes] = useState([]);
-  const getRecepiesID = async ()=>{
-      try{
-          const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}/recipesID`)
-          const jsonData = await response.json();
-          console.log(jsonData);
-          setRecipesID(jsonData)
-      }catch(err){
-          console.error(err.message);
-      }
+  // const getRecepiesID = async ()=>{
       
-  };
-  // Get all recipeIds names from database
+      
+  // };
+  // Get all recipeIds names from database ${recipeIDs[i].recipe_id}
   const getMealPlanRecipes = async ()=>{
       try{
-          const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}`)
-          const jsonData = await response.json();
-          console.log(jsonData);
-          setMealPlanRecipes(jsonData);
-          
+        console.log('This is map recipeID');
+        recipeIDs.map((each) => {console.log(each.recipe_id)});
+        recipeIDs.map(async (each) => {
+          await fetch(`http://localhost:3001/recipeName/${each.recipe_id}`)
+        .then (response => {
+          return response.json();
+      })
+      .then(name =>{
+        setMealPlanRecipes(name);
+        console.log({mealPlanRecipes});
+      })})
       }catch(err){
-          console.error(err.message);
-      }
-      
-  };
+        console.error(err.message);
+}};
+
+const deleteMealPlanRecipe = async (id)=>{
+  //const response = await fetch(`http://localhost:3001/recipeName/5`);
+  setMealPlanRecipes(mealPlanRecipes.filter(mealPlanRecipe => mealPlanRecipe.id!==id));
+  
+};
+          
+/*
+            const response = await fetch(`http://localhost:3001/recipeName/${id}`)
+            const jsonData = await response.json();
+            setMealPlanRecipes(jsonData);
+            console.log('get receipe names json')
+            console.log(mealPlanRecipes);
+  */
+          
+  useEffect(async ()=>{
+    try{
+      const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}/recipeIDs`)
+      const jsonData = await response.json();
+      console.log('getRecipeIDs json')
+      console.log(jsonData);
+      setRecipesID(jsonData)
+  }catch(err){
+      console.error(err.message);
+  }
+  },[]);
   useEffect(()=>{
   },[recipeIDs])
+
+ /* useEffect(()=>{
+      getMealPlanRecipes();
+  },[]);*/
+
+  useEffect(async ()=>{
+    try{
+      console.log('This is map recipeID');
+      recipeIDs.map((each) => {console.log(each.recipe_id)});
+      console.log('This is end of print map');
+      recipeIDs.map(async (each) => {
+        await fetch(`http://localhost:3001/recipeName/${each.recipe_id}`)
+      .then (response => {
+        return response.json();
+    })
+    .then(name =>{
+      setMealPlanRecipes(name);
+      console.log({mealPlanRecipes});
+    })})
+    }catch(err){
+      console.error(err.message);
+}},[]);
   useEffect(()=>{
   },[mealPlanRecipes])
-  useEffect(()=>{
-      getRecepiesID();
-  },[]);
-
-  useEffect(()=>{
-      getMealPlanRecipes();
-  },[]);
   
   return (
     <Fragment>
       <button type="button" class="btn btn-warning" 
-      data-toggle="modal" data-target={`#id${mealplan.mealplan_id}`}>
+      data-toggle="modal" data-target={`#id${mealplan.id}`}>
        Edit
       </button>
-      <div class="modal" id={`id${mealplan.mealplan_id}`}>
+      <div class="modal" id={`id${mealplan.id}`}>
         <div class="modal-dialog">
           <div class="modal-content">
 
             <div class="modal-header">
-              <h4 class="modal-title">Editing meal plan</h4>
+              <h4 class="modal-title">Editing {mealplan.name}</h4>
               <button type="button" class="close" 
               data-dismiss="modal" onClick={()=> setName(mealplan.name)}>
                 &times;</button>
@@ -84,13 +128,19 @@ const EditMealPlan = ({mealplan}) => {
               <table className="table mt-5 text-center">
                 <tbody>
                     {recipeIDs.map(each =>(
-                        <tr key={each.recipe_id}>
+                        <tr key={each.id}>
                             <td>{each.recipe_id}</td>
-                            <td>  
-                                Edit
+                            <td>
+                              <Link to='/recipedetails'>
+                                <button>
+                                View
+                                </button> 
+                              </Link>
+                              
                             </td>
                             <td>
-                                Delete
+                            <button onClick={()=>deleteMealPlanRecipe(each.id)}>
+                            Delete</button>
                             </td>
                         </tr>
                     ))}

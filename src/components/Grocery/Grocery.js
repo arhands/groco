@@ -1,15 +1,33 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import { Button, Modal } from 'react-bootstrap';
 import './Grocery.css';
+import Shopping from '../Shopping/Shopping';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingBasket} from '@fortawesome/free-solid-svg-icons';
 
 function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
-    function addToList(data){
-        
+   
+    const[listData, setListData] = useState([]);
 
+    const[brandName, setBrandName] = useState();    
+    const[quantity, setQuantiy] = useState();
+    const[measurementType, setMeasurementType] = useState();
+
+    // const[groceryItemName, setgroceryItemName] = useState();
+
+    function addToList(){
+        const groceryItem = {            
+            //groceryItemName: bran,
+            groceryBrand: brandName,            
+            groceryQuantity: quantity,
+            groceryMeasurment: measurementType,
+        };
+        setListData(groceryItem);
     }
-
+   
     // column labels for table
     const cols =[
         {name: "Item", selector: row => row.name},
@@ -76,6 +94,9 @@ function Grocery() {
         });
     }
 
+    <Shopping Grocery={listData} />
+    console.log(listData);
+
     return (
         <div className="groco-div">
             <h2>Groceries</h2>
@@ -89,21 +110,27 @@ function Grocery() {
                 <Modal.Body>
                     <div className="center">
                         <div> 
-                            <select className="inputSize"> {brandsList} </select>
+                            <select className="inputSize" value={brandName} onChange={(event) =>{setBrandName(event.target.value)}}> {brandsList} </select>
                         </div>
                         <div> 
-                            <select className="inputSize"> {measList} </select>
-
+                            <select className="inputSize" value={measurementType} onChange={(event) => {setMeasurementType(event.target.value)}}> {measList} </select>
                         </div>
-                        <div> <input className="inputSize" type="number" min={0} step={0.01}/> </div>
+                        <div> <input className="inputSize" type="number" min={0} step={0.01} value={quantity} onChange={(event) => {setQuantiy(event.target.value)} }/> </div>
                     </div>    
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>Close</Button>
                     <Button variant="primary" onClick={() => {addToList(data)}}>Add to List</Button>
+                    
                 </Modal.Footer>
             </Modal>
-        </div>
+            <div>
+                <Button>
+                    <Link to ="/shopping"> <FontAwesomeIcon icon={faShoppingBasket}/>
+                     Go to Shopping List</Link>
+                </Button>    
+            </div>      
+        </div>      
     );
 }
 

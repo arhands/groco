@@ -1,12 +1,8 @@
-import React, { useState } from "react";
-import ReactDOM from 'react-dom';
-import { useLocation } from 'react-router-dom'
+import React from "react";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import { Link } from 'react-router-dom';
 //import './ViewRecipe.css'
 import DataTable from 'react-data-table-component';
-import { ButtonGroup, Dropdown, DropdownButton, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 class StoreDisplayCard extends React.Component
 {
   // Placeholder function(s)
@@ -17,11 +13,6 @@ class StoreDisplayCard extends React.Component
   {
     super(props)
     this.StoreItems = props.StoreItems
-    this.StoreName = props.StoreName
-    //this.state = { Placeholder : true }
-    this.HandleAddIngredient = this.HandleAddIngredient.bind(this)
-    this.HandleDeleteSelection = this.HandleDeleteSelection.bind(this)
-    this.GetData = this.GetData.bind(this)
   }
   render()
   {
@@ -30,16 +21,7 @@ class StoreDisplayCard extends React.Component
       { name: (<Form.Label>Amount</Form.Label>), selector: row => row.quantity + " " + row.measurement_type},
     ];
     return (
-      <Card>
-        <Card.Body>
-          <Card.Title>
-            {this.props.StoreName} Items
-          </Card.Title>
-          <Card.Text>
-            <DataTable columns={columns} data={this.StoreItems} selectableRows onSelectedRowsChange={sel => this.SelectedRows = sel.selectedRows}/>
-          </Card.Text>
-        </Card.Body>       
-      </Card>
+      <DataTable columns={columns} data={this.StoreItems} selectableRows onSelectedRowsChange={sel => this.SelectedRows = sel.selectedRows}/>
     );
   }
 }

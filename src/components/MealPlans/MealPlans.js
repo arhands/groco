@@ -3,7 +3,7 @@ import "./MealPlans.css";
 import { Fragment, useEffect, useState } from 'react';
 import AddMealPlan from '../AddMealPlan/AddMealPlan';
 import EditMealPlan from '../EditMealPlan/EditMealPlan';
-import ViewMealPlan from '../ViewMealPlan/ViewMealPlan';
+
 
 
 
@@ -13,10 +13,10 @@ const MealPlans = () => {
     // Delete mealplan function
     const deleteMealPlan = async (id)=>{
         try{
-            const deleteTodo = await fetch(`https://61f6f4c72e1d7e0017fd6fa4.mockapi.io/mealplan/${id}`,{
+            const deleteTodo = await fetch(`http://localhost:3001/mealplans/${id}`,{
                 method:"DELETE"
             });
-            setMealPlans(mealPlans.filter(mealPlan => mealPlan.mealplan_id!==id));
+            setMealPlans(mealPlans.filter(mealPlan => mealPlan.id!==id));
         }catch(err){
             console.err(err.message);
         }
@@ -54,17 +54,17 @@ const MealPlans = () => {
             </thead>*/}
                 <tbody>
                     {mealPlans.map(mealPlan =>(
-                        <tr key={mealPlan.mealplan_id}>
+                        <tr key={mealPlan.id}>
                             <td>{mealPlan.name}</td>
                             <td>  
-                                <ViewMealPlan mealplan={mealPlan}/>
+                                
                             </td>
                             <td>  
                                 <EditMealPlan mealplan={mealPlan}/>
                             </td>
                             <td>
                                 <button className='btn btn-danger' 
-                                onClick={()=> deleteMealPlan(mealPlan.mealplan_id)}>Delete</button>
+                                onClick={()=> deleteMealPlan(mealPlan.id)}>Delete</button>
                             </td>
                         </tr>
                     ))}
