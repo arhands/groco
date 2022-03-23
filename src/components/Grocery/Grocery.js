@@ -10,14 +10,17 @@ import { faShoppingBasket} from '@fortawesome/free-solid-svg-icons';
 function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
     const api = "http://localhost:3001/grocery";
+    // hooks
     const[groceryData, setGroceryData] = useState([]);
-    useEffect(() => {
-        getAllGrocery();
-    }, []);
-
+    const [filteredText, setFilterText] = useState('')
+    const [pagination, setPagination] = useState(false)
     const[brandName, setBrandName] = useState();    
     const[quantity, setQuantiy] = useState();
     const[measurementType, setMeasurementType] = useState();
+
+    useEffect(() => {
+        getAllGrocery();
+    }, []);
 
 
     function addToList(){
@@ -34,7 +37,8 @@ function Grocery() {
         {name: "Item", selector: row => row.name},
         {name: "Add", selector: row => row.add}
     ];
-
+    
+    // gets all grocery data from DB
     async function getAllGrocery() {
         try {
             const response = await fetch(api);
@@ -101,9 +105,6 @@ function Grocery() {
     <Shopping Grocery={groceryData} />
     console.log(groceryData);
 
-    const [filteredText, setFilterText] = useState('')
-    const [pagination, setPagination] = useState(false)
-
     // setting up filter
     const filteredGrocery = grocoViewData.filter(item => item.name.toLowerCase().includes(filteredText.toLowerCase()))
 
@@ -115,10 +116,8 @@ function Grocery() {
                 columns={cols} 
                 data={filteredGrocery} 
                 pagination 
-                //paginationResetDefaultPage={this.state.pagination} 
                 subHeader 
                 subHeaderComponent={<input type="text" className="mb-3" onChange={e => setFilterText(e.target.value)}/>} 
-                selectableRows
                 persistTableHead/>
             </div>
             <Modal show={show} onHide={handleClose}>
