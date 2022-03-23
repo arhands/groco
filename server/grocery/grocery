@@ -1,0 +1,14 @@
+const pool = require("../db");
+
+async function getAllGrocery(req, res) {
+    try {
+        const allGrocery = await pool.query("SELECT * FROM public.ingredient_table");
+        res.json(allGrocery.rows);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+module.exports = {
+    getAllGrocery: getAllGrocery,
+};

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import { Button, Modal } from 'react-bootstrap';
@@ -9,23 +9,24 @@ import { faShoppingBasket} from '@fortawesome/free-solid-svg-icons';
 
 function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
-   
-    const[listData, setListData] = useState([]);
+    const api = "http://localhost:3001/grocery";
+    const[groceryData, setGroceryData] = useState([]);
+    useEffect(() => {
+        getAllGrocery();
+    }, []);
 
     const[brandName, setBrandName] = useState();    
     const[quantity, setQuantiy] = useState();
     const[measurementType, setMeasurementType] = useState();
 
-    // const[groceryItemName, setgroceryItemName] = useState();
 
     function addToList(){
         const groceryItem = {            
-            //groceryItemName: bran,
             groceryBrand: brandName,            
             groceryQuantity: quantity,
             groceryMeasurment: measurementType,
         };
-        setListData(groceryItem);
+        setGroceryData(groceryItem);
     }
    
     // column labels for table
@@ -34,12 +35,15 @@ function Grocery() {
         {name: "Add", selector: row => row.add}
     ];
 
-    // dummy data for testing
-    const rawData = [
-        {name: "Egg", id: 100}, {name: "Milk", id: 200}, 
-        {name: "Wheat Bread", id: 300}, {name: "Hot Sauce", id: 400}, 
-        {name: "Cookie Dough", id: 500}, {name: "Spaghetti", id: 600}
-    ];
+    async function getAllGrocery() {
+        try {
+            const response = await fetch(api);
+            const jsonData = await response.json();
+            setGroceryData(jsonData);
+        } catch(err) {
+            console.log(err.message);
+        }
+    }
 
     // dummy brand data for spinner
     const brands = [
@@ -79,13 +83,13 @@ function Grocery() {
     };
 
 
-    // format raw data to be used in view
-    const data = [];
-    const rawLen = rawData.length;
-    for(let i = 0; i < rawLen; i++){
-        data.push({
-            id: i,
-            name: rawData[i].name,
+    // format raw Grocery data to be used in view
+    const grocoViewData = [];
+    const grocLen = groceryData.length;
+    for(let i = 0; i < grocLen; i++){
+        grocoViewData.push({
+            id: groceryData[i].id,
+            name: groceryData[i].name,
             add: (
                 <Button onClick={handleShow}>
                     Add to List
@@ -94,14 +98,28 @@ function Grocery() {
         });
     }
 
-    <Shopping Grocery={listData} />
-    console.log(listData);
+    <Shopping Grocery={groceryData} />
+    console.log(groceryData);
+
+    const [filteredText, setFilterText] = useState('')
+    const [pagination, setPagination] = useState(false)
+
+    // setting up filter
+    const filteredGrocery = grocoViewData.filter(item => item.name.toLowerCase().includes(filteredText.toLowerCase()))
 
     return (
         <div className="groco-div">
             <h2>Groceries</h2>
             <div className="GroceriesTable" id="1">
-            <DataTable columns={cols} data={data} persistTableHead/>
+            <DataTable 
+                columns={cols} 
+                data={filteredGrocery} 
+                pagination 
+                //paginationResetDefaultPage={this.state.pagination} 
+                subHeader 
+                subHeaderComponent={<input type="text" className="mb-3" onChange={e => setFilterText(e.target.value)}/>} 
+                selectableRows
+                persistTableHead/>
             </div>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -120,7 +138,7 @@ function Grocery() {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>Close</Button>
-                    <Button variant="primary" onClick={() => {addToList(data)}}>Add to List</Button>
+                    <Button variant="primary" onClick={() => {addToList()}}>Add to List</Button>
                     
                 </Modal.Footer>
             </Modal>

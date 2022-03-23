@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const mealplans = require("./mealplans/mealplans");
 const shoppinglist = require("./shoppinglist/shoppinglist");
+const grocery = require("./grocery/grocery");
 const user = require("./user/user")
 const port = process.env.PORT || 3001
 const pool = require("./db");
@@ -27,6 +28,9 @@ app.get("/mealplans/:id/recipeIDs",mealplans.getRecipe);
 
 // get a shopping list
 app.get("/shoppinglist/get/:userid", shoppinglist.get);
+
+// get all grocery items
+app.get("/grocery", grocery.getAllGrocery);
 
 // create a user
 
@@ -63,3 +67,5 @@ app.get("/user/:id", user.get);
 app.listen(port, () => {
     console.log(`Server started at port ${port}`)
 });
+
+
