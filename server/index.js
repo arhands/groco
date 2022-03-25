@@ -4,6 +4,7 @@ const cors = require("cors");
 const mealplans = require("./mealplans/mealplans");
 const shoppinglist = require("./shoppinglist/shoppinglist");
 const user = require("./user/user")
+const user = require("./recipes/recipes")
 const port = process.env.PORT || 3001
 const pool = require("./db");
 // var bodyParser = require('body-parser');
@@ -23,7 +24,10 @@ app.put("/mealplans/:id", mealplans.update);
 // delete a mealplan
 app.delete("/mealplans/:id", mealplans.delete);
 // get all recipes of a mealplan
-app.get("/mealplans/:id/recipeIDs",mealplans.getRecipe);
+app.get("/mealplans/:id/recipeIDs", mealplans.getRecipe);
+// recipes
+// get all recipes
+app.get("/recipes", recipes.getAll);
 
 // get a shopping list
 app.get("/shoppinglist/get/:userid", shoppinglist.get);
@@ -44,16 +48,16 @@ app.post("/user", async (req, res) => {
     }
 });
 
-app.get("/recipeName/:recipeID",async(req,res) =>{
-    try{
-        const {recipeID} = req.params;
-        const recipeName = await pool.query("SELECT name FROM public.recipe_table WHERE id= $1",[recipeID]);
+app.get("/recipeName/:recipeID", async (req, res) => {
+    try {
+        const { recipeID } = req.params;
+        const recipeName = await pool.query("SELECT name FROM public.recipe_table WHERE id= $1", [recipeID]);
         res.json(recipeName.rows);
         console.log('This si app.get name')
         console.log(recipeID);
         console.log(recipeName);
-        
-    }catch(err){
+
+    } catch (err) {
         console.log(err.message);
     }
 });
