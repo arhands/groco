@@ -1,14 +1,25 @@
 import React from 'react';
 import axios from 'axios';
-import {Fragment, useState} from 'react';
+import {Fragment, useState, useEffect} from 'react';
 import "./AddMealPlan.css"
 
 
 
 const AddMealPlan = () => {
+    const url = 'https://groco-backend.herokuapp.com'
+    const [userProfile, setUserProfile] = useState();
+    const [userGoogleId, setUserGoogleId] = useState();
+    useEffect(async () => {
+        await axios.get(url + '/user/' + localStorage.getItem('googleId')).then(response => {
+            setUserProfile(response.data);
+            setUserGoogleId(userProfile.googleId);
+        })
+    }, [])
+
+
     const api = "http://localhost:3001/mealplans";
     const [name, setName] = useState("");
-    const [user_id, setUserId] = useState(1);
+    const [user_id, setUserId] = useState();
     const onSubmitForm = async(e) =>{
         e.preventDefault();
         if (!name)
@@ -18,7 +29,7 @@ const AddMealPlan = () => {
         }
         else{
             try{
-                setUserId(4);
+                setUserId(userGoogleId);
                 const body = {user_id, name};
                 console.log(body);
                 axios.post(api, body
