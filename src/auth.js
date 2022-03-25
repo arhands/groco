@@ -20,6 +20,8 @@ const AuthProvider = ({ children }) => {
                 if (response.status == 200) {
                     setIsAuthenticated(true);
                     localStorage.setItem('googleId', props.googleId);
+                    localStorage.setItem('userId', response?.data?.id);
+                    console.log("response from get :", response)
                 }
                 else if (response.status == 202) {
                     const createJSON = {
@@ -33,6 +35,7 @@ const AuthProvider = ({ children }) => {
                         console.log('New user created');
                         setIsAuthenticated(true);
                         localStorage.setItem('googleId', props.googleId);
+                        localStorage.setItem('userId', res.data.id);
                     })
                 }
                 else {
@@ -48,6 +51,7 @@ const AuthProvider = ({ children }) => {
         setGoogleId();
         setIsAuthenticated(false);
         localStorage.removeItem('googleId');
+        localStorage.removeItem('userId')
     }
     return <AuthContext.Provider value={{ login, logout, isAuthenticated, userProfile, googleId }}>{children}  </AuthContext.Provider>;
 };

@@ -1,14 +1,15 @@
 import React from 'react';
 import axios from 'axios';
-import {Fragment, useState} from 'react';
+import {Fragment, useState, useEffect} from 'react';
 import "./AddMealPlan.css"
 
 
 
 const AddMealPlan = () => {
+
     const api = "http://localhost:3001/mealplans";
     const [name, setName] = useState("");
-    const [user_id, setUserId] = useState(1);
+    const user_id = localStorage.getItem('userId');
     const onSubmitForm = async(e) =>{
         e.preventDefault();
         if (!name)
@@ -18,7 +19,6 @@ const AddMealPlan = () => {
         }
         else{
             try{
-                setUserId(4);
                 const body = {user_id, name};
                 console.log(body);
                 axios.post(api, body
