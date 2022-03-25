@@ -28,6 +28,9 @@ app.get("/mealplans/:id/recipeIDs", mealplans.getRecipe);
 // recipes
 // get all recipes
 app.get("/recipes", recipes.getAll);
+// get recipe details
+app.get("/recipes/:recipeId", recipes.getDetail);
+
 
 // get a shopping list
 app.get("/shoppinglist/get/:userid", shoppinglist.get);

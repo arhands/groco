@@ -10,21 +10,30 @@ import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 function ViewRecipe() {
     const location = useLocation()
     let { id, RecipeName } = location.data
-    let instructions = "ERROR"
-    let ingredients = []
-    let isAuthor = true
-    if(id === -1)// new recipe
-    {
-        instructions = ""
+    const [newId, setId] = React.useState(id)
+    //const [newName, setName] = React.useState(RecipeName)
+    const [instructions, setInstructions] = React.useState(null)
+    const [ingredients, setIngredients] = React.useState([])
+    const [isAuthor, setIsAuthor] = React.useState(id === -1)
+    if (id !== -1) {
+        const api = "http://localhost:3001/recipes/";
+        if (instructions == null) {
+            (async () => {
+                try {
+                    const response = await fetch(api + `${id}`)
+                    let jsonData = await response.json()
+                    setInstructions(jsonData.instructions)
+                    setIngredients(jsonData.ingredients)
+                } catch (err) {
+                    console.error(err);
+                }
+            })();
+        }
     }
-    else
-    {
-        
-    }
+
     // will be replaced with DB query.
 
-    switch(id)
-    {
+    switch (id) {
         case 337:
             instructions = "Place the water into a pot and cook at medium for 20 minutes then serve.";
             ingredients = [
@@ -55,17 +64,15 @@ function ViewRecipe() {
             console.error("id = '" + toString(id) + "' is invalid")
             break
     }
-    function GenerateMealPlanSelection()
-    {
+    function GenerateMealPlanSelection() {
         let mealPlans = [
-            {name: "3 days plan",   id: 1},
-            {name: "1 week plan",   id: 2},
-            {name: "Vegetarian",    id: 3},
-            {name: "Thanksgiving",  id: 4},
-            {name: "Weekend BBQ",   id: 5}
+            { name: "3 days plan", id: 1 },
+            { name: "1 week plan", id: 2 },
+            { name: "Vegetarian", id: 3 },
+            { name: "Thanksgiving", id: 4 },
+            { name: "Weekend BBQ", id: 5 }
         ];
-        function AddToMealPlan(p)
-        {
+        function AddToMealPlan(p) {
             console.log("Adding recipe to meal plan " + JSON.stringify(p) + ".")
             //console.log("Adding recipe to meal plan " + toString(p.id) + ".")
         }
@@ -73,7 +80,7 @@ function ViewRecipe() {
             <DropdownButton as={ButtonGroup} title="+ Meal Plan">
                 {mealPlans.map(
                     p => (
-                        <Link to={{ pathname: "/recipes"}} >
+                        <Link to={{ pathname: "/recipes" }} >
                             <Dropdown.Item as={Button} onClick={() => AddToMealPlan(p)} eventKey={p.id}>
                                 {p.name}
                             </Dropdown.Item>
@@ -83,45 +90,45 @@ function ViewRecipe() {
         )
     }
     //
-    console.log("id === -1:",id === -1)
+    console.log("id === -1:", id === -1)
     const [editMode, updateState] = React.useState(id === -1)
     let editModeToggle = () => updateState(!editMode)
     return (
         <form>
             <label>
                 Name:
-                <input type="text" defaultValue={RecipeName} onChange={e => RecipeName=e.target.value} id="input-name" disabled={!editMode}/>
+                <input type="text" defaultValue={RecipeName} onChange={e => RecipeName = e.target.value} id="input-name" disabled={!editMode} />
             </label>
-            <br/>
+            <br />
             <Form.Label>
-                Instructions:<br/>
+                Instructions:<br />
             </Form.Label>
-            <Form.Control as="textarea" rows="8" defaultValue={instructions} onChange={e => instructions=e.target.value} id="input-instructions" disabled={!editMode}/>
-            <br/>
-            <IngredientTable EditMode={editMode} Ingredients={ingredients}/>
-            <br/>
+            <Form.Control as="textarea" rows="8" defaultValue={instructions} onChange={e => instructions = e.target.value} id="input-instructions" disabled={!editMode} />
+            <br />
+            <IngredientTable EditMode={editMode} Ingredients={ingredients} />
+            <br />
             {
-                isAuthor? 
-                (
-                    <ButtonGroup>             
-                        <Button variant="Secondary">Delete</Button>
-                        <Button variant="Secondary" onClick={editModeToggle} id="editBtn">{editMode? "Save" : "Edit"}</Button>
-                        <Link to={{ pathname: "/recipes"}} >
+                isAuthor ?
+                    (
+                        <ButtonGroup>
+                            <Button variant="Secondary">Delete</Button>
+                            <Button variant="Secondary" onClick={editModeToggle} id="editBtn">{editMode ? "Save" : "Edit"}</Button>
+                            <Link to={{ pathname: "/recipes" }} >
+                                <Button variant="Secondary">Close</Button>
+                            </Link>
+                            {id === -1 ? null : GenerateMealPlanSelection()}
+                            <Link to={{ pathname: "/recipes" }} >
+                                <Button variant="Secondary">+List</Button>
+                            </Link>
+                        </ButtonGroup>
+                    ) :
+                    (
+                        <ButtonGroup>
                             <Button variant="Secondary">Close</Button>
-                        </Link>
-                        {id===-1? null : GenerateMealPlanSelection()}
-                        <Link to={{ pathname: "/recipes"}} >
-                            <Button variant="Secondary">+List</Button>
-                        </Link>
-                    </ButtonGroup>
-                ) :
-                (
-                    <ButtonGroup>              
-                        <Button variant="Secondary">Close</Button>
-                        {GenerateMealPlanSelection()}
-                        <Button variant="Primary">+ List</Button>
-                    </ButtonGroup>
-                )
+                            {GenerateMealPlanSelection()}
+                            <Button variant="Primary">+ List</Button>
+                        </ButtonGroup>
+                    )
             }
         </form>
     );
