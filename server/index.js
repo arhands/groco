@@ -29,8 +29,16 @@ app.get("/mealplans/:id/recipeIDs",mealplans.getRecipe);
 // get a shopping list
 app.get("/shoppinglist/get/:userid", shoppinglist.get);
 
+// ------ GROCERY QUERIES ------
 // get all grocery items
 app.get("/grocery", grocery.getAllGrocery);
+
+// get all brands
+app.get("/grocery/brand", grocery.getAllBrand);
+
+// get all measurements
+app.get("/grocery/meas", grocery.getAllMeas);
+
 
 // create a user
 

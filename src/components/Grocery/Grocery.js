@@ -4,40 +4,56 @@ import DataTable from 'react-data-table-component';
 import { Button, Modal } from 'react-bootstrap';
 import './Grocery.css';
 import Shopping from '../Shopping/Shopping';
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingBasket} from '@fortawesome/free-solid-svg-icons';
 
 function Grocery() {
+
+    useEffect(async () => {
+        await axios.get(url + '/user/' + localStorage.getItem('googleId')).then(response => {
+            setUserId(response.data.id);
+        })
+    }, [])
     // gives pop up to choose brand, measurement, and type, adds to shopping list
     const api = "http://localhost:3001/grocery";
     // hooks
     const[groceryData, setGroceryData] = useState([]);
-    const [filteredText, setFilterText] = useState('')
-    const [pagination, setPagination] = useState(false)
+    const [brandData, setBrandData] = useState([]);
+    const [filteredText, setFilterText] = useState('');
+    // const [pagination, setPagination] = useState(false);
     const[brandName, setBrandName] = useState();    
+    const [measData, setMeasData] = useState([]);
     const[quantity, setQuantiy] = useState();
     const[measurementType, setMeasurementType] = useState();
 
     useEffect(() => {
         getAllGrocery();
+    }, [])
+
+    useEffect(() => {
+        getAllBrand();
     }, []);
 
-
-    function addToList(){
-        const groceryItem = {            
-            groceryBrand: brandName,            
-            groceryQuantity: quantity,
-            groceryMeasurment: measurementType,
-        };
-        setGroceryData(groceryItem);
-    }
+    useEffect(() => {
+        getAllMeas();
+    }, []);
    
     // column labels for table
     const cols =[
         {name: "Item", selector: row => row.name},
         {name: "Add", selector: row => row.add}
     ];
+
+     // set up pop modal
+     const [show, setShow] = useState(false);
+     const handleClose = () => setShow(false);
+     const handleShow = () => setShow(true);
+     const handleOnChange = target => {
+         console.log(target);
+     };
     
+    // ------- Grocery items ------- 
     // gets all grocery data from DB
     async function getAllGrocery() {
         try {
@@ -48,44 +64,6 @@ function Grocery() {
             console.log(err.message);
         }
     }
-
-    // dummy brand data for spinner
-    const brands = [
-        {id: 100, name: "Wonder"}, {id: 200, name: "Heinz"},
-        {id: 300, name: "Yoohoo"}, {id: 400, name: "Tapitio"},
-        {id: 500, name: "Chef Boyardee"}, {id: 600, name: "Lays"}
-    ];
-
-    // dynamically assigns brand options for rendering on page
-    let brandsList = brands.length > 0 && brands.map((item, i) => {
-        return (
-            <option key={i} value={item.id}>{item.name}</option>
-        )
-    });
-
-    // dummy measurments data for spinner
-    const meas = [
-        {id: 100, name: "gallon"}, {id: 200, name: "cup"},
-        {id: 300, name: "teaspoon"}, {id: 400, name: "tablespoon"},
-        {id: 500, name: "bag"}, {id: 600, name: "unit"}
-    ];
-
-    // dynamically assigns measurment options for rendering on page
-    let measList = meas.length > 0 && meas.map((item, i) => {
-        return (
-            <option key={i} value={item.id}>{item.name}</option>
-        )
-    });
-
-
-    // set up pop modal
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    const handleOnChange = target => {
-        console.log(target);
-    };
-
 
     // format raw Grocery data to be used in view
     const grocoViewData = [];
@@ -101,6 +79,76 @@ function Grocery() {
             )
         });
     }
+
+    // ------- Brands ------- 
+    // get all brands from DB
+    async function getAllBrand() {
+        try {
+            const response = await fetch(api + "/brand");
+            const jsonData = await response.json();
+            setBrandData(jsonData);
+            console.log(jsonData);
+        } catch(err) {
+            console.log(err.message);
+        }
+    }
+
+    // format raw Brand data to be used in view
+    const brandFormatData = [];
+    const brandLen = brandData.length;
+    for(let i = 0; i < brandLen; i++){
+        brandFormatData.push({
+            id: brandData[i].id,
+            name: brandData[i].name
+        });
+    }
+
+    // dynamically assigns brand options for rendering on page
+    let brandViewData = brandFormatData.length > 0 && brandFormatData.map((item, i) =>{
+        return (
+            <option key={i} value={item.id}> {item.name} </option>
+        )
+    });
+    
+    // ------- Measurements ------- 
+    // get all meas from DB
+    async function getAllMeas() {
+        try {
+            const response = await fetch(api + "/meas");
+            const jsonData = await response.json();
+            setMeasData(jsonData);
+            console.log(jsonData);
+        } catch(err) {
+            console.log(err.message);
+        }
+    }
+
+    // format raw Brand data to be used in view
+    const measFormatData = [];
+    const measLen = measData.length;
+    for(let i = 0; i < measLen; i++){
+        measFormatData.push({
+            id: measData[i].id,
+            name: measData[i].name
+        });
+    }
+
+    // dynamically assigns brand options for rendering on page
+    let measViewData = measFormatData.length > 0 && measFormatData.map((item, i) =>{
+        return (
+            <option key={i} value={item.id}> {item.name} </option>
+        )
+    });
+
+    function addToList(){
+        const groceryItem = {            
+            groceryBrand: brandName,            
+            groceryQuantity: quantity,
+            groceryMeasurment: measurementType,
+        };
+        setGroceryData(groceryItem);
+    }
+
 
     <Shopping Grocery={groceryData} />
     console.log(groceryData);
@@ -127,10 +175,10 @@ function Grocery() {
                 <Modal.Body>
                     <div className="center">
                         <div> 
-                            <select className="inputSize" value={brandName} onChange={(event) =>{setBrandName(event.target.value)}}> {brandsList} </select>
+                            <select className="inputSize" value={brandName} onChange={(event) =>{setBrandName(event.target.value)}}> {brandViewData} </select>
                         </div>
                         <div> 
-                            <select className="inputSize" value={measurementType} onChange={(event) => {setMeasurementType(event.target.value)}}> {measList} </select>
+                            <select className="inputSize" value={measurementType} onChange={(event) => {setMeasurementType(event.target.value)}}> {measViewData} </select>
                         </div>
                         <div> <input className="inputSize" type="number" min={0} step={0.01} value={quantity} onChange={(event) => {setQuantiy(event.target.value)} }/> </div>
                     </div>    

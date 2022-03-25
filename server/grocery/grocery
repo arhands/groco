@@ -1,5 +1,11 @@
+// TODO
+// - get all brands
+// - get all measurments
+// - add item to list
+
 const pool = require("../db");
 
+// get all grocery
 async function getAllGrocery(req, res) {
     try {
         const allGrocery = await pool.query("SELECT * FROM public.ingredient_table");
@@ -9,6 +15,31 @@ async function getAllGrocery(req, res) {
     }
 }
 
+// get all brands
+async function getAllBrand(req, res) {
+    try {
+        const allBrand = await pool.query("SELECT * FROM public.brand_table");
+        res.json(allBrand.rows);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+// get all measurements
+async function getAllMeas(req, res) {
+    try {
+        const allMeas = await pool.query("SELECT * FROM public.measurement_table");
+        console.log(allMeas)
+        res.json(allMeas.rows);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+// add item to list
+
 module.exports = {
     getAllGrocery: getAllGrocery,
+    getAllBrand: getAllBrand,
+    getAllMeas: getAllMeas,
 };
