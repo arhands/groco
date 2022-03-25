@@ -6,17 +6,10 @@ import "./AddMealPlan.css"
 
 
 const AddMealPlan = () => {
-    const url = 'https://groco-backend.herokuapp.com'
-    useEffect(async () => {
-        await axios.get(url + '/user/' + localStorage.getItem('googleId')).then(response => {
-            setUserId(response.data.id);
-        })
-    }, [])
-
 
     const api = "http://localhost:3001/mealplans";
     const [name, setName] = useState("");
-    const [user_id, setUserId] = useState();
+    const user_id = localStorage.getItem('userId');
     const onSubmitForm = async(e) =>{
         e.preventDefault();
         if (!name)
@@ -26,7 +19,6 @@ const AddMealPlan = () => {
         }
         else{
             try{
-                setUserId(user_id);
                 const body = {user_id, name};
                 console.log(body);
                 axios.post(api, body
