@@ -7,12 +7,9 @@ import "./AddMealPlan.css"
 
 const AddMealPlan = () => {
     const url = 'https://groco-backend.herokuapp.com'
-    const [userProfile, setUserProfile] = useState();
-    const [userGoogleId, setUserGoogleId] = useState();
     useEffect(async () => {
         await axios.get(url + '/user/' + localStorage.getItem('googleId')).then(response => {
-            setUserProfile(response.data);
-            setUserGoogleId(userProfile.googleId);
+            setUserId(response.data.id);
         })
     }, [])
 
@@ -29,7 +26,7 @@ const AddMealPlan = () => {
         }
         else{
             try{
-                setUserId(userGoogleId);
+                setUserId(user_id);
                 const body = {user_id, name};
                 console.log(body);
                 axios.post(api, body
