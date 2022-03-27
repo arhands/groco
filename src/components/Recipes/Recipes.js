@@ -7,7 +7,7 @@ import { FaPlusCircle } from 'react-icons/fa';
 class Recipes extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { filteredText: '', pagination: false, recipes: [] }
+    this.state = { filteredText: '', pagination: false, recipes: [], loading: true }
   }
   render() {
     const columns = [
@@ -36,9 +36,9 @@ class Recipes extends React.Component {
           this.setState({
             filteredText: this.state.filteredText,
             pagination: this.state.pagination,
-            recipes: jsonData
+            recipes: jsonData,
+            loading: false 
           })
-
         } catch (err) {
           console.error(err);
         }
@@ -89,7 +89,7 @@ class Recipes extends React.Component {
           subHeaderComponent={<input type="text" className="mb-3" onChange={e => setFilterText(e.target.value)} />}
           selectableRows
           persistTableHead
-          progressPending={this.state.recipes.length === 0} />
+          progressPending={this.state.loading} />
       </div>
     )
   }

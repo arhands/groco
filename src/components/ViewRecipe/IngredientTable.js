@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import './ViewRecipe.css'
 import DataTable from 'react-data-table-component';
 import { ButtonGroup } from "react-bootstrap";
+import SelectSearch from 'react-select-search';
 class IngredientTable extends React.Component
 {
   // Placeholder function(s)
@@ -13,14 +14,29 @@ class IngredientTable extends React.Component
   constructor(props)
   {
     super(props)
-    this.Ingredients = props.Ingredients
-    this.state = { Placeholder : true }
+    this.state = { brand_options : null, measurement_types: null }
     this.HandleAddIngredient = this.HandleAddIngredient.bind(this)
     this.HandleDeleteSelection = this.HandleDeleteSelection.bind(this)
     this.GetData = this.GetData.bind(this)
   }
   render()
   {
+    if(this.state.brand_options == null && this.props.EditMode)
+    {
+      const api = "http://localhost:3001/recipe/";
+      // /ingredientoptions
+      (async () => {
+        try {
+            const response = await fetch(api + 'ingredientoptions/')
+            const {brands , measurementtypes} = await response.json()
+            const brand_options = brands.map(b => ({name: b.name, value: b.id}))
+            const measurement_types = measurementtypes.map(b => ({name: b.name, value: b.id}))
+            this.setState({ brand_options: brand_options, measurement_types: measurement_types})
+        } catch (err) {
+            console.error(err);
+        }
+      })();
+    }
     let columns = [
       { name: (<Form.Label>Item</Form.Label>),         selector: row => row.name },
       { name: (<Form.Label>Amount</Form.Label>),       selector: row => row.quantity },
@@ -47,7 +63,7 @@ class IngredientTable extends React.Component
   }
   HandleAddIngredient()
   {
-    this.Ingredients.push({
+    this.props.Ingredients.push({
         name: "", quantity: 0, measurement_type: "N/A"
     })
     this.setState({ Placeholder : true })
@@ -64,7 +80,7 @@ class IngredientTable extends React.Component
   GetData()
   {
     let data = []
-    let ingredients = this.Ingredients
+    let ingredients = this.props.Ingredients
     for(let i = 0; i < ingredients.length; i++)
       data.push({
         name: (<input type="text" defaultValue={ingredients[i].name} onChange={e => ingredients[i].name=e.target.value} disabled={!this.props.EditMode}/>),

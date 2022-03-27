@@ -10,59 +10,27 @@ import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 function ViewRecipe() {
     const location = useLocation()
     let { id, RecipeName } = location.data
-    const [newId, setId] = React.useState(id)
+    //const [newId, setId] = React.useState(id)
     //const [newName, setName] = React.useState(RecipeName)
-    const [instructions, setInstructions] = React.useState(null)
-    const [ingredients, setIngredients] = React.useState([])
+    //const [instructions, setInstructions] = React.useState(null)
+    //const [ingredients, setIngredients] = React.useState([])
+    const [{instructions, ingredients, newId}, setRecipe] = React.useState({instructions: null,ingredients: [],newId: id})
     const [isAuthor, setIsAuthor] = React.useState(id === -1)
+    const api = "http://localhost:3001/recipes/";
     if (id !== -1) {
-        const api = "http://localhost:3001/recipes/";
         if (instructions == null) {
             (async () => {
                 try {
                     const response = await fetch(api + `${id}`)
                     let jsonData = await response.json()
-                    setInstructions(jsonData.instructions)
-                    setIngredients(jsonData.ingredients)
+                    setRecipe({instructions: jsonData.instructions,ingredients: jsonData.ingredients,newId: id})
+                    console.log("ingredients updated.")
+                    console.log(JSON.stringify(jsonData.ingredients))
                 } catch (err) {
                     console.error(err);
                 }
             })();
         }
-    }
-
-    // will be replaced with DB query.
-
-    switch (id) {
-        case 337:
-            instructions = "Place the water into a pot and cook at medium for 20 minutes then serve.";
-            ingredients = [
-                { name: "Water", quantity: 1, measurement_type: "Cups" },
-            ];
-            break
-        case 561:
-            instructions = "Get two slices of bread and a pickle, mix them together, and enjoy.";
-            ingredients = [
-                { name: "Bread", quantity: 2, measurement_type: "Slices" },
-                { name: "Pickle", quantity: 1, measurement_type: "N/A" },
-            ];
-            break
-        case 849:
-            instructions = "Fetch one bread from the store and throw an egg on it!";
-            ingredients = [
-                { name: "Bread", quantity: 1, measurement_type: "Loaf" },
-                { name: "Egg", quantity: 1, measurement_type: "N/A" },
-            ];
-            break
-        case 123:
-            instructions = "Buy rice, eat it, then rethink your life because you just ate raw rice.";
-            ingredients = [
-                { name: "Rice", quantity: 2.3, measurement_type: "Cups" },
-            ];
-            break
-        default:
-            console.error("id = '" + toString(id) + "' is invalid")
-            break
     }
     function GenerateMealPlanSelection() {
         let mealPlans = [
@@ -92,7 +60,39 @@ function ViewRecipe() {
     //
     console.log("id === -1:", id === -1)
     const [editMode, updateState] = React.useState(id === -1)
-    let editModeToggle = () => updateState(!editMode)
+    function editModeToggle()
+    {
+        // checking if we need to save the recipe.
+        if(editMode)// if this is true, then we are currently in edit mode and need to save the changes.
+        {
+            if(newId === -1)
+            {
+                (async () => {
+                    try {
+                        const googleid = localStorage.getItem('googleId')
+                        const response = await fetch(api + 'post', {
+                            method: 'POST',
+                            headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                googleid: googleid,
+                                ingredients: ingredients, 
+                                instructions: instructions, 
+                                name: RecipeName
+                            })
+                        });
+                        let jsonData = await response.json()
+                        setRecipe({instructions: instructions,ingredients: ingredients, newId: jsonData.id})
+                    } catch (err) {
+                        console.error(err);
+                    }
+                })();
+            }
+        }
+        updateState(!editMode)
+    }
     return (
         <form>
             <label>

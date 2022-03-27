@@ -4,7 +4,7 @@ const cors = require("cors");
 const mealplans = require("./mealplans/mealplans");
 const shoppinglist = require("./shoppinglist/shoppinglist");
 const user = require("./user/user")
-const user = require("./recipes/recipes")
+const recipes = require("./recipes/recipes")
 const port = process.env.PORT || 3001
 const pool = require("./db");
 // var bodyParser = require('body-parser');
@@ -30,6 +30,11 @@ app.get("/mealplans/:id/recipeIDs", mealplans.getRecipe);
 app.get("/recipes", recipes.getAll);
 // get recipe details
 app.get("/recipes/:recipeId", recipes.getDetail);
+// post a new recipe
+app.post("/recipes/post", recipes.post);
+// get ingredient options
+app.get("/recipe/ingredientoptions", recipes.getIngredientOptions);
+
 
 
 // get a shopping list
