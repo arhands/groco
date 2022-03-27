@@ -21,7 +21,7 @@ function ViewRecipe() {
         if (instructions == null) {
             (async () => {
                 try {
-                    const response = await fetch(api + `${id}`)
+                    const response = await fetch(api + `details/${id}`)
                     let jsonData = await response.json()
                     setRecipe({instructions: jsonData.instructions,ingredients: jsonData.ingredients,newId: id})
                     console.log("ingredients updated.")

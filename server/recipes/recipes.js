@@ -66,9 +66,9 @@ async function postRecipe(req, res) {
 }
 async function getIngredientOptions(req, res) {
   try {
-      const brands = (await pool.query("SELECT id, name FROM brand_table")).rows;
+      const ingredients = (await pool.query("SELECT id, name FROM ingredient_table")).rows;
       const measurement_types = (await pool.query("SELECT id, name FROM measurement_table")).rows;
-      res.json({brands: brands, measurementtypes: measurement_types});
+      res.json({ingredients: ingredients, measurementtypes: measurement_types});
   } catch (err) {
       console.log(err.message);
   }

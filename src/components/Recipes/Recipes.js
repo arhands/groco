@@ -29,16 +29,20 @@ class Recipes extends React.Component {
     // raw data collected from server
     const api = "http://localhost:3001/recipes/";
     if (this.state.loading) {
+      console.log("attempting load");
       (async () => {
         try {
+          console.log("requesting data")
           const response = await fetch(api)
+          console.log("response received")
           let jsonData = await response.json()
           this.setState({
             filteredText: this.state.filteredText,
             pagination: this.state.pagination,
             recipes: jsonData,
             loading: false 
-          })
+          });
+          console.log("recipes loaded")
         } catch (err) {
           console.error(err);
         }
