@@ -78,7 +78,11 @@ function ViewRecipe() {
                             },
                             body: JSON.stringify({
                                 googleid: googleid,
-                                ingredients: ingredients, 
+                                ingredients: ingredients.map(s => ({
+                                    ingredient_id: s.ingredient_id,
+                                    quantity: s.quantity,
+                                    measurement_type: s.measurement_id,
+                                })), 
                                 instructions: instructions, 
                                 name: RecipeName
                             })
@@ -103,12 +107,12 @@ function ViewRecipe() {
             <Form.Label>
                 Instructions:<br />
             </Form.Label>
-            <Form.Control as="textarea" rows="8" defaultValue={instructions} onChange={e => instructions = e.target.value} id="input-instructions" disabled={!editMode} />
+            <Form.Control as="textarea" rows="8" defaultValue={instructions} onChange={e => setRecipe({instructions: e.target.value,ingredients: ingredients, newId: newId})} id="input-instructions" disabled={!editMode} />
             <br />
             <IngredientTable 
                 EditMode={editMode} 
                 Ingredients={ingredients}
-                UpdateIngredientsCallback={newIng => {console.log(newIng); setRecipe({instructions: instructions,ingredients: newIng, newId: newId})}}
+                UpdateIngredientsCallback={newIng => {console.log(newId); setRecipe({instructions: instructions,ingredients: newIng, newId: newId})}}
             />
             <br />
             {

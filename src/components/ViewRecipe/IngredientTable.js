@@ -95,10 +95,10 @@ class IngredientTable extends React.Component
     }
     for(let i = 0; i < ingredients.length; i++)
     {
-      console.log("ingredient[",i,"].name =",ingredients[i].name)
+      console.log("ithis.props.EditMode")
       data.push({
         //name: (<input type="text" defaultValue={ingredients[i].name} onChange={e => ingredients[i].name=e.target.value} disabled={!this.props.EditMode}/>),
-        name: <SelectSearch
+        name: this.props.EditMode? (<SelectSearch
           placeholder="Search for additional options"
           value={ingredients[i].v}
           onChange={v => {
@@ -113,11 +113,10 @@ class IngredientTable extends React.Component
           search
           filterOptions={(options) => {
               return q => options.filter(opt => opt.name.toUpperCase().includes(q.toUpperCase())).splice(0,10)
-          }}
-          disabled={!this.props.EditMode}/>,
+          }}/>) : (<p>{ingredients[i].name}</p>),
         quantity: (<input type="number" defaultValue={ingredients[i].quantity} onChange={e => ingredients[i].quantity=e.target.value} disabled={!this.props.EditMode}/>),
         //measurement_type: (<input type="text" defaultValue={ingredients[i].measurement_type} onChange={e => ingredients[i].measurement_type=e.target.value} disabled={!this.props.EditMode}/>),
-        measurement_type: <SelectSearch
+        measurement_type: this.props.EditMode? (<SelectSearch
           filterOptions={(options) => {
               return q => options.filter(opt => opt.name.toUpperCase().includes(q.toUpperCase()))
           }}
@@ -136,9 +135,8 @@ class IngredientTable extends React.Component
           filterOptions={(options) => {
               return q => options.filter(opt => opt.name.toUpperCase().includes(q.toUpperCase())).splice(0,10)
           }}
-          disabled={!this.props.EditMode}
-        />,
-        id: ingredients[i].id == null? ingredients[i].id = this.MinimumIngredientID++ : ingredients[i].id
+        />) : (<p>{ingredients[i].measurement_type}</p>),
+        key: i
       });
     }
     return data

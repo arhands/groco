@@ -38,20 +38,24 @@ async function postRecipe(req, res) {
   try {
       // ingredients: [{ingredient_id, measurement_type (id), quantity}...]
       const { googleid, ingredients, instructions, name } = req.body;
+      console.log("41:",JSON.stringify(ingredients))
+      console.log("42:",JSON.stringify(name))
+      console.log("43:",JSON.stringify(instructions))
       // TODO: make sure a collision doesn't happen with this collection ID
       const collection_id = (await pool.query(
         "SELECT MAX(collection_id) + 1 id " +
         "FROM ingredient_instance_table"
       )).rows[0].id;
+      console.log("collection_id:",collection_id)
       const creator_id = (await pool.query(
         "SELECT id FROM user_table WHERE googleid = $1",[googleid]
       )).rows[0].id;
-      for(let ingredient in ingredients)
+      for(let i = 0; i < ingredients.length; i++)
       {
         await pool.query(
           "INSERT INTO ingredient_instance_table (collection_id, ingredient_id, quantity, measurement_type)" +
           "VALUES ($1, $2, $3, $4)",
-          [collection_id, ingredient.ingredient_id, ingredient.quantity, ingredient.measurement_type]
+          [collection_id, ingredients[i].ingredient_id, ingredients[i].quantity, ingredients[i].measurement_type]
         );
       }
       const recipe_id = (await pool.query(
