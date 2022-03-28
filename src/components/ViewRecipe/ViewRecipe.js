@@ -105,7 +105,11 @@ function ViewRecipe() {
             </Form.Label>
             <Form.Control as="textarea" rows="8" defaultValue={instructions} onChange={e => instructions = e.target.value} id="input-instructions" disabled={!editMode} />
             <br />
-            <IngredientTable EditMode={editMode} Ingredients={ingredients} />
+            <IngredientTable 
+                EditMode={editMode} 
+                Ingredients={ingredients}
+                UpdateIngredientsCallback={newIng => {console.log(newIng); setRecipe({instructions: instructions,ingredients: newIng, newId: newId})}}
+            />
             <br />
             {
                 isAuthor ?

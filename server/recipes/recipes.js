@@ -22,7 +22,7 @@ async function getRecipeDetails(req, res) {
       )).rows[0];
       // getting ingredients
       const ingredients = (await pool.query(
-        "SELECT I.name AS name, quantity, M.name as measurement_type " +
+        "SELECT I.name AS name, I.id as ingredient_id, quantity, M.name as measurement_type, M.id as measurement_id " +
           "FROM ingredient_table I " +
           "JOIN ingredient_instance_table II ON I.id = II.ingredient_id " +
           "JOIN measurement_table M ON M.id = II.measurement_type " +
