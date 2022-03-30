@@ -11,16 +11,19 @@ function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
     const grocoApi = "http://localhost:3001/grocery/";
     // hooks
-    const[groceryData, setGroceryData] = useState([]);
+    const [groceryData, setGroceryData] = useState([]);
     const [brandData, setBrandData] = useState([]);
-    const [filteredText, setFilterText] = useState('');
-    const[brandName, setBrandName] = useState();    
     const [measData, setMeasData] = useState([]);
-    const[quantity, setQuantiy] = useState();
-    const[measurementType, setMeasurementType] = useState();
-    const [listId, setListId] = useState();
-    const [maxCollectId, setMaxCollect] = useState();
     const [userData, setUserData] = useState([]);
+    const [filteredText, setFilterText] = useState('');
+
+    const [grocoId, setGrocoId] = useState(0);
+    const [brandId, setBrandId] = useState(1);    
+    const [quantity, setQuantity] = useState(0);
+    const [measurementId, setMeasurementId] = useState(1);
+
+    const [listId, setListId] = useState(-1);
+    const [maxCollectId, setMaxCollect] = useState(-1);
 
     const googleID = localStorage.getItem('googleId');
     const userApi = "http://localhost:3001/user/" + googleID;
@@ -58,12 +61,17 @@ function Grocery() {
     ];
 
      // set up pop modal
-     const [show, setShow] = useState(false);
-     const handleClose = () => setShow(false);
-     const handleShow = () => setShow(true);
-     const handleOnChange = target => {
-         console.log(target);
-     };
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const handleOnChange = target => {
+        console.log(target);
+    };
+
+    // error pop modal
+    const [showError, setShowError] = useState(false);
+    const handleErrorClose = () => setShowError(false);
+    const handleErrorShow = () => setShowError(true);
     
     // ------- Grocery items ------- 
     // gets all grocery data from DB
@@ -84,11 +92,11 @@ function Grocery() {
         grocoViewData.push({
             id: groceryData[i].id,
             name: groceryData[i].name,
-            add: (
-                <Button onClick={handleShow}>
-                    Add to List
-                </Button>
-            )
+            // add: (
+            //     <Button onClick={handleShow}>
+            //         Add to List
+            //     </Button>
+            // )
         });
     }
 
@@ -190,7 +198,17 @@ function Grocery() {
 
 
     async function addToList() {
-        console.log("honk!");
+        if(grocoId) {
+            const body = { listId, grocoId, quantity, measurementId, brandId };
+            const response = await fetch(grocoApi + "add_item", {
+                method:"POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+        } else {
+            setShowError(true);
+        }
     }
 
 
@@ -209,6 +227,9 @@ function Grocery() {
                 pagination 
                 subHeader 
                 subHeaderComponent={<input type="text" className="mb-3" onChange={e => setFilterText(e.target.value)}/>} 
+                selectableRows
+                selectableRowsSingle
+                onSelectedRowsChange={(event) => {setGrocoId(event.selectedRows[0].id)}}
                 persistTableHead/>
             </div>
             <Modal show={show} onHide={handleClose}>
@@ -218,12 +239,12 @@ function Grocery() {
                 <Modal.Body>
                     <div className="center">
                         <div> 
-                            <select className="inputSize" value={brandName} onChange={(event) =>{setBrandName(event.target.value)}}> {brandViewData} </select>
+                            <select className="inputSize" value={brandId} onChange={(event) =>{setBrandId(parseInt(event.target.value))}}> {brandViewData} </select>
                         </div>
                         <div> 
-                            <select className="inputSize" value={measurementType} onChange={(event) => {setMeasurementType(event.target.value)}}> {measViewData} </select>
+                            <select className="inputSize" value={measurementId} onChange={(event) => {setBrandId(setMeasurementId(event.target.value))}}> {measViewData} </select>
                         </div>
-                        <div> <input className="inputSize" type="number" min={0} step={0.01} value={quantity} onChange={(event) => {setQuantiy(event.target.value)} }/> </div>
+                        <div> <input className="inputSize" type="number" min={0} step={0.01} value={quantity} onChange={(event) => {parseFloat(setQuantity(event.target.value))} }/> </div>
                     </div>    
                 </Modal.Body>
                 <Modal.Footer>
@@ -232,6 +253,21 @@ function Grocery() {
                     
                 </Modal.Footer>
             </Modal>
+            <Modal show={showError} onHide={handleErrorClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title> Oops! </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="center">
+                        Please select a grocery item!
+                    </div>
+                </Modal.Body>
+            </Modal>
+            <div>
+                <Button onClick={handleShow}>
+                    Add to List
+                </Button>
+            </div>
             <div>
                 <Button>
                     <Link to ="/shopping"> <FontAwesomeIcon icon={faShoppingBasket}/>

@@ -45,6 +45,9 @@ app.get("/grocery/maxCollect", grocery.getCollection);
 //set shopping list id
 app.put("/grocery/setListId/:googleId", grocery.setList);
 
+// add grocery item to list
+app.post("/grocery/add_item", grocery.addItem);
+
 
 // create a user
 

@@ -46,7 +46,8 @@ async function setListId(req, res) {
     try {
         const { maxCollectId } = req.body;
         const { googleId } = req.params;
-        const update = pool.query("UPDATE public.user_table SET shopping_list_id = $1 WHERE googleid = $2 RETURNING first_name", [maxCollectId, googleId]);
+        const update = pool.query("UPDATE public.user_table SET shopping_list_id = $1 WHERE googleid = $2 RETURNING first_name", 
+            [maxCollectId, googleId]);
         res.json(update.rows);
     } catch(err) {
         console.log(err.message);
@@ -54,6 +55,18 @@ async function setListId(req, res) {
 }
 
 // add item to list
+async function addItemToList(req, res) {
+    try {
+        const { listId, grocoId, quantity, measurementId, brandId } = req.body;
+        const itemAdd = pool.query(
+            "INSERT INTO public.ingredient_instance_table (collection_id, ingredient_id, quantity, measurement_type, brand_id) VALUES ($1, $2, $3, $4, $5)",
+            [listId, grocoId, quantity, measurementId, brandId]);
+        res.json(itemAdd.rows);
+        console.log(itemAdd.rows)
+    } catch(err) {
+        console.log(err.message);
+    }
+}
 
 module.exports = {
     getGrocery: getAllGrocery,
@@ -61,4 +74,5 @@ module.exports = {
     getMeas: getAllMeas,
     getCollection: getMaxCollect,
     setList: setListId,
+    addItem: addItemToList,
 };
