@@ -99,7 +99,6 @@ function Grocery() {
             const response = await fetch(grocoApi + "brand");
             const jsonData = await response.json();
             setBrandData(jsonData);
-            console.log(jsonData);
         } catch(err) {
             console.log(err.message);
         }

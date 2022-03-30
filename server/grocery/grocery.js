@@ -44,10 +44,9 @@ async function getMaxCollect(req, res) {
 // set collection ID
 async function setListId(req, res) {
     try {
-        const { listId } = req.body;
+        const { maxCollectId } = req.body;
         const { googleId } = req.params;
-        const update = await pool.query("UPDATE public.user_table SET shopping_list_id = $1 WHERE googleid = $2 RETURNING first_name", [listId, googleId]);
-        console.log(update);
+        const update = pool.query("UPDATE public.user_table SET shopping_list_id = $1 WHERE googleid = $2 RETURNING first_name", [maxCollectId, googleId]);
         res.json(update.rows);
     } catch(err) {
         console.log(err.message);
