@@ -31,13 +31,19 @@ app.get("/shoppinglist/get/:userid", shoppinglist.get);
 
 // ------ GROCERY QUERIES ------
 // get all grocery items
-app.get("/grocery", grocery.getAllGrocery);
+app.get("/grocery", grocery.getGrocery);
 
 // get all brands
-app.get("/grocery/brand", grocery.getAllBrand);
+app.get("/grocery/brand", grocery.getBrand);
 
 // get all measurements
-app.get("/grocery/meas", grocery.getAllMeas);
+app.get("/grocery/meas", grocery.getMeas);
+
+// get max collection id
+app.get("/grocery/maxCollect", grocery.getCollection);
+
+//set shopping list id
+app.put("/grocery/setListId/:googleId", grocery.setList);
 
 
 // create a user

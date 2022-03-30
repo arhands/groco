@@ -4,29 +4,29 @@ import DataTable from 'react-data-table-component';
 import { Button, Modal } from 'react-bootstrap';
 import './Grocery.css';
 import Shopping from '../Shopping/Shopping';
-import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingBasket} from '@fortawesome/free-solid-svg-icons';
 
 function Grocery() {
-
-    useEffect(async () => {
-        await axios.get(url + '/user/' + localStorage.getItem('googleId')).then(response => {
-            setUserId(response.data.id);
-        })
-    }, [])
     // gives pop up to choose brand, measurement, and type, adds to shopping list
-    const api = "http://localhost:3001/grocery";
+    const grocoApi = "http://localhost:3001/grocery/";
     // hooks
     const[groceryData, setGroceryData] = useState([]);
     const [brandData, setBrandData] = useState([]);
     const [filteredText, setFilterText] = useState('');
-    // const [pagination, setPagination] = useState(false);
     const[brandName, setBrandName] = useState();    
     const [measData, setMeasData] = useState([]);
     const[quantity, setQuantiy] = useState();
     const[measurementType, setMeasurementType] = useState();
+    const [listId, setListId] = useState();
+    const [maxCollectId, setMaxCollect] = useState();
+    const [userData, setUserData] = useState([]);
 
+    const googleID = localStorage.getItem('googleId');
+    const userApi = "http://localhost:3001/user/" + googleID;
+
+
+    // call get all functions
     useEffect(() => {
         getAllGrocery();
     }, [])
@@ -38,7 +38,19 @@ function Grocery() {
     useEffect(() => {
         getAllMeas();
     }, []);
-   
+
+    useEffect(() => {
+        getListId();
+    }, []);
+
+    useEffect(() => {
+        getMaxCollectId();
+    }, [listId]);
+
+    useEffect(() => {
+        setShoppingListId();
+    }, [maxCollectId]);
+
     // column labels for table
     const cols =[
         {name: "Item", selector: row => row.name},
@@ -57,7 +69,7 @@ function Grocery() {
     // gets all grocery data from DB
     async function getAllGrocery() {
         try {
-            const response = await fetch(api);
+            const response = await fetch(grocoApi);
             const jsonData = await response.json();
             setGroceryData(jsonData);
         } catch(err) {
@@ -84,7 +96,7 @@ function Grocery() {
     // get all brands from DB
     async function getAllBrand() {
         try {
-            const response = await fetch(api + "/brand");
+            const response = await fetch(grocoApi + "brand");
             const jsonData = await response.json();
             setBrandData(jsonData);
             console.log(jsonData);
@@ -114,10 +126,9 @@ function Grocery() {
     // get all meas from DB
     async function getAllMeas() {
         try {
-            const response = await fetch(api + "/meas");
+            const response = await fetch(grocoApi + "meas");
             const jsonData = await response.json();
             setMeasData(jsonData);
-            console.log(jsonData);
         } catch(err) {
             console.log(err.message);
         }
@@ -140,18 +151,51 @@ function Grocery() {
         )
     });
 
-    function addToList(){
-        const groceryItem = {            
-            groceryBrand: brandName,            
-            groceryQuantity: quantity,
-            groceryMeasurment: measurementType,
-        };
-        setGroceryData(groceryItem);
+    async function getListId(){
+        try {
+            const response = await fetch(userApi);
+            const jsonData = await response.json();
+            setUserData(jsonData);
+        } catch(err) {
+            console.log(err.message);
+        }
+        setListId(userData.shopping_list_id);
+    }
+
+    async function getMaxCollectId() {
+        if(listId === undefined) {
+            try {
+                const response = await fetch(grocoApi + "maxCollect");
+                const jsonData = await response.json();
+                setMaxCollect(jsonData[0].max + 1);
+            } catch(err) {
+                console.log(err.message);
+            }
+        }
+    }
+
+   // update shopping list ID
+    async function setShoppingListId(){
+        try {
+            const body = { maxCollectId };
+            const respone = await fetch(grocoApi + "setListId/" + googleID, {
+                method:"PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            setListId(maxCollectId);
+        } catch(err) {
+            console.log(err.message);
+        }
+    }
+
+
+    async function addToList() {
+        console.log("honk!");
     }
 
 
     <Shopping Grocery={groceryData} />
-    console.log(groceryData);
 
     // setting up filter
     const filteredGrocery = grocoViewData.filter(item => item.name.toLowerCase().includes(filteredText.toLowerCase()))
