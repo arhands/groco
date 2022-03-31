@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const mealplans = require("./mealplans/mealplans");
 const shoppinglist = require("./shoppinglist/shoppinglist");
+const grocery = require("./grocery/grocery");
 const user = require("./user/user")
 const recipes = require("./recipes/recipes")
 const port = process.env.PORT || 3001
@@ -39,6 +40,26 @@ app.get("/recipes/ingredientoptions", recipes.getIngredientOptions);
 
 // get a shopping list
 app.get("/shoppinglist/get/:userid", shoppinglist.get);
+
+// ------ GROCERY QUERIES ------
+// get all grocery items
+app.get("/grocery", grocery.getGrocery);
+
+// get all brands
+app.get("/grocery/brand", grocery.getBrand);
+
+// get all measurements
+app.get("/grocery/meas", grocery.getMeas);
+
+// // get max collection id
+// app.get("/grocery/maxCollect", grocery.getCollection);
+
+// //set shopping list id
+// app.put("/grocery/setListId/:googleId", grocery.setList);
+
+// add grocery item to list
+app.post("/grocery/add_item/:googleID", grocery.addItem);
+
 
 // create a user
 
@@ -77,3 +98,5 @@ app.get("/user/:id", user.get);
 app.listen(port, () => {
     console.log(`Server started at port ${port}`)
 });
+
+

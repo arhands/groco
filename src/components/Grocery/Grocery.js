@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import { Button, Modal } from 'react-bootstrap';
@@ -9,68 +9,70 @@ import { faShoppingBasket} from '@fortawesome/free-solid-svg-icons';
 
 function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
-   
-    const[listData, setListData] = useState([]);
+    const grocoApi = "http://localhost:3001/grocery/";
+    // hooks
+    const [groceryData, setGroceryData] = useState([]);
+    const [brandData, setBrandData] = useState([]);
+    const [measData, setMeasData] = useState([]);
+    const [userData, setUserData] = useState([]);
+    const [filteredText, setFilterText] = useState('');
 
-    const[brandName, setBrandName] = useState();    
-    const[quantity, setQuantiy] = useState();
-    const[measurementType, setMeasurementType] = useState();
+    const [grocoId, setGrocoId] = useState(0);
+    const [brandId, setBrandId] = useState(1);    
+    const [quantity, setQuantity] = useState(0);
+    const [measurementId, setMeasurementId] = useState(1);
 
-    // const[groceryItemName, setgroceryItemName] = useState();
+    const [listId, setListId] = useState(null);
+    const [maxCollectId, setMaxCollect] = useState(-1);
 
-    function addToList(){
-        const groceryItem = {            
-            //groceryItemName: bran,
-            groceryBrand: brandName,            
-            groceryQuantity: quantity,
-            groceryMeasurment: measurementType,
-        };
-        setListData(groceryItem);
-    }
-   
+    const googleID = localStorage.getItem('googleId');
+    const userApi = "http://localhost:3001/user/" + googleID;
+
+    // call get all functions
+    useEffect(() => {
+        console.log("Getting grocoery");
+        getAllGrocery();
+
+        console.log("Getting brands");
+        getAllBrand();
+
+        console.log("Getting meas");
+        getAllMeas();
+
+        // console.log("Getting user's info");
+        // getUserInfo();
+
+    }, []);
+
+    // useEffect(() => { 
+    //     console.log("Setting list id");
+    //     setListId(userData.shopping_list_id);
+    //     console.log(listId);
+    // }, [userData]);
+
+    // useEffect(() => {
+    //     if(listId === null){ 
+    //         console.log("Getting Max Collection ID");
+    //         getMaxCollectId();
+    //     }
+    // }, [listId]);
+
+    // useEffect(() => {
+    //     if(maxCollectId > -1){
+    //         console.log("Setting shopping list id");
+    //         setShoppingListId();
+    //         console.log("Updating listId")
+    //         setListId(maxCollectId);
+    //     }
+    // }, [maxCollectId]);
+        
     // column labels for table
     const cols =[
         {name: "Item", selector: row => row.name},
         {name: "Add", selector: row => row.add}
     ];
 
-    // dummy data for testing
-    const rawData = [
-        {name: "Egg", id: 100}, {name: "Milk", id: 200}, 
-        {name: "Wheat Bread", id: 300}, {name: "Hot Sauce", id: 400}, 
-        {name: "Cookie Dough", id: 500}, {name: "Spaghetti", id: 600}
-    ];
-
-    // dummy brand data for spinner
-    const brands = [
-        {id: 100, name: "Wonder"}, {id: 200, name: "Heinz"},
-        {id: 300, name: "Yoohoo"}, {id: 400, name: "Tapitio"},
-        {id: 500, name: "Chef Boyardee"}, {id: 600, name: "Lays"}
-    ];
-
-    // dynamically assigns brand options for rendering on page
-    let brandsList = brands.length > 0 && brands.map((item, i) => {
-        return (
-            <option key={i} value={item.id}>{item.name}</option>
-        )
-    });
-
-    // dummy measurments data for spinner
-    const meas = [
-        {id: 100, name: "gallon"}, {id: 200, name: "cup"},
-        {id: 300, name: "teaspoon"}, {id: 400, name: "tablespoon"},
-        {id: 500, name: "bag"}, {id: 600, name: "unit"}
-    ];
-
-    // dynamically assigns measurment options for rendering on page
-    let measList = meas.length > 0 && meas.map((item, i) => {
-        return (
-            <option key={i} value={item.id}>{item.name}</option>
-        )
-    });
-
-
-    // set up pop modal
+     // set up pop modal
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -78,30 +80,164 @@ function Grocery() {
         console.log(target);
     };
 
+    // error pop modal
+    const [showError, setShowError] = useState(false);
+    const handleErrorClose = () => setShowError(false);
+    const handleErrorShow = () => setShowError(true);
+    
+    // ------- Grocery items ------- 
+    // gets all grocery data from DB
+    async function getAllGrocery() {
+        try {
+            const response = await fetch(grocoApi);
+            const jsonData = await response.json();
+            setGroceryData(jsonData);
+        } catch(err) {
+            console.log(err.message);
+        }
+    }
 
-    // format raw data to be used in view
-    const data = [];
-    const rawLen = rawData.length;
-    for(let i = 0; i < rawLen; i++){
-        data.push({
-            id: i,
-            name: rawData[i].name,
-            add: (
-                <Button onClick={handleShow}>
-                    Add to List
-                </Button>
-            )
+    // format raw Grocery data to be used in view
+    const grocoViewData = [];
+    const grocLen = groceryData.length;
+    for(let i = 0; i < grocLen; i++){
+        grocoViewData.push({
+            id: groceryData[i].id,
+            name: groceryData[i].name,
         });
     }
 
-    <Shopping Grocery={listData} />
-    console.log(listData);
+    // ------- Brands ------- 
+    // get all brands from DB
+    async function getAllBrand() {
+        try {
+            const response = await fetch(grocoApi + "brand");
+            const jsonData = await response.json();
+            setBrandData(jsonData);
+        } catch(err) {
+            console.log(err.message);
+        }
+    }
+
+    // format raw Brand data to be used in view
+    const brandFormatData = [];
+    const brandLen = brandData.length;
+    for(let i = 0; i < brandLen; i++){
+        brandFormatData.push({
+            id: brandData[i].id,
+            name: brandData[i].name
+        });
+    }
+
+    // dynamically assigns brand options for rendering on page
+    let brandViewData = brandFormatData.length > 0 && brandFormatData.map((item, i) =>{
+        return (
+            <option key={i} value={item.id}> {item.name} </option>
+        )
+    });
+    
+    // ------- Measurements ------- 
+    // get all meas from DB
+    async function getAllMeas() {
+        try {
+            const response = await fetch(grocoApi + "meas");
+            const jsonData = await response.json();
+            setMeasData(jsonData);
+        } catch(err) {
+            console.log(err.message);
+        }
+    }
+
+    // format raw Brand data to be used in view
+    const measFormatData = [];
+    const measLen = measData.length;
+    for(let i = 0; i < measLen; i++){
+        measFormatData.push({
+            id: measData[i].id,
+            name: measData[i].name
+        });
+    }
+
+    // dynamically assigns brand options for rendering on page
+    let measViewData = measFormatData.length > 0 && measFormatData.map((item, i) =>{
+        return (
+            <option key={i} value={item.id}> {item.name} </option>
+        )
+    });
+
+    // async function getUserInfo(){
+    //     try {
+    //         const response = await fetch(userApi);
+    //         const jsonData = await response.json();
+    //         setUserData(jsonData);
+    //     } catch(err) {
+    //         console.log(err.message);
+    //     }
+    // }
+
+//     async function getMaxCollectId() {
+//         if(listId === null) {
+//             console.log("USER has no list id!");
+//             try {
+//                 const response = await fetch(grocoApi + "maxCollect");
+//                 const jsonData = await response.json();
+//                 setMaxCollect(jsonData[0].max + 1);
+//             } catch(err) {
+//                 console.log(err.message);
+//             }
+//         }
+//     }
+
+//    // update shopping list ID
+//     async function setShoppingListId(){
+//         try {
+//             const body = { maxCollectId };
+//             const respone = await fetch(grocoApi + "setListId/" + googleID, {
+//                 method:"PUT",
+//                 headers: {"Content-Type": "application/json"},
+//                 body: JSON.stringify(body)
+//             });
+//         } catch(err) {
+//             console.log(err.message);
+//         }
+//     }
+
+
+    async function addToList() {
+        if(grocoId) {
+            const body = { grocoId, quantity, measurementId, brandId, googleID };
+            const response = await fetch(grocoApi + "add_item/" + googleID, {
+                method:"POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+        } else {
+            setShowError(true);
+        }
+        setShow(false);
+    }
+
+
+    <Shopping Grocery={groceryData} />
+
+    // setting up filter
+    const filteredGrocery = grocoViewData.filter(item => item.name.toLowerCase().includes(filteredText.toLowerCase()))
 
     return (
         <div className="groco-div">
             <h2>Groceries</h2>
             <div className="GroceriesTable" id="1">
-            <DataTable columns={cols} data={data} persistTableHead/>
+            <DataTable 
+                columns={cols} 
+                data={filteredGrocery} 
+                pagination 
+                subHeader 
+                subHeaderComponent={<input type="text" className="mb-3" onChange={e => setFilterText(e.target.value)}/>} 
+                selectableRows
+                selectableRowsSingle
+                onSelectedRowsChange={(event) => {setGrocoId(event.selectedRows[0].id)}}
+                persistTableHead/>
             </div>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -110,20 +246,35 @@ function Grocery() {
                 <Modal.Body>
                     <div className="center">
                         <div> 
-                            <select className="inputSize" value={brandName} onChange={(event) =>{setBrandName(event.target.value)}}> {brandsList} </select>
+                            <select className="inputSize" value={brandId} onChange={(event) =>{setBrandId(parseInt(event.target.value))}}> {brandViewData} </select>
                         </div>
                         <div> 
-                            <select className="inputSize" value={measurementType} onChange={(event) => {setMeasurementType(event.target.value)}}> {measList} </select>
+                            <select className="inputSize" value={measurementId} onChange={(event) => {setMeasurementId(parseInt(event.target.value))}}> {measViewData} </select>
                         </div>
-                        <div> <input className="inputSize" type="number" min={0} step={0.01} value={quantity} onChange={(event) => {setQuantiy(event.target.value)} }/> </div>
+                        <div> <input className="inputSize" type="number" min={0} step={0.01} value={quantity} onChange={(event) => {parseFloat(setQuantity(event.target.value))} }/> </div>
                     </div>    
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>Close</Button>
-                    <Button variant="primary" onClick={() => {addToList(data)}}>Add to List</Button>
+                    <Button variant="primary" onClick={() => {addToList()}}>Add to List</Button>
                     
                 </Modal.Footer>
             </Modal>
+            <Modal show={showError} onHide={handleErrorClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title> Oops! </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="center">
+                        Please select a grocery item!
+                    </div>
+                </Modal.Body>
+            </Modal>
+            <div>
+                <Button onClick={handleShow}>
+                    Add to List
+                </Button>
+            </div>
             <div>
                 <Button>
                     <Link to ="/shopping"> <FontAwesomeIcon icon={faShoppingBasket}/>
