@@ -58,6 +58,8 @@ app.get("/recipeName/:recipeID",async(req,res) =>{
     }
 });
 
+app.delete("/mealplansRecipes/:id/:id", mealplans.deleteRecipeofMealplan);
+
 //get a user
 app.get("/user/:id", user.get);
 app.listen(port, () => {

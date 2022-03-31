@@ -26,7 +26,7 @@ const MealPlans = () => {
     // Fetch data from API
     const getMealPlans = async (user_id)=>{
         try{
-            const response = await fetch(`http://localhost:3001/mealplans/1`)
+            const response = await fetch(`http://localhost:3001/mealplans/27`)
             const jsonData = await response.json();
             console.log('user id ', user_id)
             console.log(jsonData);

@@ -20,18 +20,11 @@ const EditMealPlan = ({mealplan}) => {
     }
   }
 
-  // Save recipes deletion 
- 
-
-
-
+  
   // Get all selected mealplan's recipeIDs
   const [recipeIDs, setRecipesID] = useState([]);
   const [mealPlanRecipes, setMealPlanRecipes] = useState([]);
-  // const getRecepiesID = async ()=>{
-      
-      
-  // };
+  
   // Get all recipeIds names from database ${recipeIDs[i].recipe_id}
   const getMealPlanRecipes = async ()=>{
       try{
@@ -50,9 +43,13 @@ const EditMealPlan = ({mealplan}) => {
         console.error(err.message);
 }};
 
-const deleteMealPlanRecipe = async (id)=>{
-  //const response = await fetch(`http://localhost:3001/recipeName/5`);
-  setMealPlanRecipes(mealPlanRecipes.filter(mealPlanRecipe => mealPlanRecipe.id!==id));
+// delete recipe from the current mealplan only
+const deleteMealPlanRecipe = async (recipe_id)=>{
+   const response = await fetch(`http://localhost:3001/mealplansRecipes/${recipe_id}`);
+   const jsonData = await response.json();
+   setRecipesID(jsonData)
+  //setRecipesID (recipeIDs.filter(recipeID =>recipeID.id !==id))
+  //setMealPlanRecipes(mealPlanRecipes.filter(mealPlanRecipe => mealPlanRecipe.id!==id));
   
 };
           
@@ -63,7 +60,7 @@ const deleteMealPlanRecipe = async (id)=>{
             console.log('get receipe names json')
             console.log(mealPlanRecipes);
   */
-          
+  // Get all receipe IDs of a mealplan  
   useEffect(async ()=>{
     try{
       const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}/recipeIDs`)
@@ -78,7 +75,7 @@ const deleteMealPlanRecipe = async (id)=>{
   useEffect(()=>{
   },[recipeIDs])
 
- /* useEffect(()=>{
+ /*useEffect(()=>{
       getMealPlanRecipes();
   },[]);*/
  /* fetch(`http://localhost:3001/recipeName/${each.recipe_id}`*/
@@ -126,9 +123,9 @@ const deleteMealPlanRecipe = async (id)=>{
             
               <table className="table mt-5 text-center">
                 <tbody>
-                    {mealPlanRecipes.map(each =>(
+                    {recipeIDs.map(each =>(
                         <tr key={each.id}>
-                            <td>{each.name}</td>
+                            <td>{each.recipe_id}</td>
                             <td>
                               <Link to='/recipedetails'>
                                 <button>

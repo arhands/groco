@@ -44,17 +44,26 @@ async function updateMealPlan(req, res){
 async function delMealPlan (req, res) {
     try {
         const { id } = req.params;
-        const deleteTodo = await pool.query("DELETE FROM public.meal_plan_table WHERE id = $1", [id]);
+        const deleteMealplan = await pool.query("DELETE FROM public.meal_plan_table WHERE id = $1", [id]);
         res.json("Mealplan is deleted");
     } catch (err) {
         console.log(err.message);
     }
 }
 
+async function deleteRecipeofMealplan (req, res) {
+    try {
+        const { mealplan_id, recipe_id } = req.params;
+        const deleteRecipe = await pool.query("DELETE FROM public.meal_plan_recipe_table WHERE mealplan_id = $1 AND recipe_id =$2", [mealplan_id,recipe_id]);
+        res.json("Mealplan is deleted");
+    } catch (err) {
+        console.log(err.message);
+    }
+}
 async function getMealPlanRecipe (req, res){
     try {
         const { id } = req.params;
-        const allRecipesID = await pool.query("SELECT recipe_id FROM public.meal_plan_recipe_table WHERE meal_plan_id = $1", [id]);
+        const allRecipesID = await pool.query("SELECT * FROM public.meal_plan_recipe_table WHERE meal_plan_id = $1", [id]);
         //const allRecipesName = await pool.query("SELECT name FROM public.\"recipe_table\" WHERE id = $1",[each]);
         res.json(allRecipesID.rows);
 
@@ -62,6 +71,8 @@ async function getMealPlanRecipe (req, res){
         console.log(err.message);
     }
 }
+
+
 module.exports = {
     create: createMealPlan,
     getAll: getAllMealPlansOfUser,
@@ -69,4 +80,5 @@ module.exports = {
     update: updateMealPlan,
     delete: delMealPlan,
     getRecipe: getMealPlanRecipe,
+    deleteRecipeofMealplan: deleteRecipeofMealplan,
 };
