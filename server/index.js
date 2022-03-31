@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 // need to create database and table using psql first
 app.post("/mealplans", mealplans.create)
 // get all mealplan
-app.get("/mealplans", mealplans.getAll);
+app.get("/mealplans/:user_id", mealplans.getAll);
 // get a mealplan
 app.get("/mealplans/:id", mealplans.get);
 // edit a mealplan

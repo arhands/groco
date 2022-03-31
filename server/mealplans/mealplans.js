@@ -12,9 +12,10 @@ async function createMealPlan(req, res) {
         console.log(err.message);
     }
 }
-async function getAllMealPlans(req, res) {
+async function getAllMealPlansOfUser(req, res) {
     try {
-        const allMealPlans = await pool.query("SELECT * FROM public.meal_plan_table");
+        const { user_id } = req.params;
+        const allMealPlans = await pool.query("SELECT * FROM public.meal_plan_table WHERE user_id =$1",[user_id]);
         res.json(allMealPlans.rows);
     } catch (err) {
         console.log(err.message);
@@ -63,7 +64,7 @@ async function getMealPlanRecipe (req, res){
 }
 module.exports = {
     create: createMealPlan,
-    getAll: getAllMealPlans,
+    getAll: getAllMealPlansOfUser,
     get: getMealPlan,
     update: updateMealPlan,
     delete: delMealPlan,

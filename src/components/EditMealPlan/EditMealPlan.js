@@ -81,29 +81,28 @@ const deleteMealPlanRecipe = async (id)=>{
  /* useEffect(()=>{
       getMealPlanRecipes();
   },[]);*/
-
+ /* fetch(`http://localhost:3001/recipeName/${each.recipe_id}`*/
+ 
   useEffect(async ()=>{
     try{
-      console.log('This is map recipeID');
-      recipeIDs.map((each) => {console.log(each.recipe_id)});
-      console.log('This is end of print map');
-      recipeIDs.map(async (each) => {
-        await fetch(`http://localhost:3001/recipeName/${each.recipe_id}`)
+      recipeIDs.map(async each => (
+        await fetch(`http://localhost:3001/recipeName/5`)
       .then (response => {
         return response.json();
     })
     .then(name =>{
       setMealPlanRecipes(name);
       console.log({mealPlanRecipes});
-    })})
+    })))
     }catch(err){
       console.error(err.message);
 }},[]);
+
   useEffect(()=>{
   },[mealPlanRecipes])
   
   return (
-    <Fragment>
+    <div>
       <button type="button" class="btn btn-warning" 
       data-toggle="modal" data-target={`#id${mealplan.id}`}>
        Edit
@@ -127,9 +126,9 @@ const deleteMealPlanRecipe = async (id)=>{
             
               <table className="table mt-5 text-center">
                 <tbody>
-                    {recipeIDs.map(each =>(
+                    {mealPlanRecipes.map(each =>(
                         <tr key={each.id}>
-                            <td>{each.recipe_id}</td>
+                            <td>{each.name}</td>
                             <td>
                               <Link to='/recipedetails'>
                                 <button>
@@ -156,16 +155,13 @@ const deleteMealPlanRecipe = async (id)=>{
               <button type="button" class="btn btn-danger" 
               data-dismiss="modal" onClick={()=> setName(mealplan.name)}>
                 Close</button>
-             </div>
+            </div>
 
           </div>
         </div>
       </div>
-
-
-
-    </Fragment>
+    </div>
   
   )};
 
-export default EditMealPlan;
+export default EditMealPlan
