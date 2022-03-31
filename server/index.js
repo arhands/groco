@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 // need to create database and table using psql first
 app.post("/mealplans", mealplans.create)
 // get all mealplan
-app.get("/mealplans", mealplans.getAll);
+app.get("/mealplans/:user_id", mealplans.getAll);
 // get a mealplan
 app.get("/mealplans/:id", mealplans.get);
 // edit a mealplan
@@ -69,6 +69,8 @@ app.get("/recipeName/:recipeID", async (req, res) => {
         console.log(err.message);
     }
 });
+
+app.delete("/mealplansRecipes/:id/:id", mealplans.deleteRecipeofMealplan);
 
 //get a user
 app.get("/user/:id", user.get);

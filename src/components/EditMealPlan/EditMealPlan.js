@@ -20,18 +20,11 @@ const EditMealPlan = ({mealplan}) => {
     }
   }
 
-  // Save recipes deletion 
- 
-
-
-
+  
   // Get all selected mealplan's recipeIDs
   const [recipeIDs, setRecipesID] = useState([]);
   const [mealPlanRecipes, setMealPlanRecipes] = useState([]);
-  // const getRecepiesID = async ()=>{
-      
-      
-  // };
+  
   // Get all recipeIds names from database ${recipeIDs[i].recipe_id}
   const getMealPlanRecipes = async ()=>{
       try{
@@ -50,9 +43,13 @@ const EditMealPlan = ({mealplan}) => {
         console.error(err.message);
 }};
 
-const deleteMealPlanRecipe = async (id)=>{
-  //const response = await fetch(`http://localhost:3001/recipeName/5`);
-  setMealPlanRecipes(mealPlanRecipes.filter(mealPlanRecipe => mealPlanRecipe.id!==id));
+// delete recipe from the current mealplan only
+const deleteMealPlanRecipe = async (recipe_id)=>{
+   const response = await fetch(`http://localhost:3001/mealplansRecipes/${recipe_id}`);
+   const jsonData = await response.json();
+   setRecipesID(jsonData)
+  //setRecipesID (recipeIDs.filter(recipeID =>recipeID.id !==id))
+  //setMealPlanRecipes(mealPlanRecipes.filter(mealPlanRecipe => mealPlanRecipe.id!==id));
   
 };
           
@@ -63,7 +60,7 @@ const deleteMealPlanRecipe = async (id)=>{
             console.log('get receipe names json')
             console.log(mealPlanRecipes);
   */
-          
+  // Get all receipe IDs of a mealplan  
   useEffect(async ()=>{
     try{
       const response = await fetch(`http://localhost:3001/mealplans/${mealplan.id}/recipeIDs`)
@@ -78,32 +75,31 @@ const deleteMealPlanRecipe = async (id)=>{
   useEffect(()=>{
   },[recipeIDs])
 
- /* useEffect(()=>{
+ /*useEffect(()=>{
       getMealPlanRecipes();
   },[]);*/
-
+ /* fetch(`http://localhost:3001/recipeName/${each.recipe_id}`*/
+ 
   useEffect(async ()=>{
     try{
-      console.log('This is map recipeID');
-      recipeIDs.map((each) => {console.log(each.recipe_id)});
-      console.log('This is end of print map');
-      recipeIDs.map(async (each) => {
-        await fetch(`http://localhost:3001/recipeName/${each.recipe_id}`)
+      recipeIDs.map(async each => (
+        await fetch(`http://localhost:3001/recipeName/5`)
       .then (response => {
         return response.json();
     })
     .then(name =>{
       setMealPlanRecipes(name);
       console.log({mealPlanRecipes});
-    })})
+    })))
     }catch(err){
       console.error(err.message);
 }},[]);
+
   useEffect(()=>{
   },[mealPlanRecipes])
   
   return (
-    <Fragment>
+    <div>
       <button type="button" class="btn btn-warning" 
       data-toggle="modal" data-target={`#id${mealplan.id}`}>
        Edit
@@ -156,16 +152,13 @@ const deleteMealPlanRecipe = async (id)=>{
               <button type="button" class="btn btn-danger" 
               data-dismiss="modal" onClick={()=> setName(mealplan.name)}>
                 Close</button>
-             </div>
+            </div>
 
           </div>
         </div>
       </div>
-
-
-
-    </Fragment>
+    </div>
   
   )};
 
-export default EditMealPlan;
+export default EditMealPlan
