@@ -22,38 +22,50 @@ function Grocery() {
     const [quantity, setQuantity] = useState(0);
     const [measurementId, setMeasurementId] = useState(1);
 
-    const [listId, setListId] = useState(-1);
+    const [listId, setListId] = useState(null);
     const [maxCollectId, setMaxCollect] = useState(-1);
 
     const googleID = localStorage.getItem('googleId');
     const userApi = "http://localhost:3001/user/" + googleID;
 
-
     // call get all functions
     useEffect(() => {
+        console.log("Getting grocoery");
         getAllGrocery();
-    }, [])
 
-    useEffect(() => {
+        console.log("Getting brands");
         getAllBrand();
-    }, []);
 
-    useEffect(() => {
+        console.log("Getting meas");
         getAllMeas();
+
+        // console.log("Getting user's info");
+        // getUserInfo();
+
     }, []);
 
-    useEffect(() => {
-        getListId();
-    }, []);
+    // useEffect(() => { 
+    //     console.log("Setting list id");
+    //     setListId(userData.shopping_list_id);
+    //     console.log(listId);
+    // }, [userData]);
 
-    useEffect(() => {
-        getMaxCollectId();
-    }, [listId]);
+    // useEffect(() => {
+    //     if(listId === null){ 
+    //         console.log("Getting Max Collection ID");
+    //         getMaxCollectId();
+    //     }
+    // }, [listId]);
 
-    useEffect(() => {
-        setShoppingListId();
-    }, [maxCollectId]);
-
+    // useEffect(() => {
+    //     if(maxCollectId > -1){
+    //         console.log("Setting shopping list id");
+    //         setShoppingListId();
+    //         console.log("Updating listId")
+    //         setListId(maxCollectId);
+    //     }
+    // }, [maxCollectId]);
+        
     // column labels for table
     const cols =[
         {name: "Item", selector: row => row.name},
@@ -92,11 +104,6 @@ function Grocery() {
         grocoViewData.push({
             id: groceryData[i].id,
             name: groceryData[i].name,
-            // add: (
-            //     <Button onClick={handleShow}>
-            //         Add to List
-            //     </Button>
-            // )
         });
     }
 
@@ -158,49 +165,48 @@ function Grocery() {
         )
     });
 
-    async function getListId(){
-        try {
-            const response = await fetch(userApi);
-            const jsonData = await response.json();
-            setUserData(jsonData);
-        } catch(err) {
-            console.log(err.message);
-        }
-        setListId(userData.shopping_list_id);
-    }
+    // async function getUserInfo(){
+    //     try {
+    //         const response = await fetch(userApi);
+    //         const jsonData = await response.json();
+    //         setUserData(jsonData);
+    //     } catch(err) {
+    //         console.log(err.message);
+    //     }
+    // }
 
-    async function getMaxCollectId() {
-        if(listId === undefined) {
-            try {
-                const response = await fetch(grocoApi + "maxCollect");
-                const jsonData = await response.json();
-                setMaxCollect(jsonData[0].max + 1);
-            } catch(err) {
-                console.log(err.message);
-            }
-        }
-    }
+//     async function getMaxCollectId() {
+//         if(listId === null) {
+//             console.log("USER has no list id!");
+//             try {
+//                 const response = await fetch(grocoApi + "maxCollect");
+//                 const jsonData = await response.json();
+//                 setMaxCollect(jsonData[0].max + 1);
+//             } catch(err) {
+//                 console.log(err.message);
+//             }
+//         }
+//     }
 
-   // update shopping list ID
-    async function setShoppingListId(){
-        try {
-            const body = { maxCollectId };
-            const respone = await fetch(grocoApi + "setListId/" + googleID, {
-                method:"PUT",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(body)
-            });
-            setListId(maxCollectId);
-        } catch(err) {
-            console.log(err.message);
-        }
-    }
+//    // update shopping list ID
+//     async function setShoppingListId(){
+//         try {
+//             const body = { maxCollectId };
+//             const respone = await fetch(grocoApi + "setListId/" + googleID, {
+//                 method:"PUT",
+//                 headers: {"Content-Type": "application/json"},
+//                 body: JSON.stringify(body)
+//             });
+//         } catch(err) {
+//             console.log(err.message);
+//         }
+//     }
 
 
     async function addToList() {
         if(grocoId) {
-            const body = { listId, grocoId, quantity, measurementId, brandId };
-            const response = await fetch(grocoApi + "add_item", {
+            const body = { grocoId, quantity, measurementId, brandId, googleID };
+            const response = await fetch(grocoApi + "add_item/" + googleID, {
                 method:"POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
@@ -209,6 +215,7 @@ function Grocery() {
         } else {
             setShowError(true);
         }
+        setShow(false);
     }
 
 
@@ -242,7 +249,7 @@ function Grocery() {
                             <select className="inputSize" value={brandId} onChange={(event) =>{setBrandId(parseInt(event.target.value))}}> {brandViewData} </select>
                         </div>
                         <div> 
-                            <select className="inputSize" value={measurementId} onChange={(event) => {setBrandId(setMeasurementId(event.target.value))}}> {measViewData} </select>
+                            <select className="inputSize" value={measurementId} onChange={(event) => {setMeasurementId(parseInt(event.target.value))}}> {measViewData} </select>
                         </div>
                         <div> <input className="inputSize" type="number" min={0} step={0.01} value={quantity} onChange={(event) => {parseFloat(setQuantity(event.target.value))} }/> </div>
                     </div>    
