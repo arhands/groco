@@ -31,17 +31,6 @@ async function getAllMeas(req, res) {
     }
 }
 
-// get max collection id
-// async function getMaxCollect(req, res) {
-//     try {
-//         const maxCollect = await pool.query("SELECT MAX(collection_id) FROM public.ingredient_instance_table");
-//         console.log(maxCollect);
-//         res.json(maxCollect.rows);
-//     } catch(err) {
-//         console.log(err.message);
-//     }
-// }
-
 // set collection ID
 async function setListId(req, res) {
     try {

@@ -36,8 +36,6 @@ app.post("/recipes/post", recipes.post);
 // get ingredient options
 app.get("/recipes/ingredientoptions", recipes.getIngredientOptions);
 
-
-
 // get a shopping list
 app.get("/shoppinglist/get/:userid", shoppinglist.get);
 
@@ -58,7 +56,6 @@ app.post("/grocery/add_item/:googleID", grocery.addItem);
 // create a user
 
 app.post("/user", async (req, res) => {
-    console.log("woohoo")
     try {
         console.log(req)
         const { googleid, user_email, first_name, last_name, image_url } = req.body;
