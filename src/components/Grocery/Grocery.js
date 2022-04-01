@@ -9,8 +9,8 @@ import { faShoppingBasket} from '@fortawesome/free-solid-svg-icons';
 
 function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
-    // const grocoApi = "http://localhost:3001/grocery/";
-    const grocoApi = "https://groco-backend.herokuapp.com/grocery/";
+    // const url = "http://localhost:3001/grocery/";
+    const url = "https://groco-backend.herokuapp.com/grocery/";
     // hooks
     const [groceryData, setGroceryData] = useState([]);
     const [brandData, setBrandData] = useState([]);
@@ -27,7 +27,7 @@ function Grocery() {
     const [maxCollectId, setMaxCollect] = useState(-1);
 
     const googleID = localStorage.getItem('googleId');
-    const userApi = "https://groco-backend.herokuapp.com/user/" + googleID;
+    // const userApi = "https://groco-backend.herokuapp.com/user/" + googleID;
 
     // call get all functions
     useEffect(() => {
@@ -64,7 +64,7 @@ function Grocery() {
     // gets all grocery data from DB
     async function getAllGrocery() {
         try {
-            const response = await fetch(grocoApi);
+            const response = await fetch(url);
             const jsonData = await response.json();
             setGroceryData(jsonData);
         } catch(err) {
@@ -86,7 +86,7 @@ function Grocery() {
     // get all brands from DB
     async function getAllBrand() {
         try {
-            const response = await fetch(grocoApi + "brand");
+            const response = await fetch(url + "brand");
             const jsonData = await response.json();
             setBrandData(jsonData);
         } catch(err) {
@@ -115,7 +115,7 @@ function Grocery() {
     // get all meas from DB
     async function getAllMeas() {
         try {
-            const response = await fetch(grocoApi + "meas");
+            const response = await fetch(url + "meas");
             const jsonData = await response.json();
             setMeasData(jsonData);
         } catch(err) {
@@ -143,7 +143,7 @@ function Grocery() {
     async function addToList() {
         if(grocoId) {
             const body = { grocoId, quantity, measurementId, brandId, googleID };
-            const response = await fetch(grocoApi + "add_item/" + googleID, {
+            const response = await fetch(url + "add_item/" + googleID, {
                 method:"POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
