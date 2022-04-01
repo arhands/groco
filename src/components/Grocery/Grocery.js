@@ -10,7 +10,7 @@ import { faShoppingBasket} from '@fortawesome/free-solid-svg-icons';
 function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
     // const grocoApi = "http://localhost:3001/grocery/";
-    const grocoApi = "https://groco-backend.herokuapp.com";
+    const grocoApi = "https://groco-backend.herokuapp.com/";
     // hooks
     const [groceryData, setGroceryData] = useState([]);
     const [brandData, setBrandData] = useState([]);
