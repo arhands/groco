@@ -6,6 +6,7 @@ import './Grocery.css';
 import Shopping from '../Shopping/Shopping';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingBasket} from '@fortawesome/free-solid-svg-icons';
+import axios from "axios";
 
 function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
@@ -64,7 +65,7 @@ function Grocery() {
     // gets all grocery data from DB
     async function getAllGrocery() {
         try {
-            const response = await fetch(url);
+            const response = await axios.fetch(url);
             const jsonData = await response.json();
             setGroceryData(jsonData);
         } catch(err) {
@@ -86,7 +87,7 @@ function Grocery() {
     // get all brands from DB
     async function getAllBrand() {
         try {
-            const response = await fetch(url + "brand");
+            const response = await axios.get(url + "brand");
             const jsonData = await response.json();
             setBrandData(jsonData);
         } catch(err) {
@@ -115,7 +116,7 @@ function Grocery() {
     // get all meas from DB
     async function getAllMeas() {
         try {
-            const response = await fetch(url + "meas");
+            const response = await axios.get(url + "meas");
             const jsonData = await response.json();
             setMeasData(jsonData);
         } catch(err) {
