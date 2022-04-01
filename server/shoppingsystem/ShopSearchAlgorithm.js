@@ -14,7 +14,7 @@ import { GetDistanceMatrix, GetStoreItemMatrix } from './MapsInterface.js';
 //          measurement_type: String,
 //          brand: String
 //        },...]
-export async function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_weight, distance_weight, latitude, longitude)
+async function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_weight, distance_weight, latitude, longitude)
 {
   let S = GetStores(max_distance, latitude, longitude);
   let F = shopping_items
