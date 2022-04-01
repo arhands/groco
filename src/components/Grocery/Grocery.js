@@ -10,7 +10,7 @@ import { faShoppingBasket} from '@fortawesome/free-solid-svg-icons';
 function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
     // const grocoApi = "http://localhost:3001/grocery/";
-    const grocoApi = "https://groco-backend.herokuapp.com/";
+    const grocoApi = "https://groco-backend.herokuapp.com/grocery/";
     // hooks
     const [groceryData, setGroceryData] = useState([]);
     const [brandData, setBrandData] = useState([]);
@@ -27,7 +27,7 @@ function Grocery() {
     const [maxCollectId, setMaxCollect] = useState(-1);
 
     const googleID = localStorage.getItem('googleId');
-    const userApi = "http://localhost:3001/user/" + googleID;
+    const userApi = "https://groco-backend.herokuapp.com/user/" + googleID;
 
     // call get all functions
     useEffect(() => {
@@ -39,33 +39,7 @@ function Grocery() {
 
         console.log("Getting meas");
         getAllMeas();
-
-        // console.log("Getting user's info");
-        // getUserInfo();
-
     }, []);
-
-    // useEffect(() => { 
-    //     console.log("Setting list id");
-    //     setListId(userData.shopping_list_id);
-    //     console.log(listId);
-    // }, [userData]);
-
-    // useEffect(() => {
-    //     if(listId === null){ 
-    //         console.log("Getting Max Collection ID");
-    //         getMaxCollectId();
-    //     }
-    // }, [listId]);
-
-    // useEffect(() => {
-    //     if(maxCollectId > -1){
-    //         console.log("Setting shopping list id");
-    //         setShoppingListId();
-    //         console.log("Updating listId")
-    //         setListId(maxCollectId);
-    //     }
-    // }, [maxCollectId]);
         
     // column labels for table
     const cols =[
@@ -165,44 +139,6 @@ function Grocery() {
             <option key={i} value={item.id}> {item.name} </option>
         )
     });
-
-    // async function getUserInfo(){
-    //     try {
-    //         const response = await fetch(userApi);
-    //         const jsonData = await response.json();
-    //         setUserData(jsonData);
-    //     } catch(err) {
-    //         console.log(err.message);
-    //     }
-    // }
-
-//     async function getMaxCollectId() {
-//         if(listId === null) {
-//             console.log("USER has no list id!");
-//             try {
-//                 const response = await fetch(grocoApi + "maxCollect");
-//                 const jsonData = await response.json();
-//                 setMaxCollect(jsonData[0].max + 1);
-//             } catch(err) {
-//                 console.log(err.message);
-//             }
-//         }
-//     }
-
-//    // update shopping list ID
-//     async function setShoppingListId(){
-//         try {
-//             const body = { maxCollectId };
-//             const respone = await fetch(grocoApi + "setListId/" + googleID, {
-//                 method:"PUT",
-//                 headers: {"Content-Type": "application/json"},
-//                 body: JSON.stringify(body)
-//             });
-//         } catch(err) {
-//             console.log(err.message);
-//         }
-//     }
-
 
     async function addToList() {
         if(grocoId) {
