@@ -6,29 +6,23 @@ import './Grocery.css';
 import Shopping from '../Shopping/Shopping';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingBasket} from '@fortawesome/free-solid-svg-icons';
-import axios from "axios";
 
 function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
     // const url = "http://localhost:3001/grocery/";
     const url = "https://groco-backend.herokuapp.com/grocery/";
+
     // hooks
     const [groceryData, setGroceryData] = useState([]);
     const [brandData, setBrandData] = useState([]);
     const [measData, setMeasData] = useState([]);
-    const [userData, setUserData] = useState([]);
     const [filteredText, setFilterText] = useState('');
 
     const [grocoId, setGrocoId] = useState(0);
     const [brandId, setBrandId] = useState(1);    
     const [quantity, setQuantity] = useState(0);
     const [measurementId, setMeasurementId] = useState(1);
-
-    const [listId, setListId] = useState(null);
-    const [maxCollectId, setMaxCollect] = useState(-1);
-
     const googleID = localStorage.getItem('googleId');
-    // const userApi = "https://groco-backend.herokuapp.com/user/" + googleID;
 
     // call get all functions
     useEffect(() => {
@@ -65,7 +59,7 @@ function Grocery() {
     // gets all grocery data from DB
     async function getAllGrocery() {
         try {
-            const response = await axios.fetch(url);
+            const response = await fetch(url);
             const jsonData = await response.json();
             setGroceryData(jsonData);
         } catch(err) {
@@ -87,7 +81,8 @@ function Grocery() {
     // get all brands from DB
     async function getAllBrand() {
         try {
-            const response = await axios.get(url + "brand");
+            console.log(url + "brand");
+            const response = await fetch(url + "brand");
             const jsonData = await response.json();
             setBrandData(jsonData);
         } catch(err) {
@@ -116,7 +111,7 @@ function Grocery() {
     // get all meas from DB
     async function getAllMeas() {
         try {
-            const response = await axios.get(url + "meas");
+            const response = await fetch(url + "meas");
             const jsonData = await response.json();
             setMeasData(jsonData);
         } catch(err) {
