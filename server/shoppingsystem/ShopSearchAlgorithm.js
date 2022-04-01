@@ -6,36 +6,17 @@ Idea: this can be implemented as a Hidden State Shape Model with stores as the s
   implementation follows from: https://athitsos.utasites.cloud/publications/athitsos_eccv2006.pdf
 */
 // Returns: [{ Store_id, Distance: int}]
-function GetStores(max_distance)
-{
-  let arr = Array(5)
-  for(let i = 0; i < 5; i++)
-    arr[i] = { Store_id: i, Distance: 1 }
-  return arr
-}
-// Returns: { ItemName: String, Cost: Float }
-function GetItemFromStore(store_id, item)
-{
-  return { ItemName: item.name, Cost: 1 }
-}
-function GetDistance(store1_id, store2_id)
-{
-  return 1;
-}
-// [Name, Address]
-function GetStoreDetails(store_id)
-{
-  return [ "Store " + store_id + " Placeholder", "Placeholder"]
-}
+import './MapsInterface.js'
+import { GetDistanceMatrix, GetStoreItemMatrix } from './MapsInterface.js';
 // shopping_items: [{
 //          name: String,
 //          quantity: Float,
 //          measurement_type: String,
 //          brand: String
 //        },...]
-export function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_weight, distance_weight, starting_address)
+export async function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_weight, distance_weight, latitude, longitude)
 {
-  let S = GetStores(max_distance);
+  let S = GetStores(max_distance, latitude, longitude);
   let F = shopping_items
   function GetArr(width,height)
   {
@@ -47,37 +28,22 @@ export function FindOptimalRoute(shopping_items, max_stores, max_distance, item_
   
   let Registrations = GetArr(S.length,F.length)
   let PreviousRegistrations = GetArr(S.length,F.length)
-  let A = GetArr(S.length,S.length)
-  let B = GetArr(S.length,F.length)
-  // Computing transition distances & costs (A)
-  // NOTE: we assume distance will be the same in both directions...
-  for(let i = 0; i < S.length; i++)
-  {
-    A[i][i] = 0
-    for(let j = 0; j < i; j++)
-    {
-      let distance = GetDistance(S[i].store_id,S[j].store_id)
-      A[j][i] = A[i][j] = { Distance: distance, Cost: distance * distance_weight }
-    }
-  }
+  //let A = GetArr(S.length,S.length)
+  let A = await GetDistanceMatrix(S.map(store => store.Coordinates))
+  let B = await GetStoreItemMatrix(S,F)
   // Computing item cost (B)
   for(let i = 0; i < S.length; i++)
     for(let j = 0; j < F.length; j++)
-    {
-      let item = GetItemFromStore(S[i].store_id,F[j])
-      if( item != null)
-        B[i][j] = { Name: item.ItemName, MonetaryCost: item.Cost, Cost: item.Cost * item_cost_weight }
-    }
+      if( B[i][j] != null)
+        B[i][j] = { Name: B[i][j].name, MonetaryCost: B[i][j].cost, Cost: B[i][j].cost * item_cost_weight }
   // computing initial registrations
   for(let i = 0; i < S.length; i++)
-  {
     for(let k = 0; k < F.length; k++)
     {
       let item = B[i][k]
       if(item == null)
         PreviousRegistrations[i][k] = null
       else
-      {
         PreviousRegistrations[i][k] = { 
           States: new Set([i]), 
           Features: new Set([k]), 
@@ -85,9 +51,7 @@ export function FindOptimalRoute(shopping_items, max_stores, max_distance, item_
           TotalDistance: S[i].Distance,
           Coordinates: [i,k]
         }
-      }
     }
-  }
   
   // Computing intermediate and final registrations
   for(let j = 1; j < F.length; j++)
@@ -187,10 +151,9 @@ export function FindOptimalRoute(shopping_items, max_stores, max_distance, item_
     if(previousStore != optimalRegistration.Coordinates[0])
     {
       previousStore = optimalRegistration.Coordinates[0]
-      let [storeName, address] = GetStoreDetails(S[previousStore].Store_id)
       shoppingPlan.push({
-        StoreName: storeName,
-        StoreAddress: address,
+        StoreName: S[previousStore].name,
+        StoreAddress: S[previousStore].address,
         StoreItems: [],
       })
     }
