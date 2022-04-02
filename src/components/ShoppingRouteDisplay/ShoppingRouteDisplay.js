@@ -6,7 +6,6 @@ import DataTable from 'react-data-table-component';
 import StoreDisplayCard from "./StoreDisplayCard.js";
 import Badge from 'react-bootstrap/Badge';
 import { useLocation } from 'react-router-dom';
-import { FindOptimalRoute } from './ShopSearchAlgorithm.js';
 import { findDOMNode } from "react-dom";
 
 function ShoppingRouteDisplay()
@@ -60,7 +59,7 @@ function ShoppingRouteDisplay()
                   maxStores: maxStores,
                   maxDistance: maxDistance,
                   itemCostWeight: itemCostWeight,
-                  distanceWeight: distanceWeight,
+                  itemDistanceWeight: distanceWeight,
                   latitude: latitude, 
                   longitude: longitude
               })

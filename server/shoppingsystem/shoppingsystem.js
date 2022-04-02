@@ -1,8 +1,8 @@
 const pool = require("../db");
-import './ShopSearchAlgorithm'
-export async function getShoppingRoute(req, res) {
+const shopAlg = require("./ShopSearchAlgorithm.js");
+async function getShoppingRoute(req, res) {
   try {
-      const { googleid, maxStores, maxDistance, itemCostWeight, itemDistanceWeight, latitude, longitude} = req.body;
+      let { googleid, maxStores, maxDistance, itemCostWeight, itemDistanceWeight, latitude, longitude} = req.body;
       const results = await pool.query(
           "SELECT I.name AS name, quantity, B.name AS brand, M.name as measurement_type " +
             "FROM user_table U, ingredient_instance_table II, measurement_table M, ingredient_table I, brand_table B " +
@@ -13,11 +13,17 @@ export async function getShoppingRoute(req, res) {
               "AND II.brand_id = B.id ",
           [googleid]
       );
+      // converting from miles to meters
+      maxDistance *= 1609.34
       //
-      const optimalRoute = await FindOptimalRoute(results.rows,maxStores,maxDistance,itemCostWeight,itemDistanceWeight,latitude,longitude)
+      const optimalRoute = await shopAlg.FindOptimalRoute(results.rows,maxStores,maxDistance,itemCostWeight,itemDistanceWeight,latitude,longitude)
       //
+      console.log(21,optimalRoute)
       res.json(optimalRoute);
   } catch (err) {
       console.log(err.message);
   }
 }
+module.exports = {
+  getShoppingRoute: getShoppingRoute,
+};
