@@ -95,7 +95,6 @@ class IngredientTable extends React.Component
     }
     for(let i = 0; i < ingredients.length; i++)
     {
-      console.log("ithis.props.EditMode")
       data.push({
         //name: (<input type="text" defaultValue={ingredients[i].name} onChange={e => ingredients[i].name=e.target.value} disabled={!this.props.EditMode}/>),
         name: this.props.EditMode? (<SelectSearch

@@ -1,3 +1,4 @@
+
 /*
 Idea: this can be implemented as a Hidden State Shape Model with stores as the sequence data, items as the nonsequenced data, and with the following constraints:
   - You will never revisit a store, as this would be inefficient, so the total number of outer iterations should be the number of items to be purchased
@@ -6,36 +7,17 @@ Idea: this can be implemented as a Hidden State Shape Model with stores as the s
   implementation follows from: https://athitsos.utasites.cloud/publications/athitsos_eccv2006.pdf
 */
 // Returns: [{ Store_id, Distance: int}]
-function GetStores(max_distance)
-{
-  let arr = Array(5)
-  for(let i = 0; i < 5; i++)
-    arr[i] = { Store_id: i, Distance: 1 }
-  return arr
-}
-// Returns: { ItemName: String, Cost: Float }
-function GetItemFromStore(store_id, item)
-{
-  return { ItemName: item.name, Cost: 1 }
-}
-function GetDistance(store1_id, store2_id)
-{
-  return 1;
-}
-// [Name, Address]
-function GetStoreDetails(store_id)
-{
-  return [ "Store " + store_id + " Placeholder", "Placeholder"]
-}
+const mapsInterface = require('./MapsInterface.js');
+
 // shopping_items: [{
 //          name: String,
 //          quantity: Float,
 //          measurement_type: String,
 //          brand: String
 //        },...]
-export function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_weight, distance_weight, starting_address)
+async function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_weight, distance_weight, latitude, longitude)
 {
-  let S = GetStores(max_distance);
+  let S = await mapsInterface.GetStores(max_distance, latitude, longitude);
   let F = shopping_items
   function GetArr(width,height)
   {
@@ -47,30 +29,25 @@ export function FindOptimalRoute(shopping_items, max_stores, max_distance, item_
   
   let Registrations = GetArr(S.length,F.length)
   let PreviousRegistrations = GetArr(S.length,F.length)
-  let A = GetArr(S.length,S.length)
-  let B = GetArr(S.length,F.length)
-  // Computing transition distances & costs (A)
-  // NOTE: we assume distance will be the same in both directions...
-  for(let i = 0; i < S.length; i++)
+  //let A = GetArr(S.length,S.length)
+  console.log(34)
+  let A = null
+  if(shopping_items.length > 1)
   {
-    A[i][i] = 0
-    for(let j = 0; j < i; j++)
-    {
-      let distance = GetDistance(S[i].store_id,S[j].store_id)
-      A[j][i] = A[i][j] = { Distance: distance, Cost: distance * distance_weight }
-    }
+    console.log(37)
+    A = await mapsInterface.GetDistanceMatrix(S.map(store => store.coordinates))
+    console.log(38,A)
   }
+  let B = await mapsInterface.GetStoreItemMatrix(S,F)
+  console.log(37)
+  console.log(39,B)
   // Computing item cost (B)
   for(let i = 0; i < S.length; i++)
     for(let j = 0; j < F.length; j++)
-    {
-      let item = GetItemFromStore(S[i].store_id,F[j])
-      if( item != null)
-        B[i][j] = { Name: item.ItemName, MonetaryCost: item.Cost, Cost: item.Cost * item_cost_weight }
-    }
+      if( B[i][j] != null)
+        B[i][j] = { Name: B[i][j].name, MonetaryCost: B[i][j].cost, Cost: B[i][j].cost * item_cost_weight }
   // computing initial registrations
   for(let i = 0; i < S.length; i++)
-  {
     for(let k = 0; k < F.length; k++)
     {
       let item = B[i][k]
@@ -81,14 +58,14 @@ export function FindOptimalRoute(shopping_items, max_stores, max_distance, item_
         PreviousRegistrations[i][k] = { 
           States: new Set([i]), 
           Features: new Set([k]), 
-          Cost: S[i].Distance * distance_weight + item.Cost * item_cost_weight,
-          TotalDistance: S[i].Distance,
+          Cost: S[i].distance * distance_weight + item.Cost * item_cost_weight,
+          TotalDistance: S[i].distance,
           Coordinates: [i,k]
         }
+        console.log(63,": ",S[i].distance," * ",distance_weight," + ",item.Cost," * ",item_cost_weight)
       }
     }
-  }
-  
+  console.log(58)
   // Computing intermediate and final registrations
   for(let j = 1; j < F.length; j++)
   {
@@ -147,6 +124,9 @@ export function FindOptimalRoute(shopping_items, max_stores, max_distance, item_
     Registrations = PreviousRegistrations
     PreviousRegistrations = tmp
   }
+  console.log(120)
+  console.log(121,PreviousRegistrations)
+  console.log(121,Registrations)
   // Now, we search the final registrations to find the best registration
   let optimalRegistration = null
   let optimalCost = Infinity
@@ -187,10 +167,9 @@ export function FindOptimalRoute(shopping_items, max_stores, max_distance, item_
     if(previousStore != optimalRegistration.Coordinates[0])
     {
       previousStore = optimalRegistration.Coordinates[0]
-      let [storeName, address] = GetStoreDetails(S[previousStore].Store_id)
       shoppingPlan.push({
-        StoreName: storeName,
-        StoreAddress: address,
+        StoreName: S[previousStore].name,
+        StoreAddress: S[previousStore].address,
         StoreItems: [],
       })
     }
@@ -206,3 +185,6 @@ export function FindOptimalRoute(shopping_items, max_stores, max_distance, item_
   }
   return shoppingPlan.reverse()
 }
+module.exports = {
+  FindOptimalRoute: FindOptimalRoute,
+};
