@@ -15,7 +15,7 @@ function ViewRecipe() {
     //const [instructions, setInstructions] = React.useState(null)
     //const [ingredients, setIngredients] = React.useState([])
     const [{instructions, ingredients, newId}, setRecipe] = React.useState({instructions: null,ingredients: [],newId: id})
-    const [isAuthor, setIsAuthor] = React.useState(id === -1)
+    const [isAuthor, setIsAuthor] = React.useState(id === -1 || true)
     const api = "http://localhost:3001/recipes/";
     if (id !== -1) {
         if (instructions == null) {
@@ -97,6 +97,11 @@ function ViewRecipe() {
         }
         updateState(!editMode)
     }
+    async function deleteRecipe()
+    {
+        const googleid = localStorage.getItem('googleId')
+        await fetch(`http://localhost:3001/recipes/delete/${googleid}/${newId}`)
+    }
     return (
         <form>
             <label>
@@ -119,7 +124,9 @@ function ViewRecipe() {
                 isAuthor ?
                     (
                         <ButtonGroup>
-                            <Button variant="Secondary">Delete</Button>
+                            <Link to={{ pathname: "/recipes" }} >
+                                <Button variant="Secondary" onClick={deleteRecipe}>Delete</Button>
+                            </Link>
                             <Button variant="Secondary" onClick={editModeToggle} id="editBtn">{editMode ? "Save" : "Edit"}</Button>
                             <Link to={{ pathname: "/recipes" }} >
                                 <Button variant="Secondary">Close</Button>

@@ -38,6 +38,8 @@ app.post("/recipes/post", recipes.post);
 app.get("/recipes/ingredientoptions", recipes.getIngredientOptions);
 // add recipe to shopping list ingredient options
 app.get("/recipes/shoppinglist/:googleId/:recipeId", recipes.addToShoppingList);
+// add recipe to shopping list ingredient options
+app.get("/recipes/delete/:googleId/:recipeId", recipes.deleteRecipe);
 
 // Shopping Route Algorithm
 app.post("/route/ingredientoptions", recipes.getIngredientOptions);

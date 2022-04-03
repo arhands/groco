@@ -83,6 +83,23 @@ async function postRecipe(req, res) {
       console.log(err.message);
   }
 }
+async function deleteRecipe(req, res) {
+  try {
+      const { googleId, recipeId } = req.params;
+      const count = (await pool.query(
+        "DELETE FROM recipe_table WHERE id = $1 AND creator_id = (SELECT id FROM user_table WHERE googleid = $2)" +
+        " RETURNING id",
+        [recipeId, googleId]
+      )).rows.length;
+      if(count == 0)
+      {
+        res.status(405)
+        res.send("Cannot modify or delete recipes that belong to other users.")
+      }
+  } catch (err) {
+      console.log(err.message);
+  }
+}
 async function getIngredientOptions(req, res) {
   try {
       const ingredients = (await pool.query("SELECT id, name FROM ingredient_table")).rows;
@@ -97,5 +114,6 @@ module.exports = {
   getDetail: getRecipeDetails,
   post: postRecipe,
   getIngredientOptions: getIngredientOptions,
-  addToShoppingList: addToShoppingList
+  addToShoppingList: addToShoppingList,
+  deleteRecipe: deleteRecipe
 };
