@@ -13,7 +13,7 @@ async function getAllRecipes(req, res) {
 }
 async function getRecipeDetails(req, res) {
   try {
-      const { recipeId } = req.params;
+      const { recipeId, googleId } = req.params;
       const {instructions, ingredient_collection_id} = (await pool.query(
           "SELECT instructions, ingredient_collection_id " +
           "FROM recipe_table " +
@@ -29,7 +29,12 @@ async function getRecipeDetails(req, res) {
           "WHERE II.collection_id = $1",
         [ingredient_collection_id]
       )).rows;
-      res.json({instructions: instructions, ingredients: ingredients});
+      const isAuthor = (await pool.query("SELECT U.id FROM recipe_table R " +
+        "JOIN user_table U ON R.creator_id = U.id " +
+        "WHERE U.googleid = $1 " +
+        "AND R.id = $2",
+        [googleId,recipeId])).rows.length > 0;
+      res.json({instructions: instructions, ingredients: ingredients, isAuthor: isAuthor});
   } catch (err) {
       console.log(err.message);
   }

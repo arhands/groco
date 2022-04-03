@@ -15,17 +15,17 @@ function ViewRecipe() {
     //const [instructions, setInstructions] = React.useState(null)
     //const [ingredients, setIngredients] = React.useState([])
     const [{instructions, ingredients, newId}, setRecipe] = React.useState({instructions: null,ingredients: [],newId: id})
-    const [isAuthor, setIsAuthor] = React.useState(id === -1 || true)
+    const [isAuthor, setIsAuthor] = React.useState(id === -1)
     const api = "http://localhost:3001/recipes/";
     if (id !== -1) {
         if (instructions == null) {
             (async () => {
                 try {
-                    const response = await fetch(api + `details/${id}`)
+                    const googleid = localStorage.getItem('googleId')
+                    const response = await fetch(api + `details/${id}/${googleid}`)
                     let jsonData = await response.json()
                     setRecipe({instructions: jsonData.instructions,ingredients: jsonData.ingredients,newId: id})
-                    console.log("ingredients updated.")
-                    console.log(JSON.stringify(jsonData.ingredients))
+                    setIsAuthor(jsonData.isAuthor)
                 } catch (err) {
                     console.error(err);
                 }

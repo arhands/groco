@@ -31,7 +31,7 @@ app.get("/mealplans/:id/recipeIDs", mealplans.getRecipe);
 // get all recipes
 app.get("/recipes", recipes.getAll);
 // get recipe details
-app.get("/recipes/details/:recipeId", recipes.getDetail);
+app.get("/recipes/details/:recipeId/:googleId", recipes.getDetail);
 // post a new recipe
 app.post("/recipes/post", recipes.post);
 // get ingredient options
