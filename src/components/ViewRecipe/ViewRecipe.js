@@ -124,6 +124,21 @@ function ViewRecipe() {
                             <Link to={{ pathname: "/recipes" }} >
                                 <Button variant="Secondary">Close</Button>
                             </Link>
+                        </ButtonGroup>
+                    ) :
+                    (
+                        <ButtonGroup>
+                            <Button variant="Secondary">Close</Button>
+                        </ButtonGroup>
+                    )
+                    /*
+                    (
+                        <ButtonGroup>
+                            <Button variant="Secondary">Delete</Button>
+                            <Button variant="Secondary" onClick={editModeToggle} id="editBtn">{editMode ? "Save" : "Edit"}</Button>
+                            <Link to={{ pathname: "/recipes" }} >
+                                <Button variant="Secondary">Close</Button>
+                            </Link>
                             {id === -1 ? null : GenerateMealPlanSelection()}
                             <Link to={{ pathname: "/recipes" }} >
                                 <Button variant="Secondary">+List</Button>
@@ -137,6 +152,7 @@ function ViewRecipe() {
                             <Button variant="Primary">+ List</Button>
                         </ButtonGroup>
                     )
+                    */
             }
         </form>
     );

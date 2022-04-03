@@ -56,9 +56,6 @@ async function postRecipe(req, res) {
   try {
       // ingredients: [{ingredient_id, measurement_type (id), quantity}...]
       const { googleid, ingredients, instructions, name } = req.body;
-      console.log("41:",JSON.stringify(ingredients))
-      console.log("42:",JSON.stringify(name))
-      console.log("43:",JSON.stringify(instructions))
       // TODO: make sure a collision doesn't happen with this collection ID
       const collection_id = (await pool.query(
         "SELECT MAX(collection_id) + 1 id " +

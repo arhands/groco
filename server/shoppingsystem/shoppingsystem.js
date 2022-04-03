@@ -18,7 +18,6 @@ async function getShoppingRoute(req, res) {
       //
       const optimalRoute = await shopAlg.FindOptimalRoute(results.rows,maxStores,maxDistance,itemCostWeight,itemDistanceWeight,latitude,longitude)
       //
-      console.log(21,optimalRoute)
       res.json(optimalRoute);
   } catch (err) {
       console.log(err.message);
