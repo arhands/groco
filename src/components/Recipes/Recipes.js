@@ -49,8 +49,15 @@ class Recipes extends React.Component {
       })();
     }
     //
-    function AddRecipe(data) {
+    async function AddRecipe(data) {
       // TODO: Get this working my guy.
+      const id = data.id
+      const googleid = localStorage.getItem('googleId')
+      try {
+        const response = await fetch(api + `shoppinglist/${googleid}/${id}`)
+      } catch (err) {
+        console.error(err);
+      }
     }
     // converting data into something usable.
     const data = []

@@ -24,7 +24,6 @@ class IngredientTable extends React.Component
   {
     if(this.state.ingredient_options == null && this.props.EditMode)
     {
-      console.log("uhhh")
       const api = "http://localhost:3001/recipes/";
       // /ingredientoptions
       (async () => {

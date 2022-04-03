@@ -34,6 +34,24 @@ async function getRecipeDetails(req, res) {
       console.log(err.message);
   }
 }
+async function addToShoppingList(req, res) {
+  try {
+      const { googleId, recipeId } = req.params;
+      await pool.query(
+        "INSERT INTO ingredient_instance_table (collection_id, ingredient_id, quantity, measurement_type) " +
+        "(SELECT collection_id, ingredient_id, quantity, measurement_type " +
+        "FROM (SELECT shopping_list_id collection_id FROM user_table WHERE googleid = $1) S, " +
+        "(SELECT II.ingredient_id ingredient_id, quantity, II.id measurement_type " +
+          "FROM ingredient_instance_table II " +
+          "JOIN Recipe_table R ON II.collection_id = R.ingredient_collection_id " +
+          "WHERE R.id = $2) I)",
+        [googleId,recipeId]
+      )
+      //res.json({instructions: instructions, ingredients: ingredients});
+  } catch (err) {
+      console.log(err.message);
+  }
+}
 async function postRecipe(req, res) {
   try {
       // ingredients: [{ingredient_id, measurement_type (id), quantity}...]
@@ -81,5 +99,6 @@ module.exports = {
   getAll: getAllRecipes,
   getDetail: getRecipeDetails,
   post: postRecipe,
-  getIngredientOptions: getIngredientOptions
+  getIngredientOptions: getIngredientOptions,
+  addToShoppingList: addToShoppingList
 };
