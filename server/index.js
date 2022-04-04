@@ -6,6 +6,7 @@ const shoppinglist = require("./shoppinglist/shoppinglist");
 const grocery = require("./grocery/grocery");
 const user = require("./user/user")
 const recipes = require("./recipes/recipes")
+const shoppingAlgorithm = require("./shoppingsystem/shoppingsystem")
 const port = process.env.PORT || 3001
 const pool = require("./db");
 // var bodyParser = require('body-parser');
@@ -36,8 +37,11 @@ app.post("/recipes/post", recipes.post);
 // get ingredient options
 app.get("/recipes/ingredientoptions", recipes.getIngredientOptions);
 
+// Shopping Route Algorithm
+app.post("/route/ingredientoptions", recipes.getIngredientOptions);
+
 // get a shopping list
-app.get("/shoppinglist/get/:userid", shoppinglist.get);
+app.post("/shoppinglist", shoppingAlgorithm.getShoppingRoute);
 
 // ------ GROCERY QUERIES ------
 // get all grocery items
