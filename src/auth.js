@@ -3,7 +3,7 @@ import axios from "axios";
 const AuthContext = React.createContext(undefined);
 
 const AuthProvider = ({ children }) => {
-    const url = "https://groco-backend.herokuapp.com/user"
+    const url = process.env.REACT_APP_BACKEND_API
     useEffect(() => {
         setIsAuthenticated(localStorage.getItem('googleId') ? true : false);
     }, []);
@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
         setUserProfile(props.profileObj);
         setGoogleId(props.googleId);
         try {
-            const getUrl = url + '/' + props.googleId // props.googleId;
+            const getUrl = url + '/user/' + props.googleId // props.googleId;
             await axios.get(getUrl).then(response => {
                 if (response.status == 200) {
                     setIsAuthenticated(true);
@@ -31,7 +31,7 @@ const AuthProvider = ({ children }) => {
                         last_name: props.profileObj.familyName,
                         image_url: props.profileObj.imageUrl,
                     }
-                    axios.post(url, createJSON).then(res => {
+                    axios.post(url + '\\user', createJSON).then(res => {
                         console.log('New user created');
                         setIsAuthenticated(true);
                         localStorage.setItem('googleId', props.googleId);

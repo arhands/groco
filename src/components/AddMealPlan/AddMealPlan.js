@@ -7,7 +7,7 @@ import "./AddMealPlan.css"
 
 const AddMealPlan = () => {
 
-    const api = "http://localhost:3001/mealplans";
+    const api = process.env.REACT_APP_BACKEND_API + "/mealplans";
     const [name, setName] = useState("");
     const user_id = localStorage.getItem('userId');
     const onSubmitForm = async(e) =>{

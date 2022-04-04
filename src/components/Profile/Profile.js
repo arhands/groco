@@ -6,7 +6,7 @@ import axios from "axios";
 function Profile() {
     // const { userProfile } = useAuth();
     // const url = 'http://localhost:3001'
-    const url = 'https://groco-backend.herokuapp.com'
+    const url = process.env.REACT_APP_BACKEND_API
     const [userProfile, setUserProfile] = useState();
     useEffect(async () => {
         await axios.get(url + '/user/' + localStorage.getItem('googleId')).then(response => {

@@ -8,13 +8,12 @@ import Badge from 'react-bootstrap/Badge';
 import { useLocation } from 'react-router-dom';
 import { findDOMNode } from "react-dom";
 
-function ShoppingRouteDisplay()
-{
+function ShoppingRouteDisplay() {
   let selectedRows = []
   //
   let location = useLocation()
   const { maxStores, maxDistance, itemCostWeight, distanceWeight } = location.data
-  
+
   /*
   ShoppingPlan format:
   [
@@ -35,40 +34,38 @@ function ShoppingRouteDisplay()
   */
   const [shoppingPlan, setShoppingPlan] = useState(null)
   //
-  function HandleRowExpansion(row)
-  {
+  function HandleRowExpansion(row) {
     return <StoreDisplayCard StoreItems={row.data.StoreItems}></StoreDisplayCard>
   }
   //
   // TODO: replace the following hardcoded ID with the actual user_id
-  const api = "http://localhost:3001/shoppinglist";
-  if(shoppingPlan == null)
-  {
+  const api = process.env.REACT_APP_BACKEND_API + "/shoppinglist";
+  if (shoppingPlan == null) {
     (async () => {
-      try{
-          const {latitude, longitude} = (await new Promise(f => navigator.geolocation.getCurrentPosition(f))).coords;
-          const googleid = localStorage.getItem('googleId')
-          const response = await fetch(api, {
-              method: 'POST',
-              headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                  googleid: googleid,
-                  maxStores: maxStores,
-                  maxDistance: maxDistance,
-                  itemCostWeight: itemCostWeight,
-                  itemDistanceWeight: distanceWeight,
-                  latitude: latitude, 
-                  longitude: longitude
-              })
-          });
-          const jsonData = await response.json()
-          setShoppingPlan(jsonData)
-         
-      }catch(err){
-          console.error(err);
+      try {
+        const { latitude, longitude } = (await new Promise(f => navigator.geolocation.getCurrentPosition(f))).coords;
+        const googleid = localStorage.getItem('googleId')
+        const response = await fetch(api, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            googleid: googleid,
+            maxStores: maxStores,
+            maxDistance: maxDistance,
+            itemCostWeight: itemCostWeight,
+            itemDistanceWeight: distanceWeight,
+            latitude: latitude,
+            longitude: longitude
+          })
+        });
+        const jsonData = await response.json()
+        setShoppingPlan(jsonData)
+
+      } catch (err) {
+        console.error(err);
       }
     })();
   }
@@ -82,9 +79,9 @@ function ShoppingRouteDisplay()
       <label>
         Shopping List
       </label>
-      <DataTable 
-        columns={columns} 
-        data={shoppingPlan == null? [] : shoppingPlan}
+      <DataTable
+        columns={columns}
+        data={shoppingPlan == null ? [] : shoppingPlan}
         selectableRows onSelectedRowsChange={sel => selectedRows = sel.selectedRows}
         expandableRows expandableRowsComponent={HandleRowExpansion}
         progressPending={shoppingPlan == null}
