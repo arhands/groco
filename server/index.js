@@ -40,8 +40,6 @@ app.get("/recipes/ingredientoptions", recipes.getIngredientOptions);
 // Shopping Route Algorithm
 app.post("/route/ingredientoptions", recipes.getIngredientOptions);
 
-
-
 // get a shopping list
 app.post("/shoppinglist", shoppingAlgorithm.getShoppingRoute);
 
@@ -62,7 +60,6 @@ app.post("/grocery/add_item/:googleID", grocery.addItem);
 // create a user
 
 app.post("/user", async (req, res) => {
-    console.log("woohoo")
     try {
         console.log(req)
         const { googleid, user_email, first_name, last_name, image_url } = req.body;
