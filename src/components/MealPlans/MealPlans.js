@@ -24,9 +24,9 @@ const MealPlans = () => {
     };
 
     // Fetch data from API
-    const getMealPlans = async (user_id) => {
+    const getMealPlans = async () => {
         try {
-            const response = await fetch(api + `/mealplans/27`)
+            const response = await fetch(api + `/mealplans/${user_id}`)
             const jsonData = await response.json();
             console.log('user id ', user_id)
             console.log(jsonData);
