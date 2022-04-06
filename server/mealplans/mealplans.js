@@ -21,15 +21,16 @@ async function getAllMealPlansOfUser(req, res) {
         console.log(err.message);
     }
 }
+/*
 async function getMealPlan(req, res) {
     try {
-        const { id } = req.params;
-        const todo = await pool.query("SELECT * FROM public.meal_plan_table WHERE id =$1", [id]);
+        const {mealplan_id} = req.params;
+        const todo = await pool.query("SELECT meal_plan_id,mpt.name AS meal_plan_name,recipe_id,rt.name AS recipe_name FROM public.meal_plan_table mpt JOIN public.meal_plan_recipe_table mprt ON mpt.id = mprt.meal_plan_id JOIN public.recipe_table rt ON mprt.recipe_id = rt.id WHERE id =$1", [mealplan_id]);
         res.json(todo.rows[0]);
     } catch (err) {
         console.log(err.message);
     }
-}
+}*/
 async function updateMealPlan(req, res){
     try {
         const { id } = req.params;
@@ -60,13 +61,11 @@ async function deleteRecipeofMealplan (req, res) {
         console.log(err.message);
     }
 }
-async function getMealPlanRecipe (req, res){
+async function getMealPlanRecipes (req, res){
     try {
-        const { id } = req.params;
-        const allRecipesID = await pool.query("SELECT * FROM public.meal_plan_recipe_table WHERE meal_plan_id = $1", [id]);
-        //const allRecipesName = await pool.query("SELECT name FROM public.\"recipe_table\" WHERE id = $1",[each]);
-        res.json(allRecipesID.rows);
-
+        const {mealplan_id } = req.params;
+        const allRecipes = await pool.query("SELECT meal_plan_id, recipe_id, name FROM public.meal_plan_recipe_table me JOIN public.recipe_table re ON me.recipe_id = re.id WHERE meal_plan_id = $1",[mealplan_id]);
+        res.json(allRecipes.rows);
     } catch (err) {
         console.log(err.message);
     }
@@ -76,9 +75,8 @@ async function getMealPlanRecipe (req, res){
 module.exports = {
     create: createMealPlan,
     getAll: getAllMealPlansOfUser,
-    get: getMealPlan,
     update: updateMealPlan,
     delete: delMealPlan,
-    getRecipe: getMealPlanRecipe,
+    getRecipes: getMealPlanRecipes,
     deleteRecipeofMealplan: deleteRecipeofMealplan,
 };
