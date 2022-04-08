@@ -30,11 +30,15 @@ app.delete("/mealplans/:id", mealplans.delete);
 // get all recipes in database
 app.get("/recipes", recipes.getAll);
 // get recipe details
-app.get("/recipes/details/:recipeId", recipes.getDetail);
+app.get("/recipes/details/:recipeId/:googleId", recipes.getDetail);
 // post a new recipe
 app.post("/recipes/post", recipes.post);
 // get ingredient options
 app.get("/recipes/ingredientoptions", recipes.getIngredientOptions);
+// add recipe to shopping list ingredient options
+app.get("/recipes/shoppinglist/:googleId/:recipeId", recipes.addToShoppingList);
+// add recipe to shopping list ingredient options
+app.get("/recipes/delete/:googleId/:recipeId", recipes.deleteRecipe);
 // update recipe
 app.post("/recipes/update", recipes.update);
 

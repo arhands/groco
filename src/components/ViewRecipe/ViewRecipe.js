@@ -21,9 +21,11 @@ function ViewRecipe() {
         if (instructions == null) {
             (async () => {
                 try {
-                    const response = await fetch(api + `details/${id}`)
+                    const googleid = localStorage.getItem('googleId')
+                    const response = await fetch(api + `details/${id}/${googleid}`)
                     let jsonData = await response.json()
-                    setRecipe({ instructions: jsonData.instructions, ingredients: jsonData.ingredients, newId: id })
+                    setRecipe({instructions: jsonData.instructions,ingredients: jsonData.ingredients,newId: id})
+                    setIsAuthor(jsonData.isAuthor)
                 } catch (err) {
                     console.error(err);
                 }
@@ -119,6 +121,11 @@ function ViewRecipe() {
         }
         updateState(!editMode)
     }
+    async function deleteRecipe()
+    {
+        const googleid = localStorage.getItem('googleId')
+        await fetch(`http://localhost:3001/recipes/delete/${googleid}/${newId}`)
+    }
     return (
         <form>
             <label>
@@ -141,6 +148,23 @@ function ViewRecipe() {
                 isAuthor ?
                     (
                         <ButtonGroup>
+                            <Link to={{ pathname: "/recipes" }} >
+                                <Button variant="Secondary" onClick={deleteRecipe}>Delete</Button>
+                            </Link>
+                            <Button variant="Secondary" onClick={editModeToggle} id="editBtn">{editMode ? "Save" : "Edit"}</Button>
+                            <Link to={{ pathname: "/recipes" }} >
+                                <Button variant="Secondary">Close</Button>
+                            </Link>
+                        </ButtonGroup>
+                    ) :
+                    (
+                        <ButtonGroup>
+                            <Button variant="Secondary">Close</Button>
+                        </ButtonGroup>
+                    )
+                    /*
+                    (
+                        <ButtonGroup>
                             <Button variant="Secondary">Delete</Button>
                             <Button variant="Secondary" onClick={editModeToggle} id="editBtn">{editMode ? "Save" : "Edit"}</Button>
                             <Link to={{ pathname: "/recipes" }} >
@@ -159,6 +183,7 @@ function ViewRecipe() {
                             <Button variant="Primary">+ List</Button>
                         </ButtonGroup>
                     )
+                    */
             }
         </form>
     );
