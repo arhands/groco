@@ -24,8 +24,6 @@ function ViewRecipe() {
                     const response = await fetch(api + `details/${id}`)
                     let jsonData = await response.json()
                     setRecipe({ instructions: jsonData.instructions, ingredients: jsonData.ingredients, newId: id })
-                    console.log("ingredients updated.")
-                    console.log(JSON.stringify(jsonData.ingredients))
                 } catch (err) {
                     console.error(err);
                 }
@@ -85,12 +83,38 @@ function ViewRecipe() {
                                 name: RecipeName
                             })
                         });
-                        let jsonData = await response.json()
-                        setRecipe({ instructions: instructions, ingredients: ingredients, newId: jsonData.id })
                     } catch (err) {
                         console.error(err);
                     }
                 })();
+            }
+            else
+            {
+                (async () => {
+                    try {
+                        const googleid = localStorage.getItem('googleId')
+                        const response = await fetch(api + 'update', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                googleid: googleid,
+                                recipe_id: newId,
+                                ingredients: ingredients.map(s => ({
+                                    ingredient_id: s.ingredient_id,
+                                    quantity: s.quantity,
+                                    measurement_type: s.measurement_id,
+                                })),
+                                instructions: instructions,
+                                name: RecipeName
+                            })
+                        });
+                    } catch (err) {
+                        console.error(err);
+                    }
+                })();   
             }
         }
         updateState(!editMode)
