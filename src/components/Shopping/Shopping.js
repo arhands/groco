@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Shopping.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faCheckCircle, faPlus, faChevronLeft ,faChevronRight} from '@fortawesome/free-solid-svg-icons';
@@ -6,9 +6,40 @@ import ShoppingRouteOptionsModal from '../ShoppingRouteDisplay/ShoppingRouteOpti
 import Button from "react-bootstrap/Button";
 import Units from './Units';
 
+
 const Shopping = (props) => {
-	
+
+	const [itemlist, setItemsList] = useState([]);
+
+	// useEffect(() => {
+	// 	getShoppingListItems();
+    // }, []);
+	const url = "https://groco-backend.herokuapp.com/newshoppinglist/";
+	// const url =
+	const googleID = localStorage.getItem('googleId');
+
+	useEffect(()=>{
+		console.log("Getting items");
+		getShoppingListItems();
+	})
+
+	async function getShoppingListItems(){
+		try{
+			const body = {googleID};
+			const response = await fetch (url);
+			const jsonData = await response.json();
+			console.log(jsonData);
+			setItemsList(jsonData)			
+		}
+		catch(err){
+			console.log(err.message);
+		}
+	}
+
+	console.log(itemlist);
+
 	const [items, setItems] = useState([]);
+	
 
 	const groceryItem ={
 		itemName: props.groceryBrand,

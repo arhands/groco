@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const mealplans = require("./mealplans/mealplans");
 const shoppinglist = require("./shoppinglist/shoppinglist");
+const newshoppinglist = require("./newshoppinglist/newshoppinglist");
 const grocery = require("./grocery/grocery");
 const user = require("./user/user")
 const recipes = require("./recipes/recipes")
@@ -41,6 +42,7 @@ app.get("/recipes/ingredientoptions", recipes.getIngredientOptions);
 // get a shopping list
 app.get("/shoppinglist/get/:userid", shoppinglist.get);
 
+app.get("/newshoppinglist", newshoppinglist.get);
 // ------ GROCERY QUERIES ------
 // get all grocery items
 app.get("/grocery", grocery.getGrocery);
