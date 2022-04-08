@@ -14,9 +14,9 @@ function ViewRecipe() {
     //const [newName, setName] = React.useState(RecipeName)
     //const [instructions, setInstructions] = React.useState(null)
     //const [ingredients, setIngredients] = React.useState([])
-    const [{instructions, ingredients, newId}, setRecipe] = React.useState({instructions: null,ingredients: [],newId: id})
+    const [{ instructions, ingredients, newId }, setRecipe] = React.useState({ instructions: null, ingredients: [], newId: id })
     const [isAuthor, setIsAuthor] = React.useState(id === -1)
-    const api = "http://localhost:3001/recipes/";
+    const api = process.env.REACT_APP_BACKEND_API + "/recipes/";
     if (id !== -1) {
         if (instructions == null) {
             (async () => {
@@ -60,21 +60,19 @@ function ViewRecipe() {
     //
     console.log("id === -1:", id === -1)
     const [editMode, updateState] = React.useState(id === -1)
-    function editModeToggle()
-    {
+    function editModeToggle() {
         // checking if we need to save the recipe.
-        if(editMode)// if this is true, then we are currently in edit mode and need to save the changes.
+        if (editMode)// if this is true, then we are currently in edit mode and need to save the changes.
         {
-            if(newId === -1)
-            {
+            if (newId === -1) {
                 (async () => {
                     try {
                         const googleid = localStorage.getItem('googleId')
                         const response = await fetch(api + 'post', {
                             method: 'POST',
                             headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
                                 googleid: googleid,
@@ -82,17 +80,43 @@ function ViewRecipe() {
                                     ingredient_id: s.ingredient_id,
                                     quantity: s.quantity,
                                     measurement_type: s.measurement_id,
-                                })), 
-                                instructions: instructions, 
+                                })),
+                                instructions: instructions,
                                 name: RecipeName
                             })
                         });
-                        let jsonData = await response.json()
-                        setRecipe({instructions: instructions,ingredients: ingredients, newId: jsonData.id})
                     } catch (err) {
                         console.error(err);
                     }
                 })();
+            }
+            else
+            {
+                (async () => {
+                    try {
+                        const googleid = localStorage.getItem('googleId')
+                        const response = await fetch(api + 'update', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                googleid: googleid,
+                                recipe_id: newId,
+                                ingredients: ingredients.map(s => ({
+                                    ingredient_id: s.ingredient_id,
+                                    quantity: s.quantity,
+                                    measurement_type: s.measurement_id,
+                                })),
+                                instructions: instructions,
+                                name: RecipeName
+                            })
+                        });
+                    } catch (err) {
+                        console.error(err);
+                    }
+                })();   
             }
         }
         updateState(!editMode)
@@ -112,12 +136,12 @@ function ViewRecipe() {
             <Form.Label>
                 Instructions:<br />
             </Form.Label>
-            <Form.Control as="textarea" rows="8" defaultValue={instructions} onChange={e => setRecipe({instructions: e.target.value,ingredients: ingredients, newId: newId})} id="input-instructions" disabled={!editMode} />
+            <Form.Control as="textarea" rows="8" defaultValue={instructions} onChange={e => setRecipe({ instructions: e.target.value, ingredients: ingredients, newId: newId })} id="input-instructions" disabled={!editMode} />
             <br />
-            <IngredientTable 
-                EditMode={editMode} 
+            <IngredientTable
+                EditMode={editMode}
                 Ingredients={ingredients}
-                UpdateIngredientsCallback={newIng => {console.log(newId); setRecipe({instructions: instructions,ingredients: newIng, newId: newId})}}
+                UpdateIngredientsCallback={newIng => { console.log(newId); setRecipe({ instructions: instructions, ingredients: newIng, newId: newId }) }}
             />
             <br />
             {

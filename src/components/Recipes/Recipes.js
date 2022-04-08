@@ -27,19 +27,17 @@ class Recipes extends React.Component {
       },
     ];
     // raw data collected from server
-    const api = "http://localhost:3001/recipes/";
+    const api = process.env.REACT_APP_BACKEND_API + "/recipes/";
     if (this.state.loading) {
       (async () => {
         try {
-          console.log("requesting data")
           const response = await fetch(api)
-          console.log("response received")
           let jsonData = await response.json()
           this.setState({
             filteredText: this.state.filteredText,
             pagination: this.state.pagination,
             recipes: jsonData,
-            loading: false 
+            loading: false
           });
         } catch (err) {
           console.error(err);

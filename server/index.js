@@ -17,18 +17,17 @@ app.use(express.urlencoded({ extended: true }));
 // ROUTES
 // need to create database and table using psql first
 app.post("/mealplans", mealplans.create)
-// get all mealplan
+// get all mealplan of a user
 app.get("/mealplans/:user_id", mealplans.getAll);
-// get a mealplan
-app.get("/mealplans/:id", mealplans.get);
+// get a all recipes of a mealplan
+app.get("/mealplanRecipes/:mealplan_id", mealplans.getRecipes);
+// delete a recipe of a mealplan
+app.delete("/mealplanRecipes/:mealplan_id/:recipe_id", mealplans.deleteRecipe);
 // edit a mealplan
 app.put("/mealplans/:id", mealplans.update);
 // delete a mealplan
 app.delete("/mealplans/:id", mealplans.delete);
-// get all recipes of a mealplan
-app.get("/mealplans/:id/recipeIDs", mealplans.getRecipe);
-// recipes
-// get all recipes
+// get all recipes in database
 app.get("/recipes", recipes.getAll);
 // get recipe details
 app.get("/recipes/details/:recipeId/:googleId", recipes.getDetail);
@@ -40,11 +39,11 @@ app.get("/recipes/ingredientoptions", recipes.getIngredientOptions);
 app.get("/recipes/shoppinglist/:googleId/:recipeId", recipes.addToShoppingList);
 // add recipe to shopping list ingredient options
 app.get("/recipes/delete/:googleId/:recipeId", recipes.deleteRecipe);
+// update recipe
+app.post("/recipes/update", recipes.update);
 
 // Shopping Route Algorithm
 app.post("/route/ingredientoptions", recipes.getIngredientOptions);
-
-
 
 // get a shopping list
 app.post("/shoppinglist", shoppingAlgorithm.getShoppingRoute);
@@ -66,7 +65,6 @@ app.post("/grocery/add_item/:googleID", grocery.addItem);
 // create a user
 
 app.post("/user", async (req, res) => {
-    console.log("woohoo")
     try {
         console.log(req)
         const { googleid, user_email, first_name, last_name, image_url } = req.body;
@@ -80,21 +78,7 @@ app.post("/user", async (req, res) => {
     }
 });
 
-app.get("/recipeName/:recipeID", async (req, res) => {
-    try {
-        const { recipeID } = req.params;
-        const recipeName = await pool.query("SELECT name FROM public.recipe_table WHERE id= $1", [recipeID]);
-        res.json(recipeName.rows);
-        console.log('This si app.get name')
-        console.log(recipeID);
-        console.log(recipeName);
 
-    } catch (err) {
-        console.log(err.message);
-    }
-});
-
-app.delete("/mealplansRecipes/:id/:id", mealplans.deleteRecipeofMealplan);
 
 //get a user
 app.get("/user/:id", user.get);
