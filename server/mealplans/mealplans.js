@@ -54,9 +54,10 @@ async function delMealPlan (req, res) {
 
 async function deleteRecipeofMealplan (req, res) {
     try {
-        const { mealplan_id, recipe_id } = req.params;
-        const deleteRecipe = await pool.query("DELETE FROM public.meal_plan_recipe_table WHERE mealplan_id = $1 AND recipe_id =$2", [mealplan_id,recipe_id]);
-        res.json("Mealplan is deleted");
+        const {mealplan_id,recipe_id } = req.params;
+        const deleteRecipe = await pool.query("DELETE FROM public.meal_plan_recipe_table WHERE meal_plan_id = $1 AND recipe_id =$2", [mealplan_id,recipe_id]);
+        res.json("recipe is deleted");
+
     } catch (err) {
         console.log(err.message);
     }
@@ -78,5 +79,5 @@ module.exports = {
     update: updateMealPlan,
     delete: delMealPlan,
     getRecipes: getMealPlanRecipes,
-    deleteRecipeofMealplan: deleteRecipeofMealplan,
+    deleteRecipe: deleteRecipeofMealplan,
 };

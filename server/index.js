@@ -21,6 +21,8 @@ app.post("/mealplans", mealplans.create)
 app.get("/mealplans/:user_id", mealplans.getAll);
 // get a all recipes of a mealplan
 app.get("/mealplanRecipes/:mealplan_id", mealplans.getRecipes);
+// delete a recipe of a mealplan
+app.delete("/mealplanRecipes/:mealplan_id/:recipe_id", mealplans.deleteRecipe);
 // edit a mealplan
 app.put("/mealplans/:id", mealplans.update);
 // delete a mealplan
