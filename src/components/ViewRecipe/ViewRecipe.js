@@ -17,6 +17,7 @@ function ViewRecipe() {
     const [{ instructions, ingredients, newId }, setRecipe] = React.useState({ instructions: null, ingredients: [], newId: id })
     const [isAuthor, setIsAuthor] = React.useState(id === -1)
     const api = process.env.REACT_APP_BACKEND_API + "/recipes/";
+    //const api = "http://localhost:3001/recipes/";
     if (id !== -1) {
         if (instructions == null) {
             (async () => {
