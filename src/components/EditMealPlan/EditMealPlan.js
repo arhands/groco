@@ -25,14 +25,18 @@ const EditMealPlan = ({ mealplan }) => {
 
   // delete recipe from the current mealplan only
   const deleteMealPlanRecipe = async (recipe_id) => {
-    const response = await fetch(api + `/mealplansRecipes/${recipe_id}`);
-    const jsonData = await response.json();
-    setRecipeIDs(jsonData)
-    //setRecipesID (recipeIDs.filter(recipeID =>recipeID.id !==id))
-    //setMealPlanRecipes(mealPlanRecipes.filter(mealPlanRecipe => mealPlanRecipe.id!==id));
+    try {
+        const deleteRecipe = await fetch(`http://localhost:3001/mealplanRecipes/${mealplan.id}/${recipe_id}`, {
+            method: "DELETE"
+        });
+        setRecipeIDs(recipeIDs.filter(recipe => recipe.recipe_id !== recipe));
+    } catch (err) {
+        console.err(err.message);
+    }
+};
+ useEffect( () =>{
 
-  };
-
+ },[recipeIDs])
 
   // Get all receipes of a mealplan  
   useEffect(async () => {
@@ -87,7 +91,7 @@ const EditMealPlan = ({ mealplan }) => {
 
                     </td>
                     <td>
-                      <button onClick={() => deleteMealPlanRecipe(each.id)}>
+                      <button onClick={() => deleteMealPlanRecipe(each.recipe_id)}>
                         Delete</button>
                     </td>
                   </tr>
