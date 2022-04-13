@@ -13,6 +13,7 @@ import Shopping from "./components/Shopping/Shopping";
 import ShoppingRouteDisplay from "./components/ShoppingRouteDisplay/ShoppingRouteDisplay";
 // import ViewMealPlan from "./components/ViewMealPlan/ViewMealPlan";
 import Grocery from "./components/Grocery/Grocery";
+import FavList from "./components/fav_list/fav_list";
 
 export default function Routes() {
 
@@ -50,6 +51,9 @@ export default function Routes() {
             </Route>
             <Route exact path="/shoppingroute">
                 <ShoppingRouteDisplay />
+            </Route>
+            <Route exact path="/favorite_list">
+                <FavList/>
             </Route>
             <Route>
                 <NotFound />

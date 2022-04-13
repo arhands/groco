@@ -4,8 +4,6 @@ import DataTable from 'react-data-table-component';
 import { Button, Modal } from 'react-bootstrap';
 import './Grocery.css';
 import Shopping from '../Shopping/Shopping';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
 
 function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
@@ -39,21 +37,16 @@ function Grocery() {
     // column labels for table
     const cols = [
         { name: "Item", selector: row => row.name },
-        { name: "Add", selector: row => row.add }
     ];
 
     // set up pop modal
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const handleOnChange = target => {
-        console.log(target);
-    };
 
     // error pop modal
     const [showError, setShowError] = useState(false);
     const handleErrorClose = () => setShowError(false);
-    const handleErrorShow = () => setShowError(true);
 
     // ------- Grocery items ------- 
     // gets all grocery data from DB
@@ -179,7 +172,7 @@ function Grocery() {
                 <Modal.Body>
                     <div className="center">
                         <div>
-                            <select className="inputSize" value={brandId} onChange={(event) => { setBrandId(parseInt(event.target.value)) }}> {brandViewData} </select>
+                            <select className="inputSize" isSearchable value={brandId} onChange={(event) => { setBrandId(parseInt(event.target.value)) }}> {brandViewData} </select>
                         </div>
                         <div>
                             <select className="inputSize" value={measurementId} onChange={(event) => { setMeasurementId(parseInt(event.target.value)) }}> {measViewData} </select>
@@ -205,17 +198,22 @@ function Grocery() {
             </Modal>
             <div>
                 <Button onClick={handleShow}>
-                    Add to List
+                    Add to Shopping List
+                </Button>
+                <Button onClick={handleShow}>
+                    Add to Favorites List
                 </Button>
             </div>
             <div>
-                <Button>
-                    <Link to="/shopping"> <FontAwesomeIcon icon={faShoppingBasket} />
-                        Go to Shopping List</Link>
-                </Button>
+                <Link to="/shopping">
+                    <Button>View Shopping List</Button>
+                </Link>
+                <Link to="/shopping">
+                    <Button>View Favorites List</Button>
+                </Link>
             </div>
         </div>
     );
 }
 
-export default Grocery
+export default Grocery;

@@ -1,0 +1,35 @@
+@media all and (min-width: 480px) {
+    .app-background {
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 50vh;
+    }
+
+    .main-container {
+        background-color: lightyellow;
+        width: 500px;
+        height: min-content;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 10px 10px 26px 0px rgba(0, 0, 0, 0.35);
+    }
+
+    .item-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .item-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 0 20px 0;
+        border-bottom: 1px #fbc1bb solid;
+    }
+
+    .item-name {
+        cursor: pointer;
+    }
+}
