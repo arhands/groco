@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import { Button, Modal } from 'react-bootstrap';
 import './Grocery.css';
-import Shopping from '../Shopping/Shopping';
 
 function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
@@ -143,9 +142,6 @@ function Grocery() {
         }
         setShow(false);
     }
-
-
-    <Shopping Grocery={groceryData} />
 
     // setting up filter
     const filteredGrocery = grocoViewData.filter(item => item.name.toLowerCase().includes(filteredText.toLowerCase()))

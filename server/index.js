@@ -7,6 +7,7 @@ const grocery = require("./grocery/grocery");
 const user = require("./user/user")
 const recipes = require("./recipes/recipes")
 const shoppingAlgorithm = require("./shoppingsystem/shoppingsystem")
+const favList = require("./favList/favList");
 const port = process.env.PORT || 3001
 const pool = require("./db");
 // var bodyParser = require('body-parser');
@@ -53,6 +54,15 @@ app.get("/grocery/meas", grocery.getMeas);
 // add grocery item to list
 app.post("/grocery/add_item/:googleID", grocery.addItem);
 
+// ------ FAVORITE LIST QUERIES ------
+// get all favorites
+app.get("/favList", favList.getFavs)
+
+// add item to favorite
+app.post("/favList/add/:googleID", favList.addFav);
+
+// delete favorite
+app.delete("/favList/delete", favList.deleteFav);
 
 // create a user
 
