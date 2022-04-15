@@ -142,6 +142,7 @@ async function GetItemCost_v2(store, item)
 //[store_index x item_index] -> [[{name,cost}]]
 async function GetStoreItemMatrix(stores, desired_items)
 {
+  console.log("Getting Store x Item matrix")
   const response = await axios({
     url: "https://my.api.mockaroo.com/grocery_items.json",
     method: 'GET',
@@ -176,7 +177,7 @@ async function GetStoreItemMatrix(stores, desired_items)
   {
     cost_matrix[i] = Array(desired_items.length)
     for(let j = 0; j < desired_items.length; j++)
-      cost_matrix[i][j] = await GetItemCost(stores[i].id,desired_items[j], items)
+      cost_matrix[i][j] = await GetItemCost_v2(stores[i].id,desired_items[j], items)
   }
   return cost_matrix
 }
