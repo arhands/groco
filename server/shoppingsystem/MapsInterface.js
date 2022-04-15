@@ -75,7 +75,7 @@ async function GetStores(max_distance, latitude, longitude)
   return nearby_stores
 }
 // Returns: { ItemName: String, Cost: Float }
-async function GetItemCost(store_id, item, items)
+async function GetItemCost_v1(store_id, item, items)
 {
   let best_choice = null
   let name_distance = Infinity
@@ -121,6 +121,23 @@ async function GetItemCost(store_id, item, items)
       }
     }
   return best_choice
+}
+async function GetItemCost_v2(store, item)
+{
+  // configuration
+  const has_item_probability = 0.8
+  const price_min = 4
+  const price_max = 100
+  if(Math.random() >= has_item_probability)
+  {
+    return {
+      name: item.name,
+      cost: Math.random() * (price_max - price_min) + price_min,
+      brand: item.brand,
+    }
+  }
+  else
+    return null
 }
 //[store_index x item_index] -> [[{name,cost}]]
 async function GetStoreItemMatrix(stores, desired_items)

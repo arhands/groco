@@ -40,7 +40,11 @@ async function FindOptimalRoute(shopping_items, max_stores, max_distance, item_c
   for(let i = 0; i < S.length; i++)
     for(let j = 0; j < F.length; j++)
       if( B[i][j] != null)
-        B[i][j] = { Name: B[i][j].name, MonetaryCost: B[i][j].cost, Cost: B[i][j].cost * item_cost_weight }
+        B[i][j] = { 
+          Name: B[i][j].name, 
+          MonetaryCost: B[i][j].cost, 
+          Cost: B[i][j].cost * item_cost_weight 
+        }
   // computing initial registrations
   for(let i = 0; i < S.length; i++)
     for(let k = 0; k < F.length; k++)
