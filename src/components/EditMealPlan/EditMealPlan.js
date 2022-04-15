@@ -83,11 +83,16 @@ const EditMealPlan = ({ mealplan }) => {
                   <tr key={each.id}>
                     <td>{each.name}</td>
                     <td>
-                      <Link to='/recipedetails'>
-                        <button>
-                          View
-                        </button>
-                      </Link>
+                    <Link
+                      to={{
+                      pathname: "/recipedetails",
+                      data: { id:each.recipe_id, RecipeName: each.name }
+                    }}
+                    >
+                    <button>
+                    Details
+                    </button>
+                  </Link>
 
                     </td>
                     <td>
@@ -98,8 +103,6 @@ const EditMealPlan = ({ mealplan }) => {
                 ))}
               </tbody>
             </table>
-
-
 
             <div className="modal-footer">
               <button type="button" className="btn btn-danger"
