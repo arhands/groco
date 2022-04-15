@@ -11,7 +11,6 @@ import MealPlans from "./components/MealPlans/MealPlans";
 import EditMealPlan from "./components/EditMealPlan/EditMealPlan";
 import Shopping from "./components/Shopping/Shopping";
 import ShoppingRouteDisplay from "./components/ShoppingRouteDisplay/ShoppingRouteDisplay";
-import UyenTestViewRecipe from "./components/ViewRecipe/UyenTestViewRecipe"
 // import ViewMealPlan from "./components/ViewMealPlan/ViewMealPlan";
 import Grocery from "./components/Grocery/Grocery";
 
@@ -36,9 +35,6 @@ export default function Routes() {
             </Route>
             <Route exact path="/recipedetails">
                 <ViewRecipe />
-            </Route>
-            <Route exact path="/UyenTestRecipedetails">
-                <UyenTestViewRecipe />
             </Route>
             <Route exact path="/">
                 <Home />

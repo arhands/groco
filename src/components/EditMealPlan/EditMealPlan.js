@@ -83,11 +83,16 @@ const EditMealPlan = ({ mealplan }) => {
                   <tr key={each.id}>
                     <td>{each.name}</td>
                     <td>
-                      <Link to='/UyenTestRecipedetails'>
-                        <button>
-                          View
-                        </button>
-                      </Link>
+                    <Link
+                      to={{
+                      pathname: "/recipedetails",
+                      data: { id:each.recipe_id, RecipeName: each.name }
+                    }}
+                    >
+                    <button>
+                    Details
+                    </button>
+                  </Link>
 
                     </td>
                     <td>
