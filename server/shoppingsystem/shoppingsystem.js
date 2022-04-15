@@ -3,6 +3,7 @@ const shopAlg = require("./ShopSearchAlgorithm.js");
 async function getShoppingRoute(req, res) {
   try {
       let { googleid, maxStores, maxDistance, itemCostWeight, itemDistanceWeight, latitude, longitude} = req.body;
+      console.log("shoppingsystem.js:6:Getting shopping Route")
       const results = await pool.query(
           "SELECT I.name AS name, quantity, B.name AS brand, M.name AS measurement_type " +
             "FROM user_table U " + 

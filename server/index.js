@@ -46,7 +46,7 @@ app.post("/recipes/update", recipes.update);
 app.post("/route/ingredientoptions", recipes.getIngredientOptions);
 
 // get a shopping list
-app.post("/shoppinglist", shoppingAlgorithm.getShoppingRoute);
+app.post("/shoppinglistroute", shoppingAlgorithm.getShoppingRoute);
 
 // ------ GROCERY QUERIES ------
 // get all grocery items
