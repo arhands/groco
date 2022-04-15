@@ -83,7 +83,7 @@ const EditMealPlan = ({ mealplan }) => {
                   <tr key={each.id}>
                     <td>{each.name}</td>
                     <td>
-                      <Link to='/recipedetails'>
+                      <Link to='/UyenTestRecipedetails'>
                         <button>
                           View
                         </button>
@@ -98,8 +98,6 @@ const EditMealPlan = ({ mealplan }) => {
                 ))}
               </tbody>
             </table>
-
-
 
             <div className="modal-footer">
               <button type="button" className="btn btn-danger"
