@@ -59,6 +59,18 @@ function ViewRecipe() {
         )
     }
     //
+    function addRecipeToShoppingList()
+    {
+        (async () => {
+            try {
+                const googleid = localStorage.getItem('googleId')
+                const response = await fetch(api + `shoppinglist/${googleid}/${newId}`)
+                let jsonData = await response.json()
+            } catch (err) {
+                console.error(err);
+            }
+        })();
+    }
     console.log("id === -1:", id === -1)
     const [editMode, updateState] = React.useState(id === -1)
     function editModeToggle() {
@@ -156,11 +168,19 @@ function ViewRecipe() {
                             <Link to={{ pathname: "/recipes" }} >
                                 <Button variant="Secondary">Close</Button>
                             </Link>
+                            <Link to={{ pathname: "/recipes" }} >
+                                <Button variant="Secondary" onClick={addRecipeToShoppingList}>Add Shopping List</Button>
+                            </Link>
                         </ButtonGroup>
                     ) :
                     (
                         <ButtonGroup>
-                            <Button variant="Secondary">Close</Button>
+                            <Link to={{ pathname: "/recipes" }} >
+                                <Button variant="Secondary">Close</Button>
+                            </Link>
+                            <Link to={{ pathname: "/recipes" }} >
+                                <Button variant="Secondary" onClick={addRecipeToShoppingList}>Add Shopping List</Button>
+                            </Link>
                         </ButtonGroup>
                     )
                     /*

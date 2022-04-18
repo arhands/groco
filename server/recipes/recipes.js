@@ -40,6 +40,7 @@ async function getRecipeDetails(req, res) {
   }
 }
 async function addToShoppingList(req, res) {
+  console.log("Adding recipe to shopping list.")
   try {
       const { googleId, recipeId } = req.params;
       await pool.query(
