@@ -11,7 +11,6 @@ import MealPlans from "./components/MealPlans/MealPlans";
 import EditMealPlan from "./components/EditMealPlan/EditMealPlan";
 import Shopping from "./components/Shopping/Shopping";
 import ShoppingRouteDisplay from "./components/ShoppingRouteDisplay/ShoppingRouteDisplay";
-// import ViewMealPlan from "./components/ViewMealPlan/ViewMealPlan";
 import Grocery from "./components/Grocery/Grocery";
 
 export default function Routes() {
