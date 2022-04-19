@@ -1,4 +1,3 @@
-const { parse } = require("@fortawesome/fontawesome-svg-core");
 const pool = require("../db");
 
 // get all grocery
@@ -14,7 +13,7 @@ async function getAllGrocery(req, res) {
 // get all brands
 async function getAllBrand(req, res) {
     try {
-        const allBrand = await pool.query("SELECT * FROM public.brand_table");
+        const allBrand = await pool.query("SELECT * FROM public.brand_table ORDER BY name ASC");
         res.json(allBrand.rows);
     } catch (err) {
         console.log(err.message);
@@ -46,7 +45,9 @@ async function setListId(req, res) {
 
 // add item to list
 async function addItemToList(req, res) {
+    console.log("WOO!+")
     var { grocoId, quantity, measurementId, brandId } = req.body;
+    console.log(req.body);
     var { googleID } = req.params;
     quantity = parseFloat(quantity);
     var listId = null;

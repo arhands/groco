@@ -56,7 +56,7 @@ app.post("/grocery/add_item/:googleID", grocery.addItem);
 
 // ------ FAVORITE LIST QUERIES ------
 // get all favorites
-app.get("/favList", favList.getFavs)
+app.get("/favList/get/:googleID", favList.getFavs)
 
 // add item to favorite
 app.post("/favList/add/:googleID", favList.addFav);

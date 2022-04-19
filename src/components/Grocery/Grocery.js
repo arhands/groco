@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import { Button, Modal } from 'react-bootstrap';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Grocery.css';
 
 function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
     const api = process.env.REACT_APP_BACKEND_API
+    console.log(api);
     const url = api + "/grocery/";
+    const favUrl = api + "/favList/";
 
     // hooks
     const [groceryData, setGroceryData] = useState([]);
@@ -36,6 +40,7 @@ function Grocery() {
     // column labels for table
     const cols = [
         { name: "Item", selector: row => row.name },
+        { name: "Add Item", selector: row =>row.add}
     ];
 
     // set up pop modal
@@ -66,6 +71,9 @@ function Grocery() {
         grocoViewData.push({
             id: groceryData[i].id,
             name: groceryData[i].name,
+            add: (
+                <Button onClick= {function(event) {setGrocoId(groceryData[i].id); setShow(true)}}>Add Item</Button>
+            )
         });
     }
 
@@ -88,7 +96,7 @@ function Grocery() {
     for (let i = 0; i < brandLen; i++) {
         brandFormatData.push({
             id: brandData[i].id,
-            name: brandData[i].name
+            name: brandData[i].name,
         });
     }
 
@@ -130,17 +138,58 @@ function Grocery() {
 
     async function addToList() {
         if (grocoId) {
-            const body = { grocoId, quantity, measurementId, brandId, googleID };
-            const response = await fetch(url + "add_item/" + googleID, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body)
-            });
-            const jsonData = await response.json();
+            try {
+                const body = { grocoId, quantity, measurementId, brandId, googleID };
+                const response = await fetch(url + "add_item/" + googleID, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body)
+                });
+                const jsonData = await response.json();
+            } catch(err){
+                console.log(err.message);
+            }
         } else {
             setShowError(true);
         }
         setShow(false);
+        toast.success('Item added to your shopping list!', {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    }
+
+    async function addFav() {
+        if(grocoId) {
+            try {
+                const body = { grocoId, quantity, measurementId, brandId, googleID };
+                const response = await fetch(favUrl + "add/" + googleID, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body)
+                });
+                const jsonData = await response.json();
+            } catch(err) {
+                console.log(err.message);
+            }
+        } else {
+            setShowError(true);
+        }
+        setShow(false);
+        toast.success('Item added to your favorites list!', {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
     }
 
     // setting up filter
@@ -156,7 +205,7 @@ function Grocery() {
                     pagination
                     subHeader
                     subHeaderComponent={<input type="text" className="mb-3" onChange={e => setFilterText(e.target.value)} />}
-                    selectableRows
+                    // selectableRows
                     selectableRowsSingle
                     onSelectedRowsChange={(event) => { setGrocoId(event.selectedRows[0].id) }}
                     persistTableHead />
@@ -178,7 +227,8 @@ function Grocery() {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>Close</Button>
-                    <Button variant="primary" onClick={() => { addToList() }}>Add to List</Button>
+                    <Button variant="primary" onClick={() => { addToList() }}>Add to Shopping List</Button>
+                    <Button onClick={() => { addFav() }}>Add to Favorites List</Button>
 
                 </Modal.Footer>
             </Modal>
@@ -193,18 +243,21 @@ function Grocery() {
                 </Modal.Body>
             </Modal>
             <div>
-                <Button onClick={handleShow}>
-                    Add to Shopping List
-                </Button>
-                <Button onClick={handleShow}>
-                    Add to Favorites List
-                </Button>
-            </div>
-            <div>
+            <ToastContainer
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
                 <Link to="/shopping">
                     <Button>View Shopping List</Button>
                 </Link>
-                <Link to="/shopping">
+                <Link to="/favorite_list">
                     <Button>View Favorites List</Button>
                 </Link>
             </div>
