@@ -64,6 +64,9 @@ app.post("/favList/add/:googleID", favList.addFav);
 // delete favorite
 app.delete("/favList/delete", favList.deleteFav);
 
+// add all fav items to shopping list
+app.post("/favList/addAllFavs", favList.addAllFavs);
+
 // create a user
 
 app.post("/user", async (req, res) => {

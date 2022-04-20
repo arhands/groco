@@ -94,6 +94,7 @@ function FavList() {
         });
     }
 
+    // add 1 item to shopping list
     async function addToShopping(item) {
         const grocoId = item.grocid;
         const quantity = item.quantity;
@@ -106,7 +107,38 @@ function FavList() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             });
-            const jsonData = await response.json();
+            toast.success('Item added!', {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        } catch(err){
+            console.log(err.message);
+        }
+    }
+
+    // add all items to shopping list
+    async function addAllFavs() {
+        try {
+            const body = { googleID };
+            const response = await fetch(url + "addAllFavs", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+            toast.success('All items added!', {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         } catch(err){
             console.log(err.message);
         }
@@ -140,17 +172,20 @@ function FavList() {
                     </Modal.Footer>
                 </Modal>
             </div>
-            <ToastContainer
-                position="bottom-center"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-            />
+            <div>
+                <Button onClick={() =>  addAllFavs() }>Add all to Shopping List</Button>
+                <ToastContainer
+                    position="bottom-center"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
+            </div>
         </div>
 
     );

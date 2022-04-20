@@ -9,7 +9,6 @@ async function getFavs(req, res) {
     try {
         favId = (await pool.query("SELECT favorites_list_id FROM public.user_table WHERE googleid = $1", [googleID])).rows[0].favorites_list_id;
     } catch(err) {
-        console.log("getFav error");
         console.log("cannot get user's favorite list id");
         console.log(err.message);
     }
@@ -28,6 +27,7 @@ async function getFavs(req, res) {
     }
 }
 
+// add 1 item to favorites list
 async function addFav(req, res) {
     var { grocoId, quantity, measurementId, brandId } = req.body;
     var { googleID } = req.params;
@@ -37,7 +37,6 @@ async function addFav(req, res) {
     try {
         favId = (await pool.query("SELECT favorites_list_id FROM public.user_table WHERE googleid = $1", [googleID])).rows[0].favorites_list_id;
     } catch(err) {
-        console.log("addFav error");
         console.log("cannot get user's favorite list id");
         console.log(err.message);
     }
@@ -62,20 +61,19 @@ async function addFav(req, res) {
         }
     }
 
-    // add item to list
+    // add item to favorites list
     try {
         const itemAdd = await pool.query(
             "INSERT INTO public.ingredient_instance_table (collection_id, ingredient_id, quantity, measurement_type, brand_id) VALUES ($1, $2, $3, $4, $5)",
             [favId, grocoId, quantity, measurementId, brandId]);
         res.json(itemAdd.rows);
-        console.log(itemAdd.rows)
     } catch(err) {
         console.log("Unable to add favorite item");
         console.log(err.message);
     }
 }
 
-// delete item from fav list
+// delete 1 item from fav list
 async function deleteFav(req, res) {
     const { instId } = req.body;
 
@@ -87,13 +85,45 @@ async function deleteFav(req, res) {
     }
 }
 
-// add 1 item to shopping list
-async function addShop(req, res) {
 
+// add all favorite items to shopping list
+async function addAllFavs(req, res) {
+    const { googleID } = req.body;
+    var favId = null;
+    var shopId = null;
+    // get shopping list id
+    try {  
+        shopId = (await pool.query("SELECT shopping_list_id FROM public.user_table WHERE googleid = $1", [googleID])).rows[0].shopping_list_id;
+    } catch(err) {
+        console.log(err.message);
+    }
+
+    // get favorites list id
+    try {  
+        favId = (await pool.query("SELECT favorites_list_id FROM public.user_table WHERE googleid = $1", [googleID])).rows[0].favorites_list_id;
+    } catch(err) {
+        console.log("favId");
+        console.log(err.message);
+    }
+
+    // insert all items
+    try {
+        const insert = await pool.query(
+          "INSERT INTO public.ingredient_instance_table (collection_id, ingredient_id, quantity, measurement_type, brand_id) " +
+            "(SELECT $1, ingredient_id, quantity, measurement_type, brand_id FROM public.ingredient_instance_table a " + 
+            "WHERE a.collection_id = $2)",
+          [shopId,favId]
+        );
+        res.json(insert.rows);
+        console.log("All items added!");
+    } catch (err) {
+        console.log(err.message);
+    }
 }
 
 module.exports = {
     getFavs: getFavs,
     addFav: addFav,
-    deleteFav: deleteFav
+    deleteFav: deleteFav,
+    addAllFavs: addAllFavs
 };

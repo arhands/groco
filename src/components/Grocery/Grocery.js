@@ -46,7 +46,6 @@ function Grocery() {
     // set up pop modal
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
 
     // error pop modal
     const [showError, setShowError] = useState(false);
