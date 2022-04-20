@@ -34,7 +34,7 @@ const AddMealPlan = () => {
 
     }
   return (
-    <Fragment>
+    <div styles={{ backgroundImage:`url(https://www.plantemoran.com/-/media/images/insights-images/2018/03/food-and-bev-capital-roundtable--article-image.jpg)` }}>
         <h1 className='text-center mt-5'>Meal Plans</h1>
         <form className="d-flex mt-5" onSubmit={onSubmitForm}>
             <input type='text' placeholder='New plan name' className="form-control" value={name}
@@ -42,7 +42,7 @@ const AddMealPlan = () => {
             <button className='btn btn-success'>Add</button>
         </form>
     
-    </Fragment>
+    </div>
   )
 };
 

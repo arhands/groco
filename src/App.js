@@ -11,6 +11,9 @@ import { useHistory } from "react-router-dom";
 
 
 function App() {
+  let imgUrl = 'images/1.jpg';
+  
+
   const { enqueueSnackbar } = useSnackbar();
   let history = useHistory();
   const { isAuthenticated, logout } = useAuth();
@@ -20,7 +23,13 @@ function App() {
     history.push('/login');
   }
   return (
-    <div className="App container py-3">
+    <div className="App container py-3" 
+    style={{
+      backgroundImage: 'url("https://www.plantemoran.com/-/media/images/insights-images/2018/03/food-and-bev-capital-roundtable--article-image.jpg")',
+      height:"600px", backgroundRepeat: "no-repeat"
+    }}
+    
+    >
       <Navbar collapseOnSelect bg="light" expand="md" className="mb-3">
         <Navbar.Brand className="font-weight-bold text-muted">
           <img src={logo} width="50" height="50" className="d-inline-block align-top" alt="" />
