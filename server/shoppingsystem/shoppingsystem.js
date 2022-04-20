@@ -3,14 +3,15 @@ const shopAlg = require("./ShopSearchAlgorithm.js");
 async function getShoppingRoute(req, res) {
   try {
       let { googleid, maxStores, maxDistance, itemCostWeight, itemDistanceWeight, latitude, longitude} = req.body;
+      console.log("shoppingsystem.js:6:Getting shopping Route")
       const results = await pool.query(
-          "SELECT I.name AS name, quantity, B.name AS brand, M.name as measurement_type " +
-            "FROM user_table U, ingredient_instance_table II, measurement_table M, ingredient_table I, brand_table B " +
-            "WHERE U.googleid = $1 " +
-              "AND U.shopping_list_id = II.collection_id " +
-              "AND II.ingredient_id = I.id " +
-              "AND II.measurement_type = M.id " +
-              "AND II.brand_id = B.id ",
+          "SELECT I.name AS name, quantity, B.name AS brand, M.name AS measurement_type " +
+            "FROM user_table U " + 
+            "JOIN ingredient_instance_table II ON II.collection_id = U.shopping_list_id " +
+            "JOIN measurement_table M ON M.id = II.measurement_type " +
+            "JOIN ingredient_table I ON I.id = II.ingredient_id " +
+            "LEFT JOIN brand_table B ON B.id = II.brand_id " +
+            "WHERE U.googleid = $1",
           [googleid]
       );
       // converting from miles to meters
@@ -18,7 +19,6 @@ async function getShoppingRoute(req, res) {
       //
       const optimalRoute = await shopAlg.FindOptimalRoute(results.rows,maxStores,maxDistance,itemCostWeight,itemDistanceWeight,latitude,longitude)
       //
-      console.log(21,optimalRoute)
       res.json(optimalRoute);
   } catch (err) {
       console.log(err.message);

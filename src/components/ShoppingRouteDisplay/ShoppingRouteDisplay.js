@@ -9,6 +9,7 @@ import { useLocation } from 'react-router-dom';
 import { findDOMNode } from "react-dom";
 
 function ShoppingRouteDisplay() {
+  console.log("Shopping route display")
   let selectedRows = []
   //
   let location = useLocation()
@@ -39,7 +40,7 @@ function ShoppingRouteDisplay() {
   }
   //
   // TODO: replace the following hardcoded ID with the actual user_id
-  const api = process.env.REACT_APP_BACKEND_API + "/shoppinglist";
+  const api = process.env.REACT_APP_BACKEND_API + "/shoppinglistroute";
   if (shoppingPlan == null) {
     (async () => {
       try {

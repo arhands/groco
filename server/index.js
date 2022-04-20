@@ -22,6 +22,8 @@ app.post("/mealplans", mealplans.create)
 app.get("/mealplans/:user_id", mealplans.getAll);
 // get a all recipes of a mealplan
 app.get("/mealplanRecipes/:mealplan_id", mealplans.getRecipes);
+// delete a recipe of a mealplan
+app.delete("/mealplanRecipes/:mealplan_id/:recipe_id", mealplans.deleteRecipe);
 // edit a mealplan
 app.put("/mealplans/:id", mealplans.update);
 // delete a mealplan
@@ -29,17 +31,23 @@ app.delete("/mealplans/:id", mealplans.delete);
 // get all recipes in database
 app.get("/recipes", recipes.getAll);
 // get recipe details
-app.get("/recipes/details/:recipeId", recipes.getDetail);
+app.get("/recipes/details/:recipeId/:googleId", recipes.getDetail);
 // post a new recipe
 app.post("/recipes/post", recipes.post);
 // get ingredient options
 app.get("/recipes/ingredientoptions", recipes.getIngredientOptions);
+// add recipe to shopping list ingredient options
+app.get("/recipes/shoppinglist/:googleId/:recipeId", recipes.addToShoppingList);
+// add recipe to shopping list ingredient options
+app.get("/recipes/delete/:googleId/:recipeId", recipes.deleteRecipe);
+// update recipe
+app.post("/recipes/update", recipes.update);
 
 // Shopping Route Algorithm
 app.post("/route/ingredientoptions", recipes.getIngredientOptions);
 
 // get a shopping list
-app.post("/shoppinglist", shoppingAlgorithm.getShoppingRoute);
+app.post("/shoppinglistroute", shoppingAlgorithm.getShoppingRoute);
 
 // ------ GROCERY QUERIES ------
 // get all grocery items

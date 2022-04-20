@@ -17,6 +17,7 @@ const mapsInterface = require('./MapsInterface.js');
 //        },...]
 async function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_weight, distance_weight, latitude, longitude)
 {
+  console.log("Seeking optimal route.")
   let S = await mapsInterface.GetStores(max_distance, latitude, longitude);
   let F = shopping_items
   function GetArr(width,height)
@@ -30,22 +31,21 @@ async function FindOptimalRoute(shopping_items, max_stores, max_distance, item_c
   let Registrations = GetArr(S.length,F.length)
   let PreviousRegistrations = GetArr(S.length,F.length)
   //let A = GetArr(S.length,S.length)
-  console.log(34)
   let A = null
   if(shopping_items.length > 1)
   {
-    console.log(37)
     A = await mapsInterface.GetDistanceMatrix(S.map(store => store.coordinates))
-    console.log(38,A)
   }
   let B = await mapsInterface.GetStoreItemMatrix(S,F)
-  console.log(37)
-  console.log(39,B)
   // Computing item cost (B)
   for(let i = 0; i < S.length; i++)
     for(let j = 0; j < F.length; j++)
       if( B[i][j] != null)
-        B[i][j] = { Name: B[i][j].name, MonetaryCost: B[i][j].cost, Cost: B[i][j].cost * item_cost_weight }
+        B[i][j] = { 
+          Name: B[i][j].name, 
+          MonetaryCost: B[i][j].cost, 
+          Cost: B[i][j].cost * item_cost_weight 
+        }
   // computing initial registrations
   for(let i = 0; i < S.length; i++)
     for(let k = 0; k < F.length; k++)
@@ -62,10 +62,8 @@ async function FindOptimalRoute(shopping_items, max_stores, max_distance, item_c
           TotalDistance: S[i].distance,
           Coordinates: [i,k]
         }
-        console.log(63,": ",S[i].distance," * ",distance_weight," + ",item.Cost," * ",item_cost_weight)
       }
     }
-  console.log(58)
   // Computing intermediate and final registrations
   for(let j = 1; j < F.length; j++)
   {
@@ -88,10 +86,10 @@ async function FindOptimalRoute(shopping_items, max_stores, max_distance, item_c
                     break;
                   if(i != i1 && (PreviousRegistrations[i1][k1].States.has(i) || PreviousRegistrations[i1][k1].States.length == max_stores))
                     continue;
-                  let distance = PreviousRegistrations[i1][k1].TotalDistance + A[i][i1].Distance
+                  let distance = PreviousRegistrations[i1][k1].TotalDistance + A[i][i1]
                   if(distance > max_distance)
                     continue;
-                  let cost = PreviousRegistrations[i1][k1].Cost + A[i][i1].Cost + B[i][k].Cost
+                  let cost = PreviousRegistrations[i1][k1].Cost + A[i][i1] * distance_weight + B[i][k].Cost
                   if(cost < optimalCost)
                   {
                     optimalCost = cost
@@ -124,9 +122,6 @@ async function FindOptimalRoute(shopping_items, max_stores, max_distance, item_c
     Registrations = PreviousRegistrations
     PreviousRegistrations = tmp
   }
-  console.log(120)
-  console.log(121,PreviousRegistrations)
-  console.log(121,Registrations)
   // Now, we search the final registrations to find the best registration
   let optimalRegistration = null
   let optimalCost = Infinity

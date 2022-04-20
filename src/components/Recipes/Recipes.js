@@ -29,12 +29,9 @@ class Recipes extends React.Component {
     // raw data collected from server
     const api = process.env.REACT_APP_BACKEND_API + "/recipes/";
     if (this.state.loading) {
-      console.log("attempting load");
       (async () => {
         try {
-          console.log("requesting data")
           const response = await fetch(api)
-          console.log("response received")
           let jsonData = await response.json()
           this.setState({
             filteredText: this.state.filteredText,
@@ -42,15 +39,21 @@ class Recipes extends React.Component {
             recipes: jsonData,
             loading: false
           });
-          console.log("recipes loaded")
         } catch (err) {
           console.error(err);
         }
       })();
     }
     //
-    function AddRecipe(data) {
+    async function AddRecipe(data) {
       // TODO: Get this working my guy.
+      const id = data.id
+      const googleid = localStorage.getItem('googleId')
+      try {
+        const response = await fetch(api + `shoppinglist/${googleid}/${id}`)
+      } catch (err) {
+        console.error(err);
+      }
     }
     // converting data into something usable.
     const data = []

@@ -2,7 +2,13 @@ import { Fragment, useState, useEffect } from "react"
 import { Link } from "react-router-dom";
 
 
+
 const EditMealPlan = ({ mealplan }) => {
+  
+  const reload=()=>{
+    alert('Recipe is deleted.')
+    window.location.reload();
+  }
   // Edit mealplan name
   const api = process.env.REACT_APP_BACKEND_API
   const [name, setName] = useState(mealplan.name);
@@ -25,14 +31,19 @@ const EditMealPlan = ({ mealplan }) => {
 
   // delete recipe from the current mealplan only
   const deleteMealPlanRecipe = async (recipe_id) => {
-    const response = await fetch(api + `/mealplansRecipes/${recipe_id}`);
-    const jsonData = await response.json();
-    setRecipeIDs(jsonData)
-    //setRecipesID (recipeIDs.filter(recipeID =>recipeID.id !==id))
-    //setMealPlanRecipes(mealPlanRecipes.filter(mealPlanRecipe => mealPlanRecipe.id!==id));
+    try {
+        const deleteRecipe = await fetch(`http://localhost:3001/mealplanRecipes/${mealplan.id}/${recipe_id}`, {
+            method: "DELETE"
+        });
+        setRecipeIDs(recipeIDs.filter(recipe => recipe.recipe_id !== recipe));
+        
+    } catch (err) {
+        console.err(err.message);
+    }
+};
+ useEffect( () =>{
 
-  };
-
+ },[recipeIDs])
 
   // Get all receipes of a mealplan  
   useEffect(async () => {
@@ -53,7 +64,7 @@ const EditMealPlan = ({ mealplan }) => {
   return (
     <div>
       <button type="button" className="btn btn-warning"
-        data-toggle="modal" data-target={`#id${mealplan.id}`}>
+        data-toggle="modal" data-target={`#id${mealplan.id}`} >
         Edit
       </button>
       <div className="modal" id={`id${mealplan.id}`}>
@@ -72,30 +83,29 @@ const EditMealPlan = ({ mealplan }) => {
                 onChange={e => setName(e.target.value)} />
             </div>
 
-
-            <table className="table mt-5 text-center">
+            <table className="table mt-5 text-center" >
               <tbody>
                 {recipeIDs.map(each => (
                   <tr key={each.id}>
                     <td>{each.name}</td>
                     <td>
-                      <Link to='/recipedetails'>
-                        <button>
-                          View
-                        </button>
-                      </Link>
-
+                    <Link
+                      to={{
+                          pathname: "/recipedetails",
+                          data: { id:each.recipe_id, RecipeName: each.name }
+                          }}> 
+                      <button >Details
+                      </button>
+                    </Link>
                     </td>
                     <td>
-                      <button onClick={() => deleteMealPlanRecipe(each.id)}>
-                        Delete</button>
+                      <button onClick={() => {deleteMealPlanRecipe(each.recipe_id); reload()}}>
+                        Delete </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-
-
 
             <div className="modal-footer">
               <button type="button" className="btn btn-danger"

@@ -13,7 +13,7 @@ async function getAllRecipes(req, res) {
 }
 async function getRecipeDetails(req, res) {
   try {
-      const { recipeId } = req.params;
+      const { recipeId, googleId } = req.params;
       const {instructions, ingredient_collection_id} = (await pool.query(
           "SELECT instructions, ingredient_collection_id " +
           "FROM recipe_table " +
@@ -29,7 +29,30 @@ async function getRecipeDetails(req, res) {
           "WHERE II.collection_id = $1",
         [ingredient_collection_id]
       )).rows;
-      res.json({instructions: instructions, ingredients: ingredients});
+      const isAuthor = (await pool.query("SELECT U.id FROM recipe_table R " +
+        "JOIN user_table U ON R.creator_id = U.id " +
+        "WHERE U.googleid = $1 " +
+        "AND R.id = $2",
+        [googleId,recipeId])).rows.length > 0;
+      res.json({instructions: instructions, ingredients: ingredients, isAuthor: isAuthor});
+  } catch (err) {
+      console.log(err.message);
+  }
+}
+async function addToShoppingList(req, res) {
+  try {
+      const { googleId, recipeId } = req.params;
+      await pool.query(
+        "INSERT INTO ingredient_instance_table (collection_id, ingredient_id, quantity, measurement_type) " +
+        "(SELECT collection_id, ingredient_id, quantity, measurement_type " +
+        "FROM (SELECT shopping_list_id collection_id FROM user_table WHERE googleid = $1) S, " +
+        "(SELECT II.ingredient_id ingredient_id, quantity, II.id measurement_type " +
+          "FROM ingredient_instance_table II " +
+          "JOIN Recipe_table R ON II.collection_id = R.ingredient_collection_id " +
+          "WHERE R.id = $2) I)",
+        [googleId,recipeId]
+      )
+      //res.json({instructions: instructions, ingredients: ingredients});
   } catch (err) {
       console.log(err.message);
   }
@@ -38,15 +61,11 @@ async function postRecipe(req, res) {
   try {
       // ingredients: [{ingredient_id, measurement_type (id), quantity}...]
       const { googleid, ingredients, instructions, name } = req.body;
-      console.log("41:",JSON.stringify(ingredients))
-      console.log("42:",JSON.stringify(name))
-      console.log("43:",JSON.stringify(instructions))
       // TODO: make sure a collision doesn't happen with this collection ID
       const collection_id = (await pool.query(
         "SELECT MAX(collection_id) + 1 id " +
         "FROM ingredient_instance_table"
       )).rows[0].id;
-      console.log("collection_id:",collection_id)
       const creator_id = (await pool.query(
         "SELECT id FROM user_table WHERE googleid = $1",[googleid]
       )).rows[0].id;
@@ -68,6 +87,60 @@ async function postRecipe(req, res) {
       console.log(err.message);
   }
 }
+async function deleteRecipe(req, res) {
+  try {
+    const { googleId, recipeId } = req.params;
+    const count = (await pool.query(
+      "DELETE FROM recipe_table WHERE id = $1 AND creator_id = (SELECT id FROM user_table WHERE googleid = $2)" +
+      " RETURNING id",
+      [recipeId, googleId]
+    )).rows.length;
+    if(count == 0)
+    {
+      res.status(405)
+      res.send("Cannot modify or delete recipes that belong to other users.")
+    }
+  }
+  catch (err)
+  {
+    console.log(err.message)
+  }
+}
+async function updateRecipe(req, res) {
+  try {
+      // ingredients: [{ingredient_id, measurement_type (id), quantity}...]
+      const { googleid, recipe_id, ingredients, instructions, name } = req.body;
+      // TODO: make sure a collision doesn't happen with this collection ID
+      if((await pool.query(
+        "SELECT COUNT(*) c FROM user_table WHERE googleid = $1",[googleid]
+        )).rows[0].c == 0)
+      {
+        // raise error since given ID does not corrospond to recipe.
+        res.status(405)
+        res.message("Cannot modify other users' recipes.")
+      }
+      else
+      {
+        const collection_id = (await pool.query("SELECT ingredient_collection_id id FROM recipe_table WHERE id=$1",[recipe_id])).rows[0].id;
+        for(let i = 0; i < ingredients.length; i++)
+        {
+          await pool.query(
+            "INSERT INTO ingredient_instance_table (collection_id, ingredient_id, quantity, measurement_type) " +
+            "VALUES ($1, $2, $3, $4)",
+            [collection_id, ingredients[i].ingredient_id, ingredients[i].quantity, ingredients[i].measurement_type]
+          );
+        }
+        await pool.query(
+          "UPDATE recipe_table SET (name, instructions) " +
+          "VALUES ($1, $2) WHERE id = $3",
+          [name, instructions, recipe_id]
+        );
+        res.status(200)
+      }
+  } catch (err) {
+      console.log(err.message);
+  }
+}
 async function getIngredientOptions(req, res) {
   try {
       const ingredients = (await pool.query("SELECT id, name FROM ingredient_table")).rows;
@@ -81,5 +154,8 @@ module.exports = {
   getAll: getAllRecipes,
   getDetail: getRecipeDetails,
   post: postRecipe,
-  getIngredientOptions: getIngredientOptions
+  getIngredientOptions: getIngredientOptions,
+  addToShoppingList: addToShoppingList,
+  deleteRecipe: deleteRecipe,
+  update: updateRecipe
 };
