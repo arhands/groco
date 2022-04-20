@@ -26,6 +26,9 @@ function Landing() {
                 <Link to="/shopping">
                     <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Shopping List</Button>
                 </Link>
+                <Link to="/favorite_list">
+                    <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Favorite List</Button>
+                </Link>
                 <Link to="/mealplans">
                     <Button style={{ backgroundColor: '#f14b2c' }} block size="lg" >Meal Plans</Button>
                 </Link>
