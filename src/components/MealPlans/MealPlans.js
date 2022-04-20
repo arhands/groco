@@ -46,6 +46,9 @@ const MealPlans = () => {
     return (
         <Fragment>
             <AddMealPlan />
+            <Link to='/recipes'>
+                <button className='btn btn-info'> Search Recipes</button>
+            </Link>
             <table className="table mt-5 text-center">
                 <tbody>
                     {mealPlans.map(mealPlan => (
@@ -59,7 +62,7 @@ const MealPlans = () => {
                             </td>
                             
                             <td>
-                                <button className='btn btn-danger'
+                                <button className='btn btn-outline-danger'
                                     onClick={() => deleteMealPlan(mealPlan.id)}>Delete</button>
                             </td>
                         </tr>

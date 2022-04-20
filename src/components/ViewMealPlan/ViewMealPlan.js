@@ -28,7 +28,7 @@ const ViewMealPlan = ({mealplan}) => {
 
   return (
     <div>
-        <button className='btn btn-primary' onClick={()=>setShowRecipes(!showRecipes)}>View</button>
+        <button className='btn btn-outline-primary' onClick={()=>setShowRecipes(!showRecipes)}>View</button>
         <div>
             { showRecipes ? 
             <table className="table mt-5 text-center">
