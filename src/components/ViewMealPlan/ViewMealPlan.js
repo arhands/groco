@@ -3,6 +3,7 @@ import {useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const ViewMealPlan = ({mealplan}) => {
+    const [showRecipes, setShowRecipes] =useState(false)
     const api = process.env.REACT_APP_BACKEND_API
     const [recipes, setRecipes] = useState([]);
     const getRecipesOfMealplan = async () => {
@@ -27,26 +28,30 @@ const ViewMealPlan = ({mealplan}) => {
 
   return (
     <div>
-        <button className='btn btn-primary'>View</button>
-        <table className="table mt-5 text-center">
-            <tbody>
-                {recipes.map(each => (
-                    <tr key={each.recipe_id}>
-                        <td>{each.name}</td>
-                        <td>
-                        <Link
-                            to={{
-                                pathname: "/recipedetails",
-                                data: { id: each.recipe_id, RecipeName: each.name }
-                              }}>
-                                Details
-                            </Link>
-                            
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>   
+        <button className='btn btn-primary' onClick={()=>setShowRecipes(!showRecipes)}>View</button>
+        <div>
+            { showRecipes ? 
+            <table className="table mt-5 text-center">
+                <tbody>
+                    {recipes.map(each => (
+                        <tr key={each.recipe_id}>
+                            <td>{each.name}</td>
+                            <td>
+                            <Link
+                                to={{
+                                    pathname: "/recipedetails",
+                                    data: { id: each.recipe_id, RecipeName: each.name }
+                                }}>
+                                    Details
+                                </Link>
+                                
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>  :null
+            }  
+        </div>
 
     </div>
   )
