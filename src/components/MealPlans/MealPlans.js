@@ -59,11 +59,14 @@ const MealPlans = () => {
                         <tr key={mealPlan.id}>
                             <td>{mealPlan.name}</td>
                             <td>
-
+                                <Link>
+                                    <button className='btn btn-primary'>View</button>
+                                </Link>
                             </td>
                             <td>
                                 <EditMealPlan mealplan={mealPlan} />
                             </td>
+                            
                             <td>
                                 <button className='btn btn-danger'
                                     onClick={() => deleteMealPlan(mealPlan.id)}>Delete</button>

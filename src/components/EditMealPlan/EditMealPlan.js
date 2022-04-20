@@ -89,16 +89,6 @@ const EditMealPlan = ({ mealplan }) => {
                   <tr key={each.id}>
                     <td>{each.name}</td>
                     <td>
-                    <Link
-                      to={{
-                          pathname: "/recipedetails",
-                          data: { id:each.recipe_id, RecipeName: each.name }
-                          }}> 
-                      <button >Details
-                      </button>
-                    </Link>
-                    </td>
-                    <td>
                       <button onClick={() => {deleteMealPlanRecipe(each.recipe_id); reload()}}>
                         Delete </button>
                     </td>
