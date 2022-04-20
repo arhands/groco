@@ -3,7 +3,7 @@ import "./MealPlans.css";
 import { Fragment, useEffect, useState } from 'react';
 import AddMealPlan from '../AddMealPlan/AddMealPlan';
 import EditMealPlan from '../EditMealPlan/EditMealPlan';
-
+import ViewMealPlan from '../ViewMealPlan/ViewMealPlan';
 
 
 
@@ -47,21 +47,12 @@ const MealPlans = () => {
         <Fragment>
             <AddMealPlan />
             <table className="table mt-5 text-center">
-                {/*<thead>
-                <tr>
-                    <th>Mealplan</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>*/}
                 <tbody>
                     {mealPlans.map(mealPlan => (
                         <tr key={mealPlan.id}>
                             <td>{mealPlan.name}</td>
                             <td>
-                                <Link>
-                                    <button className='btn btn-primary'>View</button>
-                                </Link>
+                                <ViewMealPlan mealplan={mealPlan}/>
                             </td>
                             <td>
                                 <EditMealPlan mealplan={mealPlan} />
