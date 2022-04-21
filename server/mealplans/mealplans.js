@@ -21,16 +21,6 @@ async function getAllMealPlansOfUser(req, res) {
         console.log(err.message);
     }
 }
-/*
-async function getMealPlan(req, res) {
-    try {
-        const {mealplan_id} = req.params;
-        const todo = await pool.query("SELECT meal_plan_id,mpt.name AS meal_plan_name,recipe_id,rt.name AS recipe_name FROM public.meal_plan_table mpt JOIN public.meal_plan_recipe_table mprt ON mpt.id = mprt.meal_plan_id JOIN public.recipe_table rt ON mprt.recipe_id = rt.id WHERE id =$1", [mealplan_id]);
-        res.json(todo.rows[0]);
-    } catch (err) {
-        console.log(err.message);
-    }
-}*/
 async function updateMealPlan(req, res){
     try {
         const { id } = req.params;
