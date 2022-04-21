@@ -62,6 +62,12 @@ app.get("/grocery/meas", grocery.getMeas);
 // add grocery item to list
 app.post("/grocery/add_item/:googleID", grocery.addItem);
 
+// ------ SHOPPING LIST QUERIES ------
+//get all shopping list items
+app.get("/shoppingList/get/:googleID", shoppinglist.get);
+
+app.delete("/shoppingList/delete", shoppinglist.delete);
+
 // ------ FAVORITE LIST QUERIES ------
 // get all favorites
 app.get("/favList/get/:googleID", favList.getFavs)

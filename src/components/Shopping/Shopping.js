@@ -1,157 +1,144 @@
-import React, { useState } from 'react';
 import './Shopping.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle, faCheckCircle, faPlus, faChevronLeft ,faChevronRight} from '@fortawesome/free-solid-svg-icons';
+import React, { useEffect, useState } from 'react';
+import { Button, Modal } from 'react-bootstrap';
+import DataTable from 'react-data-table-component';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import ShoppingRouteOptionsModal from '../ShoppingRouteDisplay/ShoppingRouteOptionsModal.js';
-import Button from "react-bootstrap/Button";
-import Units from './Units';
 
-const Shopping = (props) => {
-	
-	const [items, setItems] = useState([]);
 
-	const groceryItem ={
-		itemName: props.groceryBrand,
-		quantity: props.groceryQuantity,
-		units: props.ButtongroceryMeasurment,
-	}
+function FavList() {
+    const api = process.env.REACT_APP_BACKEND_API
+    const url = api + "/shoppingList/";
 
-	const [inputValue, setInputValue] = useState('');
-	const [totalItemCount, setTotalItemCount] = useState('');
+    // hooks
+    const [listData, setListData]  = useState([]);
+    const [instId, setInstId] = useState(0); 
+    const [filteredText, setFilterText] = useState('');
 
-	const handleAddButtonClick = () => {
-		const newItem = {
-			itemName: inputValue,
-			quantity: 1,
-			isSelected: false,
-		};
-		
-		const newItems = [...items, newItem];
-
-		if(newItem.itemName.length===0){
-			alert('Please add a food to your shopping list');
-		}
-		else{
-			setItems(newItems);
-			setInputValue('');
-			calculateTotal();
-		}
-	};
-
-	const handleQuantityIncrease = (index) => {
-		const newItems = [...items];
-
-		newItems[index].quantity++;
-
-		setItems(newItems);
-		calculateTotal();
-	};
-
-	const handleQuantityDecrease = (index) => {
-		const newItems = [...items];
-
-		if(newItems[index].quantity>0){
-			newItems[index].quantity--;
-		}
-		
-		setItems(newItems);
-		calculateTotal();
-	};
-
-	const toggleComplete = (index) => {
-		//const newItems = [...items];
-		const removeItems = [...items];
-		
-		//newItems[index].isSelected = !newItems[index].isSelected;
-		
-		removeItems[index].quantity = 0;
-		removeItems.splice(index,1);
-		
-		//setItems(newItems);
-		setItems(removeItems);
-		calculateTotal();
-	};
-
-	const calculateTotal = () => {
-		const totalItemCount = items.reduce((total, item) => {
-			return total + item.quantity;
-		}, 0);
-
-		setTotalItemCount(totalItemCount);
-	};
+    const [show, setShow] = useState(false);
 	const [options, showOptions] = useState(false);
-	const [units, showUnits] = useState(false);
-	
-	console.log("Rerendering shopping")
-	console.log("options: ",options)
-	return (
-		
-		<div className='app-background'>
-			<div className='main-container'>
-			
-			<div><h2>Shopping list</h2></div>
-				<div className='add-item-box'>
-					
-					<input value={inputValue} onChange={(event) => setInputValue(event.target.value)} className='add-item-input' placeholder='Add an item...'/>	
-					
-					<FontAwesomeIcon icon={faPlus} onClick={() => handleAddButtonClick()} alignmentBaseline = 'right' />
-				</div>
-				<div className='item-list'>
-					<div className = 'item-container'>
-						<div className='item-name'>
-							{groceryItem.itemName}
-						</div>
-						<div className='Quantity'>
-							{groceryItem.quantity}
-						</div>
-						<div className='Units'>
-							{groceryItem.units}
-						</div>
-					</div>					
-					{items.map((item, index) => (						
-						<div className='item-container'>
-							<div className='item-name' onClick={() => toggleComplete(index)}>
-								{item.isSelected ? (
-									<>
-										<FontAwesomeIcon icon={faCheckCircle} />
-										<span className='completed'>{item.itemName}</span>
-										
-									</>
-								) : (
-									<>
-										<FontAwesomeIcon icon={faCircle} />
-										<span>{item.itemName}</span>
-									</>
-								)}
-							</div>
-							<div className='quantity'>
-								<button>
-									<FontAwesomeIcon icon={faChevronLeft} onClick={() => handleQuantityDecrease(index)} />
-								</button>
-								<span> {item.quantity} </span>
-								<button>
-									<FontAwesomeIcon icon={faChevronRight} onClick={() => handleQuantityIncrease(index)} />
-								</button>
-							</div>
-							<div className = 'units'>
-								<Button variant="primary" onClick={() => {showUnits(true);}}>
-									Change<Units Display={units} HideDisplay={() => showUnits(false)}/>
-								</Button>								
-							</div>
-						</div>
-					))}
-					
-				</div>
-				<div className='total'>Total: {totalItemCount}</div>
-				<div className='shop'>
-					<Button variant="primary" onClick={() => {showOptions(true); console.log("button clicked!");}}>Open Options</Button>
-					<ShoppingRouteOptionsModal Show={options} HideMenu={() => showOptions(false)}/>
-				</div>
-			</div>
-			
-		</div>
-		
-	);
-};
+    const handleClose = () => setShow(false);
 
-export default Shopping;
+    const googleID = localStorage.getItem('googleId');
+
+    useEffect(() => {
+        getListData();
+    }, [show]);
+
+    // column labels for table
+    const cols = [
+        { name: "Item", selector: row => row.name },
+        { name: "Brand", selector: row => row.brand},
+        { name: "Amount", selector: row =>row.amount},
+        { name: "Measurement", selector: row => row.meas},
+        { name: "Delete", selector: row => row.delete },
+    ];
+
+    async function getListData(){
+        try {
+            const response = await fetch(url + "get/" + googleID);
+            const jsonData = await response.json();
+            setListData(jsonData);
+        } catch(err) {
+            console.log(err.message);
+        }
+    }
+
+
+    // format raw favorite data to be used in view
+    const listViewData = [];
+    const listLen = listData.length;
+    for (let i = 0; i < listLen; i++) {
+        listViewData.push({
+            id: listData[i].instid,
+            name: listData[i].name,
+            brand: listData[i].bname,
+            amount: listData[i].quantity,
+            meas: listData[i].meas,
+            delete: (
+                <Button onClick={function(event) {setInstId(listData[i].instid); setShow(true)}}>Delete</Button>
+            )
+        });
+    }
+
+    // setting up filters
+    const filteredList = listViewData.filter(item => item.name.toLowerCase().includes(filteredText.toLowerCase()))
+
+    async function deleteItem() {
+        console.log(instId);
+        if( instId ){
+            try {
+                const body = { instId };
+                const del = await fetch(url + "delete", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body)
+                });
+                const jsonData = await del.json();
+            } catch(err) {
+                console.log(err.message);
+            }
+        }
+        setShow(false);
+        toast.success('Item deleted!', {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    }
+
+    return (
+        <div className="list-div">
+            <h2>Shopping List</h2>
+            <div className="listTable">
+                <DataTable
+                columns={cols}
+                data={filteredList}
+                pagination
+                subHeader
+                subHeaderComponent={<input type="text" className="mb-3" onChange={e => setFilterText(e.target.value)} />}
+                persistTableHead />
+            </div>
+            <div>
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Delete Item</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="center">
+                            <p1>Are you sure you want to delete this item from your Shopping List?</p1>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>Close</Button>
+                        <Button variant="primary" onClick={function(event) { deleteItem(); setShow(false) }}>Delete</Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+            <div>
+                <Button onClick={() => {showOptions(true)} }>Shop Items</Button>
+                <ToastContainer
+                    position="bottom-center"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
+				<ShoppingRouteOptionsModal Show={options} HideMenu={() => showOptions(false)}/>
+            </div>
+        </div>
+
+    );
+}
+
+
+export default FavList;
