@@ -19,7 +19,7 @@ async function getFavs(req, res) {
             "FROM public.ingredient_table a " + 
             "JOIN public.ingredient_instance_table b on a.id = b.ingredient_id AND b.collection_id = $1 " + 
             "JOIN public.brand_table as c on c.id = b.brand_id " +
-            "JOIN public.measurement_table d on d.id = b.measurement_type;", [favId]);
+            "JOIN public.measurement_table d on d.id = b.measurement_type", [favId]);
         res.json(favs.rows);
     } catch(err) {
         console.log("Unable to get favorite items.");
