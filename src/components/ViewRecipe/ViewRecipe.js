@@ -29,6 +29,7 @@ function ViewRecipe() {
                     const googleid = localStorage.getItem('googleId')
                     const response = await fetch(api + `details/${id}/${googleid}`)
                     let jsonData = await response.json()
+                    console.log(32,jsonData)
                     setRecipe({instructions: jsonData.instructions,ingredients: jsonData.ingredients,newId: id})
                     setMealPlans(jsonData.mealPlans)
                     setIsAuthor(jsonData.isAuthor)

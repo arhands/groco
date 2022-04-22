@@ -41,14 +41,13 @@ async function getRecipeDetails(req, res) {
   }
 }
 async function addToShoppingList(req, res) {
-  console.log("Adding recipe to shopping list.")
   try {
       const { googleId, recipeId } = req.params;
       await pool.query(
         "INSERT INTO ingredient_instance_table (collection_id, ingredient_id, quantity, measurement_type) " +
         "(SELECT collection_id, ingredient_id, quantity, measurement_type " +
         "FROM (SELECT shopping_list_id collection_id FROM user_table WHERE googleid = $1) S, " +
-        "(SELECT II.ingredient_id ingredient_id, quantity, II.id measurement_type " +
+        "(SELECT II.ingredient_id ingredient_id, quantity, II.measurement_type measurement_type " +
           "FROM ingredient_instance_table II " +
           "JOIN Recipe_table R ON II.collection_id = R.ingredient_collection_id " +
           "WHERE R.id = $2) I)",
