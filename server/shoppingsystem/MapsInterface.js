@@ -1,6 +1,3 @@
-//const MapboxClient = require('mapbox');
-const MapboxClient = require('mapbox');
-const client = new MapboxClient('pk.eyJ1IjoiYW5kcmV3aGFuZHMiLCJhIjoiY2wxZTU4dng2MG80MjNkbjRuMG02cjdsbyJ9.sMh4xQ7h4jtvFEmuh0ToOQ');
 const axios = require('axios')
 async function GetDistance(coordsA, coordsB)
 {
@@ -74,61 +71,13 @@ async function GetStores(max_distance, latitude, longitude)
   }
   return nearby_stores
 }
-// Returns: { ItemName: String, Cost: Float }
-async function GetItemCost_v1(store_id, item, items)
-{
-  let best_choice = null
-  let name_distance = Infinity
-  // arbitrary constant
-  const similarity_threshold = Infinity
-  function Edit_Distance(a,b)
-  {
-    const insert_cost = 1
-    const delete_cost = 5
-    const sub_cost = 3
-    let d = Array(a.length)
-    for(let i = 0; i < a.length; i++)
-      d[i] = Array(b.length)
-    for(let i = 0; i < a.length; i++)
-      d[i][0] = delete_cost
-    for(let i = 0; i < b.length; i++)
-      d[0][i] = insert_cost
-    for(let i = 1; i < a.length; i++)
-      for(let j = 1; j < b.length; j++)
-      {
-        if(a[i] === b[j])
-          d[i][j] = d[i-1][j-1]
-        else
-          d[i][j] = Math.min(
-            d[i-1][j] + delete_cost,
-            d[i][j-1] + insert_cost,
-            d[i-1][j-1] + sub_cost,
-          )
-      }
-    d = d[d.length-1]
-    d = d[d.length-1]
-    return d
-  }
-  for(let i = 0; i < items.length; i++)
-    // TODO: add getting brand
-    if(items[i].store_id == store_id && (items[i]?.brand === item[i]?.brand || item[i]?.brand == null || true))
-    {
-      const checking_distance = Edit_Distance(item.name,items[i].name)**2/(item.name.length * items[i].name.length)
-      if(checking_distance < similarity_threshold && checking_distance < name_distance)
-      {
-        name_distance = checking_distance
-        best_choice = items[i]
-      }
-    }
-  return best_choice
-}
 async function GetItemCost_v2(store, item)
 {
   // configuration
-  const has_item_probability = 0.8
+  const has_item_probability = 0.9
   const price_min = 4
   const price_max = 100
-  if(Math.random() >= has_item_probability)
+  if(Math.random() <= has_item_probability)
   {
     return {
       name: item.name,
@@ -142,7 +91,6 @@ async function GetItemCost_v2(store, item)
 //[store_index x item_index] -> [[{name,cost}]]
 async function GetStoreItemMatrix(stores, desired_items)
 {
-  console.log("Getting Store x Item matrix")
   const response = await axios({
     url: "https://my.api.mockaroo.com/grocery_items.json",
     method: 'GET',
@@ -150,7 +98,6 @@ async function GetStoreItemMatrix(stores, desired_items)
       "X-Api-Key": "7d251f60"
     }
   })
-  console.log("MapsInterface.js ",136)
   let rows = response.data.split('\n')
   // need to format items
   let items = Array(rows.length - 1)

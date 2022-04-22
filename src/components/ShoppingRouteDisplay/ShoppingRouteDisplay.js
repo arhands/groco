@@ -33,7 +33,8 @@ function ShoppingRouteDisplay() {
     },...
   ]
   */
-  const [shoppingPlan, setShoppingPlan] = useState(null)
+  const [shoppingPlan, setShoppingPlan] = useState(null);
+  const [searching, setSearching] = useState(true);
   //
   function HandleRowExpansion(row) {
     return <StoreDisplayCard StoreItems={row.data.StoreItems}></StoreDisplayCard>
@@ -43,6 +44,9 @@ function ShoppingRouteDisplay() {
   const api = process.env.REACT_APP_BACKEND_API + "/shoppinglistroute";
   if (shoppingPlan == null) {
     (async () => {
+      if(!searching)
+        return
+      setSearching(false)
       try {
         const { latitude, longitude } = (await new Promise(f => navigator.geolocation.getCurrentPosition(f))).coords;
         const googleid = localStorage.getItem('googleId')
@@ -63,7 +67,10 @@ function ShoppingRouteDisplay() {
           })
         });
         const jsonData = await response.json()
-        setShoppingPlan(jsonData)
+        if(jsonData == null)
+          setShoppingPlan(false)
+        else
+          setShoppingPlan(jsonData)
 
       } catch (err) {
         console.error(err);
@@ -80,6 +87,8 @@ function ShoppingRouteDisplay() {
       <label>
         Shopping List
       </label>
+      <br></br>
+      { shoppingPlan === false? <Form.Label>Unable to find route.  Consider widening your search.</Form.Label> :
       <DataTable
         columns={columns}
         data={shoppingPlan == null ? [] : shoppingPlan}
@@ -87,6 +96,7 @@ function ShoppingRouteDisplay() {
         expandableRows expandableRowsComponent={HandleRowExpansion}
         progressPending={shoppingPlan == null}
       />
+      }
     </div>
   );
 }

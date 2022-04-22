@@ -17,7 +17,6 @@ const mapsInterface = require('./MapsInterface.js');
 //        },...]
 async function FindOptimalRoute(shopping_items, max_stores, max_distance, item_cost_weight, distance_weight, latitude, longitude)
 {
-  console.log("Seeking optimal route.")
   let S = await mapsInterface.GetStores(max_distance, latitude, longitude);
   let F = shopping_items
   function GetArr(width,height)
