@@ -24,7 +24,7 @@ class IngredientTable extends React.Component
   {
     if(this.state.ingredient_options == null && this.props.EditMode)
     {
-      const api = process.env.REACT_APP_BACKEND_API + "http://localhost:3001/recipes/";
+      const api = process.env.REACT_APP_BACKEND_API + "/recipes/";
       // /ingredientoptions
       (async () => {
         try {
@@ -64,12 +64,14 @@ class IngredientTable extends React.Component
   }
   HandleAddIngredient()
   {
+    console.log(67)
     let ingredients = this.props.Ingredients
     ingredients.push({
       name: "", quantity: 0, measurement_type: ""
     })
     //this.setState({ brand_options : this.state.brand_options, measurement_types: this.state.measurement_types, Placeholder : true })
     this.UpdateIngredientsCallback(ingredients)
+    this.setState(this.state)
   }
   HandleDeleteSelection()
   {
@@ -80,6 +82,7 @@ class IngredientTable extends React.Component
       if(selectedIDs.has(this.Ingredients[i].id))
         ingredients.splice(i--,1)
     this.UpdateIngredientsCallback(ingredients)
+    this.setState(this.state)
     //this.setState({ brand_options : this.state.brand_options, measurement_types: this.state.measurement_types, Placeholder : true })
   }
   GetData()

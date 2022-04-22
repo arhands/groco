@@ -14,7 +14,10 @@ function ViewRecipe() {
     //const [newName, setName] = React.useState(RecipeName)
     //const [instructions, setInstructions] = React.useState(null)
     //const [ingredients, setIngredients] = React.useState([])
-    const [{ instructions, ingredients, newId }, setRecipe] = React.useState({ instructions: null, ingredients: [], newId: id })
+    const [instructions, setInstructions] = React.useState(null)
+    const [ingredients, setIngredients] = React.useState([])
+    const [newId, setID] = React.useState(id)
+    const [name, setName] = React.useState(RecipeName)
     const [getting_data, setGettingData] = React.useState(true)
     const [isAuthor, setIsAuthor] = React.useState(id === -1)
     const [mealPlans, setMealPlans] = React.useState([])
@@ -30,7 +33,8 @@ function ViewRecipe() {
                     const response = await fetch(api + `details/${id}/${googleid}`)
                     let jsonData = await response.json()
                     console.log(32,jsonData)
-                    setRecipe({instructions: jsonData.instructions,ingredients: jsonData.ingredients,newId: id})
+                    setIngredients(jsonData.ingredients)
+                    setInstructions(jsonData.instructions)
                     setMealPlans(jsonData.mealPlans)
                     setIsAuthor(jsonData.isAuthor)
                 } catch (err) {
@@ -74,7 +78,6 @@ function ViewRecipe() {
             }
         })();
     }
-    console.log("id === -1:", id === -1)
     const [editMode, updateState] = React.useState(id === -1)
     function editModeToggle() {
         // checking if we need to save the recipe.
@@ -98,9 +101,10 @@ function ViewRecipe() {
                                     measurement_type: s.measurement_id,
                                 })),
                                 instructions: instructions,
-                                name: RecipeName
+                                name: name
                             })
                         });
+                        console.log("got response")
                     } catch (err) {
                         console.error(err);
                     }
@@ -146,18 +150,18 @@ function ViewRecipe() {
         <form>
             <label>
                 Name:
-                <input type="text" defaultValue={RecipeName} onChange={e => RecipeName = e.target.value} id="input-name" disabled={!editMode} />
+                <input type="text" defaultValue={name} onChange={e => setName(e.target.value)} id="input-name" disabled={!editMode} />
             </label>
             <br />
             <Form.Label>
                 Instructions:<br />
             </Form.Label>
-            <Form.Control as="textarea" rows="8" defaultValue={instructions} onChange={e => setRecipe({ instructions: e.target.value, ingredients: ingredients, newId: newId })} id="input-instructions" disabled={!editMode} />
+            <Form.Control as="textarea" rows="8" defaultValue={instructions} onChange={e => setInstructions(e.target.value)} id="input-instructions" disabled={!editMode} />
             <br />
             <IngredientTable
                 EditMode={editMode}
                 Ingredients={ingredients}
-                UpdateIngredientsCallback={newIng => { console.log(newId); setRecipe({ instructions: instructions, ingredients: newIng, newId: newId }) }}
+                UpdateIngredientsCallback={newIng => setIngredients(newIng) }
             />
             <br />
             {
