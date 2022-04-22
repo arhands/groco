@@ -22,7 +22,7 @@ function Grocery() {
     const [grocoId, setGrocoId] = useState(0);
     const [brandId, setBrandId] = useState(1);
     const [quantity, setQuantity] = useState(0);
-    const [measurementId, setMeasurementId] = useState(1);
+    const [measurementId, setMeasurementId] = useState(5);
     const googleID = localStorage.getItem('googleId');
 
     // call get all functions

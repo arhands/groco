@@ -17,7 +17,7 @@ async function getShoppingList(req, res) {
         const sList = await pool.query("SELECT b.id as instID, a.name, a.id as grocid, c.name as bname, b.brand_id, d.name as meas, b.measurement_type, b.quantity " +
             "FROM public.ingredient_table a " + 
             "JOIN public.ingredient_instance_table b on a.id = b.ingredient_id AND b.collection_id = $1 " + 
-            "JOIN public.brand_table as c on c.id = b.brand_id " +
+            "LEFT JOIN public.brand_table as c on c.id = b.brand_id " +
             "JOIN public.measurement_table d on d.id = b.measurement_type", [listId]);
         res.json(sList.rows);
     } catch(err) {
