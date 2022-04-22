@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import { Link } from 'react-router-dom';
 import './ViewRecipe.css'
 import IngredientTable from './IngredientTable.js'
-import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import { ButtonGroup, Dropdown, DropdownButton, FormLabel } from "react-bootstrap";
 
 function ViewRecipe() {
     const location = useLocation()
@@ -15,17 +15,23 @@ function ViewRecipe() {
     //const [instructions, setInstructions] = React.useState(null)
     //const [ingredients, setIngredients] = React.useState([])
     const [{ instructions, ingredients, newId }, setRecipe] = React.useState({ instructions: null, ingredients: [], newId: id })
+    const [getting_data, setGettingData] = React.useState(true)
     const [isAuthor, setIsAuthor] = React.useState(id === -1)
+    const [mealPlans, setMealPlans] = React.useState([])
     const api = process.env.REACT_APP_BACKEND_API + "/recipes/";
     //const api = "http://localhost:3001/recipes/";
-    if (id !== -1) {
+    if (id !== -1 && getting_data) {
+        setGettingData(false)
+        
         if (instructions == null) {
             (async () => {
                 try {
                     const googleid = localStorage.getItem('googleId')
                     const response = await fetch(api + `details/${id}/${googleid}`)
                     let jsonData = await response.json()
+                    console.log(32,jsonData)
                     setRecipe({instructions: jsonData.instructions,ingredients: jsonData.ingredients,newId: id})
+                    setMealPlans(jsonData.mealPlans)
                     setIsAuthor(jsonData.isAuthor)
                 } catch (err) {
                     console.error(err);
@@ -34,31 +40,40 @@ function ViewRecipe() {
         }
     }
     function GenerateMealPlanSelection() {
-        let mealPlans = [
-            { name: "3 days plan", id: 1 },
-            { name: "1 week plan", id: 2 },
-            { name: "Vegetarian", id: 3 },
-            { name: "Thanksgiving", id: 4 },
-            { name: "Weekend BBQ", id: 5 }
-        ];
-        function AddToMealPlan(p) {
-            console.log("Adding recipe to meal plan " + JSON.stringify(p) + ".")
-            //console.log("Adding recipe to meal plan " + toString(p.id) + ".")
+        async function AddToMealPlan(p) {
+            try {
+                const googleid = localStorage.getItem('googleId')
+                const response = await fetch(api + `addrecipetomealplan/${p}/${newId}/${googleid}`)
+            } catch (err) {
+                console.error(err);
+            }
         }
         return (
             <DropdownButton as={ButtonGroup} title="+ Meal Plan">
-                {mealPlans.map(
+                {mealPlans.length > 0? mealPlans.map(
                     p => (
                         <Link to={{ pathname: "/recipes" }} >
-                            <Dropdown.Item as={Button} onClick={() => AddToMealPlan(p)} eventKey={p.id}>
+                            <Dropdown.Item as={Button} onClick={() => AddToMealPlan(p.id)} eventKey={p.id}>
                                 {p.name}
                             </Dropdown.Item>
                         </Link>))
-                }
+                : <p>None</p>}
             </DropdownButton>
         )
     }
     //
+    function addRecipeToShoppingList()
+    {
+        (async () => {
+            try {
+                const googleid = localStorage.getItem('googleId')
+                const response = await fetch(api + `shoppinglist/${googleid}/${newId}`)
+                let jsonData = await response.json()
+            } catch (err) {
+                console.error(err);
+            }
+        })();
+    }
     console.log("id === -1:", id === -1)
     const [editMode, updateState] = React.useState(id === -1)
     function editModeToggle() {
@@ -156,11 +171,21 @@ function ViewRecipe() {
                             <Link to={{ pathname: "/recipes" }} >
                                 <Button variant="Secondary">Close</Button>
                             </Link>
+                            <Link to={{ pathname: "/recipes" }} >
+                                <Button variant="Secondary" onClick={addRecipeToShoppingList}>Add Shopping List</Button>
+                            </Link>
+                            {id === -1 ? null : GenerateMealPlanSelection()}
                         </ButtonGroup>
                     ) :
                     (
                         <ButtonGroup>
-                            <Button variant="Secondary">Close</Button>
+                            <Link to={{ pathname: "/recipes" }} >
+                                <Button variant="Secondary">Close</Button>
+                            </Link>
+                            <Link to={{ pathname: "/recipes" }} >
+                                <Button variant="Secondary" onClick={addRecipeToShoppingList}>Add Shopping List</Button>
+                            </Link>
+                            {id === -1 ? null : GenerateMealPlanSelection()}
                         </ButtonGroup>
                     )
                     /*

@@ -42,6 +42,8 @@ app.get("/recipes/shoppinglist/:googleId/:recipeId", recipes.addToShoppingList);
 app.get("/recipes/delete/:googleId/:recipeId", recipes.deleteRecipe);
 // update recipe
 app.post("/recipes/update", recipes.update);
+//
+app.get("/recipes/addrecipetomealplan/:meal_plan_id/:recipe_id/:google_id", recipes.addRecipeToMealPlan);
 
 // Shopping Route Algorithm
 app.post("/route/ingredientoptions", recipes.getIngredientOptions);

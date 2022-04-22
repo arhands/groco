@@ -34,7 +34,8 @@ async function getRecipeDetails(req, res) {
         "WHERE U.googleid = $1 " +
         "AND R.id = $2",
         [googleId,recipeId])).rows.length > 0;
-      res.json({instructions: instructions, ingredients: ingredients, isAuthor: isAuthor});
+      const allMealPlans = (await pool.query("SELECT M.id, M.name FROM meal_plan_table M JOIN user_table U ON U.id = M.user_id WHERE googleid = $1",[googleId])).rows;
+      res.json({instructions: instructions, ingredients: ingredients, isAuthor: isAuthor, mealPlans: allMealPlans});
   } catch (err) {
       console.log(err.message);
   }
@@ -46,7 +47,7 @@ async function addToShoppingList(req, res) {
         "INSERT INTO ingredient_instance_table (collection_id, ingredient_id, quantity, measurement_type) " +
         "(SELECT collection_id, ingredient_id, quantity, measurement_type " +
         "FROM (SELECT shopping_list_id collection_id FROM user_table WHERE googleid = $1) S, " +
-        "(SELECT II.ingredient_id ingredient_id, quantity, II.id measurement_type " +
+        "(SELECT II.ingredient_id ingredient_id, quantity, II.measurement_type measurement_type " +
           "FROM ingredient_instance_table II " +
           "JOIN Recipe_table R ON II.collection_id = R.ingredient_collection_id " +
           "WHERE R.id = $2) I)",
@@ -150,6 +151,19 @@ async function getIngredientOptions(req, res) {
       console.log(err.message);
   }
 }
+async function addRecipeToMealPlan(req, res) {
+  try {
+    // ingredients: [{ingredient_id, measurement_type (id), quantity}...]
+    const { meal_plan_id, recipe_id, google_id } = req.params;
+    // TODO: check if google id corrosponds to meal plan id
+    await pool.query(
+      "INSERT INTO meal_plan_recipe_table (meal_plan_id, recipe_id) VALUES ($1, $2)",
+      [meal_plan_id, recipe_id]
+    )
+  } catch (err) {
+      console.log(err.message);
+  }
+}
 module.exports = {
   getAll: getAllRecipes,
   getDetail: getRecipeDetails,
@@ -157,5 +171,6 @@ module.exports = {
   getIngredientOptions: getIngredientOptions,
   addToShoppingList: addToShoppingList,
   deleteRecipe: deleteRecipe,
-  update: updateRecipe
+  update: updateRecipe,
+  addRecipeToMealPlan: addRecipeToMealPlan
 };
