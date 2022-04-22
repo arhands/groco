@@ -1,13 +1,14 @@
 import { Fragment, useState, useEffect } from "react"
 import { Link } from "react-router-dom";
+import {useSnackbar} from "notistack"
 
 
 
 const EditMealPlan = ({ mealplan }) => {
-  
+  const {enqueueSnackbar} = useSnackbar();
   const reload=()=>{
-    alert('Recipe is deleted.')
-    window.location.reload();
+    // window.location.reload();
+    enqueueSnackbar('Recipe is deleted.',{variant: 'success'});
   }
   // Edit mealplan name
   const api = process.env.REACT_APP_BACKEND_API
@@ -32,23 +33,20 @@ const EditMealPlan = ({ mealplan }) => {
   // delete recipe from the current mealplan only
   const deleteMealPlanRecipe = async (recipe_id) => {
     try {
-        const deleteRecipe = await fetch(`http://localhost:3001/mealplanRecipes/${mealplan.id}/${recipe_id}`, {
+        const deleteRecipe = await fetch(api + `/mealplanRecipes/${mealplan.id}/${recipe_id}`, {
             method: "DELETE"
         });
-        setRecipeIDs(recipeIDs.filter(recipe => recipe.recipe_id !== recipe));
+        setRecipeIDs(recipeIDs.filter((recipe) => recipe.recipe_id !== recipe_id));
         
     } catch (err) {
         console.err(err.message);
     }
 };
- useEffect( () =>{
-
- },[recipeIDs])
 
   // Get all receipes of a mealplan  
   useEffect(async () => {
     try {
-      const response = await fetch(`http://localhost:3001/mealplanRecipes/${mealplan.id}`)
+      const response = await fetch(api + `/mealplanRecipes/${mealplan.id}`)
       const jsonData = await response.json();
       console.log(jsonData);
       setRecipeIDs(jsonData)
@@ -57,6 +55,7 @@ const EditMealPlan = ({ mealplan }) => {
     }
   }, []);
   useEffect(() => {
+    console.log("Is this thing ever updating??")
   }, [recipeIDs])
 
 
