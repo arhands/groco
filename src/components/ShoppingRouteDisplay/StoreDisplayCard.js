@@ -19,6 +19,7 @@ class StoreDisplayCard extends React.Component
     let columns = [
       { name: (<Form.Label>Item</Form.Label>), selector: row => row.name },
       { name: (<Form.Label>Amount</Form.Label>), selector: row => row.quantity + " " + row.measurement_type},
+      { name: (<Form.Label>Price</Form.Label>), selector: row => "$" + row.cost},
     ];
     return (
       <DataTable columns={columns} data={this.StoreItems} selectableRows onSelectedRowsChange={sel => this.SelectedRows = sel.selectedRows}/>
