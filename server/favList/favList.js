@@ -79,6 +79,7 @@ async function deleteFav(req, res) {
 
     try {
         const del = await pool.query("DELETE FROM public.ingredient_instance_table WHERE id = $1 ", [instId]);
+        res.json(del.rows);
     } catch(err) {
         console.log("Unable to delete from fav list");
         console.log(err.message);
