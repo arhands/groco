@@ -76,10 +76,12 @@ async function addFav(req, res) {
 // delete 1 item from fav list
 async function deleteFav(req, res) {
     const { instId } = req.body;
-
+    console.log("Deletingin item");
     try {
+        console.log("Deleting Item");
         const del = await pool.query("DELETE FROM public.ingredient_instance_table WHERE id = $1 ", [instId]);
         res.json(del.rows);
+        console.log("Item deleted");
     } catch(err) {
         console.log("Unable to delete from fav list");
         console.log(err.message);

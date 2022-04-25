@@ -111,7 +111,7 @@ function FavList() {
                     </Modal.Header>
                     <Modal.Body>
                         <div className="center">
-                            <p1>Are you sure you want to delete this item from your Shopping List?</p1>
+                            <p>Are you sure you want to delete this item from your Shopping List?</p>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>

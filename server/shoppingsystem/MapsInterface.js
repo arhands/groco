@@ -81,7 +81,7 @@ async function GetItemCost_v2(store, item)
   {
     return {
       name: item.name,
-      cost: Math.random() * (price_max - price_min) + price_min,
+      cost: Math.round((Math.random() * (price_max - price_min) + price_min)*1E2)/100,
       brand: item.brand,
     }
   }
