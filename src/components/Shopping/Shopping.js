@@ -5,6 +5,7 @@ import DataTable from 'react-data-table-component';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ShoppingRouteOptionsModal from '../ShoppingRouteDisplay/ShoppingRouteOptionsModal.js';
+import {useSnackbar} from "notistack";
 
 
 function FavList() {
@@ -19,6 +20,11 @@ function FavList() {
     const [show, setShow] = useState(false);
 	const [options, showOptions] = useState(false);
     const handleClose = () => setShow(false);
+
+    const {enqueueSnackbar} = useSnackbar();
+    const delReload=()=>{
+        enqueueSnackbar('Item deleted!',{variant: 'success'});
+    }
 
     const googleID = localStorage.getItem('googleId');
 
@@ -76,20 +82,11 @@ function FavList() {
                     body: JSON.stringify(body)
                 });
                 const jsonData = await del.json();
+                setShow(false);
             } catch(err) {
                 console.log(err.message);
             }
         }
-        setShow(false);
-        toast.success('Item deleted!', {
-            position: "bottom-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
     }
 
     return (
@@ -116,23 +113,12 @@ function FavList() {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>Close</Button>
-                        <Button variant="primary" onClick={function(event) { deleteItem(); setShow(false) }}>Delete</Button>
+                        <Button variant="primary" onClick={function(event) { deleteItem(); delReload() }}>Delete</Button>
                     </Modal.Footer>
                 </Modal>
             </div>
             <div>
                 <Button onClick={() => {showOptions(true)} }>Shop Items</Button>
-                <ToastContainer
-                    position="bottom-center"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                />
 				<ShoppingRouteOptionsModal Show={options} HideMenu={() => showOptions(false)}/>
             </div>
         </div>
