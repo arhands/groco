@@ -34,6 +34,7 @@ async function deleteItem(req, res) {
   const { instId } = req.body;
   try {
       const del = await pool.query("DELETE FROM public.ingredient_instance_table WHERE id = $1 ", [instId]);
+      res.json(del.rows);
   } catch(err) {
       console.log("Unable to delete from shopping list");
       console.log(err.message);
