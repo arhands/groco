@@ -15,7 +15,7 @@
     "axios": "^0.24.0",
     "jquery": "^3.6.0",
     "mapbox": "^1.0.0-beta10",
-    "notistack": "^2.0.3",
+    "notistack": "^2.0.4",
     "pg": "^8.7.1",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.1",
