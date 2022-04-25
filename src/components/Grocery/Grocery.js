@@ -9,7 +9,6 @@ import './Grocery.css';
 function Grocery() {
     // gives pop up to choose brand, measurement, and type, adds to shopping list
     const api = process.env.REACT_APP_BACKEND_API
-    console.log(api);
     const url = api + "/grocery/";
     const favUrl = api + "/favList/";
 
@@ -27,13 +26,10 @@ function Grocery() {
 
     // call get all functions
     useEffect(() => {
-        console.log("Getting grocoery");
         getAllGrocery();
 
-        console.log("Getting brands");
         getAllBrand();
 
-        console.log("Getting meas");
         getAllMeas();
     }, []);
 

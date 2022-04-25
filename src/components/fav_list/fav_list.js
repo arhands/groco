@@ -4,11 +4,14 @@ import { Button, Modal } from 'react-bootstrap';
 import DataTable from 'react-data-table-component';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {useSnackbar} from "notistack";
 
 
 function FavList() {
     const api = process.env.REACT_APP_BACKEND_API
     const url = api + "/favList/";
+
+    
 
     // hooks
     const [favData, setFavData]  = useState([]);
@@ -17,6 +20,17 @@ function FavList() {
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
+
+    const {enqueueSnackbar} = useSnackbar();
+    const delReload=()=>{
+        enqueueSnackbar('Item deleted!',{variant: 'success'});
+    }
+    const addOneReload=()=>{
+        enqueueSnackbar('Item Added!',{variant: 'success'});
+    }
+    const addAllReload=()=>{
+        enqueueSnackbar('All Items Added!',{variant: 'success'});
+    }
 
     const googleID = localStorage.getItem('googleId');
 
@@ -56,7 +70,7 @@ function FavList() {
             amount: favData[i].quantity,
             meas: favData[i].meas,
             add: (
-                <Button onClick={() => addToShopping(favData[i])}>Add</Button>
+                <Button onClick={function(event) { addToShopping(favData[i]); addOneReload()}}>Add</Button>
             ),
             delete: (
                 <Button onClick={function(event) {setInstId(favData[i].instid); setShow(true)}}>Delete</Button>
@@ -77,20 +91,12 @@ function FavList() {
                     body: JSON.stringify(body)
                 });
                 const jsonData = await del.json();
+
+                setShow(false);
             } catch(err) {
                 console.log(err.message);
             }
         }
-            setShow(false);
-            toast.success('Item deleted!', {
-                position: "bottom-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
     }
 
     // add 1 item to shopping list
@@ -129,15 +135,6 @@ function FavList() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             });
-            toast.success('All items added!', {
-                position: "bottom-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
         } catch(err){
             console.log(err.message);
         }
@@ -167,23 +164,12 @@ function FavList() {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>Close</Button>
-                        <Button variant="primary" onClick={function(event) { deleteItem(); setShow(false) }}>Delete</Button>
+                        <Button variant="primary" onClick={function(event) {deleteItem(); delReload() } }>Delete</Button>
                     </Modal.Footer>
                 </Modal>
             </div>
             <div>
-                <Button onClick={() =>  addAllFavs() }>Add all to Shopping List</Button>
-                <ToastContainer
-                    position="bottom-center"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                />
+                <Button onClick={function(event) {  addAllFavs(); addAllReload() } }>Add all to Shopping List</Button>
             </div>
         </div>
 
