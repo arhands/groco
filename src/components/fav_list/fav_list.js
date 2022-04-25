@@ -68,7 +68,6 @@ function FavList() {
     const filteredFavs = favViewData.filter(item => item.name.toLowerCase().includes(filteredText.toLowerCase()))
 
     async function deleteItem() {
-        console.log(instId);
         if(instId){
             try {
                 const body = { instId };
@@ -82,16 +81,16 @@ function FavList() {
                 console.log(err.message);
             }
         }
-        setShow(false);
-        toast.success('Item deleted!', {
-            position: "bottom-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
+            setShow(false);
+            toast.success('Item deleted!', {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
     }
 
     // add 1 item to shopping list
@@ -163,7 +162,7 @@ function FavList() {
                     </Modal.Header>
                     <Modal.Body>
                         <div className="center">
-                            <p1>Are you sure you want to delete this item from your favorites?</p1>
+                            <p>Are you sure you want to delete this item from your favorites?</p>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
