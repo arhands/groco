@@ -2,8 +2,6 @@ import './Shopping.css';
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import DataTable from 'react-data-table-component';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import ShoppingRouteOptionsModal from '../ShoppingRouteDisplay/ShoppingRouteOptionsModal.js';
 import {useSnackbar} from "notistack";
 
@@ -18,19 +16,25 @@ function FavList() {
     const [filteredText, setFilterText] = useState('');
 
     const [show, setShow] = useState(false);
+    const [clearShow, setClear] = useState(false);
 	const [options, showOptions] = useState(false);
     const handleClose = () => setShow(false);
+    const handleClearClose = () => setShow(false);
 
     const {enqueueSnackbar} = useSnackbar();
     const delReload=()=>{
         enqueueSnackbar('Item deleted!',{variant: 'success'});
     }
 
+    const clearReload=()=>{
+        enqueueSnackbar('All items deleted!',{variant: 'success'});
+    }
+
     const googleID = localStorage.getItem('googleId');
 
     useEffect(() => {
         getListData();
-    }, [show]);
+    }, [show, clearShow]);
 
     // column labels for table
     const cols = [
@@ -72,7 +76,6 @@ function FavList() {
     const filteredList = listViewData.filter(item => item.name.toLowerCase().includes(filteredText.toLowerCase()))
 
     async function deleteItem() {
-        console.log(instId);
         if( instId ){
             try {
                 const body = { instId };
@@ -86,6 +89,19 @@ function FavList() {
             } catch(err) {
                 console.log(err.message);
             }
+        }
+    }
+
+    async function clearList() {
+        try {
+            const clear = await fetch(url + "clear/" + googleID, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" }
+            });
+            const jsonData = await clear.json();
+            setClear(false);
+        } catch(err) {
+            console.log(err.message);
         }
     }
 
@@ -116,8 +132,23 @@ function FavList() {
                         <Button variant="primary" onClick={function(event) { deleteItem(); delReload() }}>Delete</Button>
                     </Modal.Footer>
                 </Modal>
+                <Modal show={clearShow} onHide={handleClearClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Clear List</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="center">
+                            <p>Are you sure you want to delete all items from your Shopping List?</p>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClearClose}>Close</Button>
+                        <Button variant="primary" onClick={function(event) { clearList(); clearReload() }}>Delete</Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
             <div>
+                <Button onClick={() => {setClear(true)}}>Clear List</Button>
                 <Button onClick={() => {showOptions(true)} }>Shop Items</Button>
 				<ShoppingRouteOptionsModal Show={options} HideMenu={() => showOptions(false)}/>
             </div>

@@ -70,6 +70,8 @@ app.get("/shoppingList/get/:googleID", shoppinglist.get);
 
 app.delete("/shoppingList/delete", shoppinglist.delete);
 
+app.delete("/shoppingList/clear/:googleID", shoppinglist.clear);
+
 // ------ FAVORITE LIST QUERIES ------
 // get all favorites
 app.get("/favList/get/:googleID", favList.getFavs)

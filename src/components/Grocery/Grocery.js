@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import { Button, Modal } from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {useSnackbar} from "notistack";
 import './Grocery.css';
 
 function Grocery() {
@@ -23,6 +22,11 @@ function Grocery() {
     const [quantity, setQuantity] = useState(0);
     const [measurementId, setMeasurementId] = useState(5);
     const googleID = localStorage.getItem('googleId');
+
+    const {enqueueSnackbar} = useSnackbar();
+    const addReload=()=>{
+        enqueueSnackbar('Item added!',{variant: 'success'});
+    }
 
     // call get all functions
     useEffect(() => {
@@ -148,15 +152,6 @@ function Grocery() {
             setShowError(true);
         }
         setShow(false);
-        toast.success('Item added to your shopping list!', {
-            position: "bottom-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
     }
 
     async function addFav() {
@@ -176,15 +171,6 @@ function Grocery() {
             setShowError(true);
         }
         setShow(false);
-        toast.success('Item added to your favorites list!', {
-            position: "bottom-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
     }
 
     // setting up filter
@@ -200,7 +186,6 @@ function Grocery() {
                     pagination
                     subHeader
                     subHeaderComponent={<input type="text" className="mb-3" onChange={e => setFilterText(e.target.value)} />}
-                    // selectableRows
                     selectableRowsSingle
                     onSelectedRowsChange={(event) => { setGrocoId(event.selectedRows[0].id) }}
                     persistTableHead />
@@ -222,8 +207,8 @@ function Grocery() {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>Close</Button>
-                    <Button variant="primary" onClick={() => { addToList() }}>Add to Shopping List</Button>
-                    <Button onClick={() => { addFav() }}>Add to Favorites List</Button>
+                    <Button variant="primary" onClick={function(event)  { addToList(); addReload() }}>Add to Shopping List</Button>
+                    <Button onClick={function(event) { addFav(); addReload() }}>Add to Favorites List</Button>
 
                 </Modal.Footer>
             </Modal>
@@ -238,17 +223,6 @@ function Grocery() {
                 </Modal.Body>
             </Modal>
             <div>
-            <ToastContainer
-                position="bottom-center"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-            />
                 <Link to="/shopping">
                     <Button>View Shopping List</Button>
                 </Link>
