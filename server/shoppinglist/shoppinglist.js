@@ -40,7 +40,32 @@ async function deleteItem(req, res) {
       console.log(err.message);
   }
 }
+
+async function clearList(req, res) {
+  const { googleID } = req.params;
+    var listId = null;
+
+    // get shopping list id
+    try {
+        listId = (await pool.query("SELECT shopping_list_id FROM public.user_table WHERE googleid = $1", [googleID])).rows[0].shopping_list_id;
+        console.log(listId);
+    } catch(err) {
+        console.log("cannot get user's shopping list id");
+        console.log(err.message);
+    }
+
+    // clear list
+    try {
+      const clear = await pool.query("DELETE FROM public.ingredient_instance_table WHERE collection_id = $1", [listId]);
+      res.json(clear.rows);
+    } catch {
+      console.log("Unable to clear shopping list");
+      console.log(err.message);
+    }
+
+}
 module.exports = {
   get: getShoppingList,
-  delete: deleteItem
+  delete: deleteItem,
+  clear: clearList
 };
