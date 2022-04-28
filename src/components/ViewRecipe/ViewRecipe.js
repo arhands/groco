@@ -104,6 +104,7 @@ function ViewRecipe() {
                                 name: name
                             })
                         });
+                        setID((await response.json()).recipeid)
                         console.log("got response")
                     } catch (err) {
                         console.error(err);
@@ -130,7 +131,7 @@ function ViewRecipe() {
                                     measurement_type: s.measurement_id,
                                 })),
                                 instructions: instructions,
-                                name: RecipeName
+                                name: name
                             })
                         });
                     } catch (err) {
