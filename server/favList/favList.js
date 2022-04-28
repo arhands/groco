@@ -32,6 +32,8 @@ async function addFav(req, res) {
     var { grocoId, quantity, measurementId, brandId } = req.body;
     var { googleID } = req.params;
     var favId = null;
+    var maxShop = null;
+    var maxFav = null;
 
     // get list id
     try {
@@ -47,10 +49,17 @@ async function addFav(req, res) {
     if(favId === null) {
         try {
             favId = (await pool.query("SELECT MAX(collection_id) FROM public.ingredient_instance_table")).rows[0].max;
+            maxShop = (await pool.query("SELECT MAX(shopping_list_id) FROM public.user_table")).rows[0].max;
+            maxFav = (await pool.query("SELECT MAX(shopping_list_id) FROM public.user_table")).rows[0].max;
         } catch(err) {
             console.log("error max collect");
             console.log(err.message);
         }
+
+        if(favId < maxShop) favId = maxShop;
+        if(favId < maxFav) favId = maxFav;
+        favId = favId + 1;
+        console.log(favId);
         
         // set new shopping list id
         try {
