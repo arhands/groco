@@ -74,8 +74,8 @@ async function addItemToList(req, res) {
         // find max id from instance, shop and fav ids
         if(listId < maxShop) listdId = maxShop;
         if(listId < maxFav) listdId = maxFav;
-        listdId = listdId + 1;
-        console.log(listdId);
+        listId = listId + 1;
+        console.log(listId);
 
         // set new shopping list id
         try {
