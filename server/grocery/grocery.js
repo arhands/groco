@@ -45,12 +45,13 @@ async function setListId(req, res) {
 
 // add item to list
 async function addItemToList(req, res) {
-    console.log("WOO!+")
     var { grocoId, quantity, measurementId, brandId } = req.body;
     console.log(req.body);
     var { googleID } = req.params;
     quantity = parseFloat(quantity);
     var listId = null;
+    var maxShop = null;
+    var maxFav = null;
 
     // get shopping list id
     try {
@@ -64,14 +65,21 @@ async function addItemToList(req, res) {
     if(listId === null){
         try {
             listId = (await pool.query("SELECT MAX(collection_id) FROM public.ingredient_instance_table")).rows[0].max;
+            maxShop = (await pool.query("SELECT MAX(shopping_list_id) FROM public.user_table")).rows[0].max;
+            maxFav = (await pool.query("SELECT MAX(shopping_list_id) FROM public.user_table")).rows[0].max;
         } catch(err) {
             console.log("error max collect");
             console.log(err.message);
         }
-        
+        // find max id from instance, shop and fav ids
+        if(listId < maxShop) listdId = maxShop;
+        if(listId < maxFav) listdId = maxFav;
+        listdId = listdId + 1;
+        console.log(listdId);
+
         // set new shopping list id
         try {
-            const update = await pool.query("UPDATE public.user_table SET shopping_list_id = $1 WHERE googleid = $2", [listId, googleID]);
+            const update = await pool.query("UPDATE public.user_table SET shopping_list_id = $1 WHERE googleid = $2", [listdId, googleID]);
         } catch (err) {
             console.log("error update list id");
             console.log(err.message);
@@ -84,6 +92,7 @@ async function addItemToList(req, res) {
             [listId, grocoId, quantity, measurementId, brandId]);
         res.json(itemAdd.rows);
         console.log(itemAdd.rows)
+        console.log("listId = " + listId);
     } catch(err) {
         console.log("error grocery add");
         console.log(err.message);
