@@ -35,10 +35,10 @@ async function setListId(req, res) {
     try {
         const { maxCollectId } = req.body;
         const { googleId } = req.params;
-        const update = await pool.query("UPDATE public.user_table SET shopping_list_id = $1 WHERE googleid = $2 RETURNING first_name", 
+        const update = await pool.query("UPDATE public.user_table SET shopping_list_id = $1 WHERE googleid = $2 RETURNING first_name",
             [maxCollectId, googleId]);
         res.json(update.rows);
-    } catch(err) {
+    } catch (err) {
         console.log(err.message);
     }
 }
@@ -56,30 +56,30 @@ async function addItemToList(req, res) {
     // get shopping list id
     try {
         listId = (await pool.query("SELECT shopping_list_id FROM public.user_table WHERE googleid = $1", [googleID])).rows[0].shopping_list_id;
-    } catch(err) {
+    } catch (err) {
         console.log("cant get shopping_list_id");
         console.log(err.message);
     }
 
     //if shopping list id === null -> get max collection id
-    if(listId === null){
+    if (listId === null) {
         try {
             listId = (await pool.query("SELECT MAX(collection_id) FROM public.ingredient_instance_table")).rows[0].max;
             maxShop = (await pool.query("SELECT MAX(shopping_list_id) FROM public.user_table")).rows[0].max;
             maxFav = (await pool.query("SELECT MAX(shopping_list_id) FROM public.user_table")).rows[0].max;
-        } catch(err) {
+        } catch (err) {
             console.log("error max collect");
             console.log(err.message);
         }
         // find max id from instance, shop and fav ids
-        if(listId < maxShop) listdId = maxShop;
-        if(listId < maxFav) listdId = maxFav;
+        if (listId < maxShop) listId = maxShop;
+        if (listId < maxFav) listId = maxFav;
         listId = listId + 1;
         console.log(listId);
 
         // set new shopping list id
         try {
-            const update = await pool.query("UPDATE public.user_table SET shopping_list_id = $1 WHERE googleid = $2", [listdId, googleID]);
+            const update = await pool.query("UPDATE public.user_table SET shopping_list_id = $1 WHERE googleid = $2", [listId, googleID]);
         } catch (err) {
             console.log("error update list id");
             console.log(err.message);
@@ -93,7 +93,7 @@ async function addItemToList(req, res) {
         res.json(itemAdd.rows);
         console.log(itemAdd.rows)
         console.log("listId = " + listId);
-    } catch(err) {
+    } catch (err) {
         console.log("error grocery add");
         console.log(err.message);
     }
