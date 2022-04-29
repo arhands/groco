@@ -14,7 +14,7 @@ class IngredientTable extends React.Component
   constructor(props)
   {
     super(props)
-    this.state = { ingredient_options : null, measurement_types: null, Placeholder: true }
+    this.state = { ingredient_options : [], measurement_types: [], Placeholder: true }
     this.HandleAddIngredient = this.HandleAddIngredient.bind(this)
     this.HandleDeleteSelection = this.HandleDeleteSelection.bind(this)
     this.GetData = this.GetData.bind(this)
@@ -22,7 +22,7 @@ class IngredientTable extends React.Component
   }
   render()
   {
-    if(this.state.ingredient_options == null && this.props.EditMode)
+    if(this.state.ingredient_options.length == 0 && this.props.EditMode)
     {
       const api = process.env.REACT_APP_BACKEND_API + "/recipes/";
       // /ingredientoptions
@@ -64,7 +64,6 @@ class IngredientTable extends React.Component
   }
   HandleAddIngredient()
   {
-    console.log(67)
     let ingredients = this.props.Ingredients
     ingredients.push({
       name: "", quantity: 0, measurement_type: ""
@@ -97,6 +96,13 @@ class IngredientTable extends React.Component
     }
     for(let i = 0; i < ingredients.length; i++)
     {
+      for(let j = 0; j < this.state.ingredient_options.length; j++)
+        if(this.state.ingredient_options[j].id == ingredients[i].ingredient_id)
+        {
+          ingredients[i].v = this.state.ingredient_options[j].value
+          break
+        }
+      ingredients[i].just_searched = false
       data.push({
         //name: (<input type="text" defaultValue={ingredients[i].name} onChange={e => ingredients[i].name=e.target.value} disabled={!this.props.EditMode}/>),
         name: this.props.EditMode? (<SelectSearch
@@ -108,19 +114,28 @@ class IngredientTable extends React.Component
             let s = this.state.ingredient_options[v]; 
             i1.ingredient_id = s.id; 
             i1.name = s.name; 
+            ingredients[i].just_searched = true
             updateIngredients(i,i1) 
           }}
           options={this.state.ingredient_options}
           search
           filterOptions={(options) => {
-              return q => options.filter(opt => opt.name.toUpperCase().includes(q.toUpperCase())).splice(0,10)
+              return q => {
+                if(ingredients[i].just_searched)
+                {
+                  ingredients[i].just_searched = false
+                  q = ingredients[i].search_text
+                }
+                ingredients[i].search_text = q
+                let f = options.filter(opt => opt.name.toUpperCase().includes(q.toUpperCase())).splice(0,10)
+                if(ingredients[i].v != null && f.every(s => s.value != ingredients[i].v))
+                  f.push(options[ingredients[i].v])
+                return f
+              }
           }}/>) : (<p>{ingredients[i].name}</p>),
         quantity: (<input type="number" defaultValue={ingredients[i].quantity} onChange={e => ingredients[i].quantity=e.target.value} disabled={!this.props.EditMode}/>),
         //measurement_type: (<input type="text" defaultValue={ingredients[i].measurement_type} onChange={e => ingredients[i].measurement_type=e.target.value} disabled={!this.props.EditMode}/>),
         measurement_type: this.props.EditMode? (<SelectSearch
-          filterOptions={(options) => {
-              return q => options.filter(opt => opt.name.toUpperCase().includes(q.toUpperCase()))
-          }}
           placeholder="Search for additional options"
           value={ingredients[i].m}
           onChange={v => {
@@ -129,12 +144,22 @@ class IngredientTable extends React.Component
             let s = this.state.ingredient_options[v]; 
             i1.measurement_id = s.id; 
             i1.name = s.name; 
+            ingredients[i].just_searched = true
             updateIngredients(i,i1) 
           }}
           options={this.state.measurement_types}
           search
           filterOptions={(options) => {
-              return q => options.filter(opt => opt.name.toUpperCase().includes(q.toUpperCase())).splice(0,10)
+              return q => {
+                let f = options.filter(opt => opt.name.toUpperCase().includes(q.toUpperCase())).splice(0,10)
+                if(ingredients[i].just_searched)
+                {
+                  ingredients[i].just_searched = false
+                  q = ingredients[i].search_text_m
+                }
+                ingredients[i].search_text_m = q
+                return f
+              }
           }}
         />) : (<p>{ingredients[i].measurement_type}</p>),
         key: i
