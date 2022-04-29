@@ -162,7 +162,7 @@ function ViewRecipe() {
             <IngredientTable
                 EditMode={editMode}
                 Ingredients={ingredients}
-                UpdateIngredientsCallback={newIng => setIngredients(newIng) }
+                UpdateIngredientsCallback={setIngredients}
             />
             <br />
             {
